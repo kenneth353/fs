@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Catbalogan Ride — Functional Specification &amp; UI/UX Design Specification</title>
+<title>CatbaRide — Functional Specification &amp; UI/UX Design Specification</title>
 <style>
 /* ============================================================
-   CATBALOGAN RIDE — PARTS 1 + 2
+   CATBARIDE — PARTS 1 + 2
    Reset, Design System, A4 Print Layout, Cover, TOC,
    Sections 1–10 (Introduction through Admin Process)
    ============================================================ */
@@ -23,6 +23,7 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -31,6 +32,7 @@ body {
   color: #1f2937;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 img {
@@ -116,6 +118,8 @@ ol {
   align-items: center;
   padding: var(--sp-5) var(--sp-3) var(--sp-8);
   gap: var(--sp-5);
+  width: 100%;
+  max-width: 100%;
 }
 
 /* ---------- TOOLBAR ---------- */
@@ -141,6 +145,7 @@ ol {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
+  min-width: 0;
 }
 
 .doc-toolbar__logo {
@@ -154,6 +159,7 @@ ol {
   font-weight: 800;
   font-size: 1rem;
   letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
 .doc-toolbar__title {
@@ -176,6 +182,7 @@ ol {
 .btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--sp-2);
   padding: 9px 14px;
   border-radius: var(--r-md);
@@ -183,6 +190,7 @@ ol {
   font-weight: 600;
   transition: background 0.15s ease, transform 0.05s ease;
   border: 1px solid transparent;
+  white-space: nowrap;
 }
 
 .btn:active {
@@ -211,6 +219,7 @@ ol {
 /* ---------- A4 PAGE ---------- */
 .page {
   width: var(--page-width);
+  max-width: 100%;
   min-height: var(--page-min-height);
   background: var(--cr-bg);
   padding: var(--page-padding);
@@ -224,6 +233,8 @@ ol {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
   border-bottom: 1px solid var(--cr-border);
   padding-bottom: var(--sp-2);
   margin-bottom: var(--sp-5);
@@ -246,6 +257,8 @@ ol {
   border-top: 1px solid var(--cr-border);
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
   font-size: 0.7rem;
   color: var(--cr-text-muted);
 }
@@ -296,6 +309,7 @@ ol {
   display: flex;
   align-items: center;
   gap: var(--sp-4);
+  flex-wrap: wrap;
 }
 
 .cover__brand-mark {
@@ -417,6 +431,7 @@ ol {
   border-bottom: 2px solid var(--cr-primary);
   padding-bottom: var(--sp-2);
   margin-bottom: var(--sp-4);
+  flex-wrap: wrap;
 }
 
 .section__number {
@@ -431,6 +446,7 @@ ol {
   border-radius: var(--r-md);
   font-weight: 800;
   font-size: 0.9rem;
+  flex-shrink: 0;
 }
 
 .section__title {
@@ -464,6 +480,7 @@ ol {
   height: 18px;
   background: var(--cr-secondary);
   border-radius: var(--r-pill);
+  flex-shrink: 0;
 }
 
 p {
@@ -562,13 +579,16 @@ strong {
 .table-wrap {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   margin: var(--sp-3) 0 var(--sp-4);
   border: 1px solid var(--cr-border);
   border-radius: var(--r-md);
+  background: var(--cr-bg);
 }
 
 table {
   width: 100%;
+  min-width: 520px;
   border-collapse: collapse;
   font-size: 0.82rem;
 }
@@ -586,6 +606,7 @@ thead th {
   letter-spacing: 0.3px;
   text-transform: uppercase;
   border-right: 1px solid rgba(255, 255, 255, 0.15);
+  white-space: nowrap;
 }
 
 thead th:last-child {
@@ -598,6 +619,7 @@ tbody td {
   border-right: 1px solid var(--cr-border);
   color: var(--cr-text-soft);
   vertical-align: top;
+  word-break: break-word;
 }
 
 tbody td:last-child {
@@ -625,6 +647,7 @@ tbody tr:last-child td {
   border: 1px solid var(--cr-border);
   border-radius: var(--r-md);
   padding: var(--sp-3) var(--sp-4);
+  min-width: 0;
 }
 
 .card__title {
@@ -635,6 +658,7 @@ tbody tr:last-child td {
   display: flex;
   align-items: center;
   gap: var(--sp-2);
+  flex-wrap: wrap;
 }
 
 .card__text {
@@ -669,6 +693,7 @@ tbody tr:last-child td {
   border-radius: var(--r-lg);
   overflow: hidden;
   background: var(--cr-bg);
+  min-width: 0;
 }
 
 .role-card__head {
@@ -720,6 +745,7 @@ tbody tr:last-child td {
   border-radius: var(--r-lg);
   padding: var(--sp-4);
   margin: var(--sp-3) 0 var(--sp-4);
+  min-width: 0;
 }
 
 .flow__title {
@@ -749,6 +775,8 @@ tbody tr:last-child td {
   text-align: center;
   min-width: 220px;
   max-width: 320px;
+  width: 100%;
+  word-break: break-word;
 }
 
 .flow__node--start {
@@ -810,12 +838,6 @@ tbody tr:last-child td {
   margin: var(--sp-3) 0;
 }
 
-@media (max-width: 900px) {
-  .flow-3col {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* ---------- TABLE OF CONTENTS ---------- */
 .toc {
   background: var(--cr-bg-alt);
@@ -840,6 +862,7 @@ tbody tr:last-child td {
   height: 22px;
   background: var(--cr-secondary);
   border-radius: var(--r-pill);
+  flex-shrink: 0;
 }
 
 .toc__hint {
@@ -908,6 +931,7 @@ tbody tr:last-child td {
   padding-left: 24px;
   position: relative;
   line-height: 1.5;
+  word-break: break-word;
 }
 
 .list-check li::before {
@@ -1014,6 +1038,19 @@ tbody tr:last-child td {
   .no-print {
     display: none !important;
   }
+
+  .table-wrap {
+    overflow: visible;
+    border: 1px solid var(--cr-border);
+  }
+
+  table {
+    min-width: 0;
+  }
+
+  .flow-3col {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }
 
 /* ---------- RESPONSIVE ---------- */
@@ -1032,6 +1069,10 @@ tbody tr:last-child td {
     grid-template-columns: 1fr;
   }
 
+  .flow-3col {
+    grid-template-columns: 1fr;
+  }
+
   .cover__brand-name {
     font-size: 2rem;
   }
@@ -1042,6 +1083,423 @@ tbody tr:last-child td {
 
   .doc-toolbar {
     border-radius: var(--r-md);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+
+  .doc-shell {
+    padding: var(--sp-2) var(--sp-2) var(--sp-5);
+    gap: var(--sp-3);
+  }
+
+  .page {
+    padding: var(--sp-4) var(--sp-3);
+  }
+
+  .page__header {
+    font-size: 0.65rem;
+    margin-bottom: var(--sp-4);
+  }
+
+  .page__footer {
+    font-size: 0.65rem;
+  }
+
+  .doc-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--sp-2);
+    padding: var(--sp-3);
+  }
+
+  .doc-toolbar__brand {
+    justify-content: center;
+  }
+
+  .doc-toolbar__actions {
+    justify-content: center;
+  }
+
+  .doc-toolbar__actions .btn {
+    flex: 1 1 auto;
+    min-width: 120px;
+    padding: 11px 14px;
+    font-size: 0.85rem;
+  }
+
+  .cover {
+    padding: var(--sp-4) 0;
+  }
+
+  .cover__brand {
+    gap: var(--sp-3);
+  }
+
+  .cover__brand-mark {
+    width: 56px;
+    height: 56px;
+    font-size: 1.4rem;
+    border-radius: var(--r-lg);
+  }
+
+  .cover__brand-name {
+    font-size: 1.6rem;
+  }
+
+  .cover__brand-tag {
+    font-size: 0.85rem;
+  }
+
+  .cover__title {
+    font-size: 1.25rem;
+    max-width: 100%;
+  }
+
+  .cover__subtitle {
+    font-size: 0.9rem;
+  }
+
+  .cover__meta {
+    gap: var(--sp-3);
+    padding: var(--sp-4) 0;
+  }
+
+  .cover__notice {
+    font-size: 0.75rem;
+    padding: var(--sp-2) var(--sp-3);
+  }
+
+  .section__header {
+    gap: var(--sp-2);
+  }
+
+  .section__number {
+    min-width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+
+  .section__title {
+    font-size: 1.1rem;
+  }
+
+  .section__subtitle {
+    font-size: 0.78rem;
+  }
+
+  .subsection__title {
+    font-size: 0.92rem;
+  }
+
+  p {
+    font-size: 0.88rem;
+  }
+
+  .callout {
+    font-size: 0.8rem;
+    padding: var(--sp-2) var(--sp-3);
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .role-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .flow {
+    padding: var(--sp-3);
+  }
+
+  .flow__node {
+    min-width: 0;
+    max-width: 100%;
+    font-size: 0.78rem;
+    padding: 7px 12px;
+  }
+
+  .flow__title {
+    font-size: 0.78rem;
+  }
+
+  .table-wrap {
+    margin: var(--sp-2) 0 var(--sp-3);
+    border-radius: var(--r-sm);
+  }
+
+  table {
+    font-size: 0.75rem;
+    min-width: 460px;
+  }
+
+  thead th {
+    padding: 8px 10px;
+    font-size: 0.7rem;
+  }
+
+  tbody td {
+    padding: 8px 10px;
+  }
+
+  .toc {
+    padding: var(--sp-4);
+  }
+
+  .toc__title {
+    font-size: 1rem;
+  }
+
+  .toc__item {
+    font-size: 0.8rem;
+    padding: 7px 6px;
+  }
+
+  .list-check li {
+    font-size: 0.82rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  .doc-shell {
+    padding: var(--sp-1) var(--sp-1) var(--sp-4);
+    gap: var(--sp-2);
+  }
+
+  .page {
+    padding: var(--sp-3) var(--sp-2);
+    box-shadow: var(--sh-md);
+    border-radius: var(--r-sm);
+  }
+
+  .page__header {
+    font-size: 0.6rem;
+    letter-spacing: 0.2px;
+    margin-bottom: var(--sp-3);
+  }
+
+  .page__footer {
+    font-size: 0.6rem;
+  }
+
+  .doc-toolbar {
+    border-radius: var(--r-sm);
+    padding: var(--sp-2);
+  }
+
+  .doc-toolbar__logo {
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .doc-toolbar__title {
+    font-size: 0.85rem;
+  }
+
+  .doc-toolbar__subtitle {
+    font-size: 0.68rem;
+  }
+
+  .doc-toolbar__actions {
+    flex-direction: column;
+  }
+
+  .doc-toolbar__actions .btn {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 14px;
+  }
+
+  .cover__eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+  }
+
+  .cover__brand-mark {
+    width: 48px;
+    height: 48px;
+    font-size: 1.2rem;
+    border-radius: var(--r-md);
+  }
+
+  .cover__brand-name {
+    font-size: 1.35rem;
+  }
+
+  .cover__brand-tag {
+    font-size: 0.78rem;
+  }
+
+  .cover__title {
+    font-size: 1.1rem;
+  }
+
+  .cover__subtitle {
+    font-size: 0.82rem;
+  }
+
+  .cover__meta-label {
+    font-size: 0.62rem;
+  }
+
+  .cover__meta-value {
+    font-size: 0.85rem;
+  }
+
+  .cover__notice {
+    font-size: 0.7rem;
+  }
+
+  .section__number {
+    min-width: 24px;
+    height: 24px;
+    font-size: 0.72rem;
+  }
+
+  .section__title {
+    font-size: 1rem;
+  }
+
+  .subsection__title {
+    font-size: 0.85rem;
+  }
+
+  p {
+    font-size: 0.84rem;
+  }
+
+  .callout {
+    font-size: 0.76rem;
+  }
+
+  .flow__node {
+    font-size: 0.72rem;
+    padding: 6px 10px;
+    border-width: 1.5px;
+  }
+
+  .flow__arrow {
+    font-size: 0.9rem;
+    padding: 2px 0;
+  }
+
+  table {
+    font-size: 0.7rem;
+    min-width: 400px;
+  }
+
+  thead th {
+    padding: 6px 8px;
+    font-size: 0.65rem;
+  }
+
+  tbody td {
+    padding: 6px 8px;
+  }
+
+  .toc {
+    padding: var(--sp-3);
+  }
+
+  .toc__title {
+    font-size: 0.92rem;
+  }
+
+  .toc__hint {
+    font-size: 0.7rem;
+  }
+
+  .toc__item {
+    font-size: 0.75rem;
+    padding: 6px 4px;
+    gap: var(--sp-1);
+  }
+
+  .toc__num {
+    min-width: 20px;
+    font-size: 0.72rem;
+  }
+
+  .toc__group {
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+  }
+
+  .list-check li {
+    font-size: 0.78rem;
+    padding-left: 20px;
+  }
+
+  .card {
+    padding: var(--sp-2) var(--sp-3);
+  }
+
+  .card__title {
+    font-size: 0.82rem;
+  }
+
+  .card__text {
+    font-size: 0.75rem;
+  }
+
+  .role-card__head {
+    padding: var(--sp-2) var(--sp-3);
+  }
+
+  .role-card__head h4 {
+    font-size: 0.88rem;
+  }
+
+  .role-card__body {
+    padding: var(--sp-2) var(--sp-3);
+  }
+
+  .role-card__body li {
+    font-size: 0.75rem;
+  }
+
+  .placeholder {
+    font-size: 0.78em;
+    padding: 0 4px;
+  }
+}
+
+/* Very small devices — minimal but readable */
+@media screen and (max-width: 360px) {
+  html {
+    font-size: 13px;
+  }
+
+  .page {
+    padding: var(--sp-2) var(--sp-2);
+  }
+
+  .flow__node {
+    font-size: 0.68rem;
+    padding: 5px 8px;
+  }
+
+  table {
+    font-size: 0.65rem;
+    min-width: 360px;
+  }
+
+  thead th {
+    padding: 5px 6px;
+    font-size: 0.6rem;
+  }
+
+  tbody td {
+    padding: 5px 6px;
   }
 }
 </style>
@@ -1057,7 +1515,7 @@ tbody tr:last-child td {
     <div class="doc-toolbar__brand">
       <div class="doc-toolbar__logo" aria-hidden="true">CR</div>
       <div>
-        <div class="doc-toolbar__title">Catbalogan Ride</div>
+        <div class="doc-toolbar__title">CatbaRide</div>
         <div class="doc-toolbar__subtitle">Functional Spec &amp; UI/UX Design Document</div>
       </div>
     </div>
@@ -1086,7 +1544,7 @@ tbody tr:last-child td {
         <div class="cover__brand">
           <div class="cover__brand-mark" aria-hidden="true">CR</div>
           <div>
-            <div class="cover__brand-name">CATBALOGAN<br>RIDE</div>
+            <div class="cover__brand-name">CATBARIDE</div>
             <div class="cover__brand-tag">Local Ride-Hailing &amp; Motorcycle Transportation System</div>
           </div>
         </div>
@@ -1158,7 +1616,7 @@ tbody tr:last-child td {
      ============================================================ -->
   <section class="page" id="toc-page">
     <header class="page__header">
-      <div class="page__header-left">Catbalogan Ride — Functional Specification</div>
+      <div class="page__header-left">CatbaRide — Functional Specification</div>
       <div class="page__header-right">Version 1.0 · Draft</div>
     </header>
 
@@ -1221,7 +1679,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 2</span>
     </footer>
   </section>
@@ -1232,7 +1690,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-1">
     <header class="page__header">
       <div class="page__header-left">Section 1 — Introduction</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -1245,7 +1703,7 @@ tbody tr:last-child td {
       </div>
 
       <p>
-        <strong>Catbalogan Ride</strong> is a proposed local ride-hailing and motorcycle
+        <strong>CatbaRide</strong> is a proposed local ride-hailing and motorcycle
         transportation system intended for <strong>Catbalogan City, Samar, Philippines</strong>.
         It is designed as a capstone project to demonstrate how a digital platform could
         help organize motorcycle-based passenger transport within the city by allowing
@@ -1273,7 +1731,7 @@ tbody tr:last-child td {
       <div class="subsection">
         <h3 class="subsection__title">1.1 Purpose of the Proposed System</h3>
         <p>
-          The purpose of Catbalogan Ride is to propose a structured, digital way for
+          The purpose of CatbaRide is to propose a structured, digital way for
           passengers and motorcycle riders in Catbalogan City to connect for local
           trips. Instead of relying solely on informal arrangements, the proposed
           system aims to provide a single platform where:
@@ -1342,7 +1800,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 3</span>
     </footer>
   </section>
@@ -1353,7 +1811,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-2">
     <header class="page__header">
       <div class="page__header-left">Section 2 — Project Overview</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -1366,9 +1824,9 @@ tbody tr:last-child td {
       </div>
 
       <div class="subsection">
-        <h3 class="subsection__title">2.1 What Catbalogan Ride Is</h3>
+        <h3 class="subsection__title">2.1 What CatbaRide Is</h3>
         <p>
-          Catbalogan Ride is a proposed ride-hailing and motorcycle transportation
+          CatbaRide is a proposed ride-hailing and motorcycle transportation
           booking system for Catbalogan City. It consists of three connected
           application views:
         </p>
@@ -1519,7 +1977,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 4</span>
     </footer>
   </section>
@@ -1530,7 +1988,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-3">
     <header class="page__header">
       <div class="page__header-left">Section 3 — System Objectives</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -1544,7 +2002,7 @@ tbody tr:last-child td {
 
       <p>
         The following objectives define the intended purpose of the proposed
-        Catbalogan Ride system. Each objective is written as a goal that the
+        CatbaRide system. Each objective is written as a goal that the
         functional specification is designed to support.
       </p>
 
@@ -1584,7 +2042,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 5</span>
     </footer>
   </section>
@@ -1595,7 +2053,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-4">
     <header class="page__header">
       <div class="page__header-left">Section 4 — Scope and Limitations</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -1611,7 +2069,7 @@ tbody tr:last-child td {
         <h3 class="subsection__title">4.1 In Scope</h3>
         <p>
           The following functions and deliverables are part of the proposed
-          Catbalogan Ride system documentation and prototype:
+          CatbaRide system documentation and prototype:
         </p>
         <ul class="list-check">
           <li>Passenger registration and login (conceptual)</li>
@@ -1687,7 +2145,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 6</span>
     </footer>
   </section>
@@ -1698,7 +2156,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-5">
     <header class="page__header">
       <div class="page__header-left">Section 5 — Target Users</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -1712,7 +2170,7 @@ tbody tr:last-child td {
 
       <p>
         The proposed system is intended for three groups of users who interact
-        with Catbalogan Ride in different ways. Each group has distinct needs
+        with CatbaRide in different ways. Each group has distinct needs
         and expected interactions with the platform.
       </p>
 
@@ -1800,7 +2258,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 7</span>
     </footer>
   </section>
@@ -1811,7 +2269,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-6">
     <header class="page__header">
       <div class="page__header-left">Section 6 — User Roles</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -1824,7 +2282,7 @@ tbody tr:last-child td {
       </div>
 
       <p>
-        Catbalogan Ride defines three user roles. Each role has its own
+        CatbaRide defines three user roles. Each role has its own
         responsibilities, main functions, permissions, and typical workflow.
       </p>
 
@@ -1934,7 +2392,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 8</span>
     </footer>
   </section>
@@ -1945,7 +2403,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-7">
     <header class="page__header">
       <div class="page__header-left">Section 7 — Overall System Process</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -2049,7 +2507,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 9</span>
     </footer>
   </section>
@@ -2060,7 +2518,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-8">
     <header class="page__header">
       <div class="page__header-left">Section 8 — Passenger Process</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -2253,7 +2711,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 10</span>
     </footer>
   </section>
@@ -2264,7 +2722,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-9">
     <header class="page__header">
       <div class="page__header-left">Section 9 — Rider / Driver Process</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -2455,7 +2913,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 11</span>
     </footer>
   </section>
@@ -2466,7 +2924,7 @@ tbody tr:last-child td {
   <section class="page" id="sec-10">
     <header class="page__header">
       <div class="page__header-left">Section 10 — Admin Process</div>
-      <div class="page__header-right">Catbalogan Ride v1.0</div>
+      <div class="page__header-right">CatbaRide v1.0</div>
     </header>
 
     <div class="section">
@@ -2601,7 +3059,7 @@ tbody tr:last-child td {
     </div>
 
     <footer class="page__footer">
-      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>CatbaRide — Capstone Documentation</span>
       <span>Page 12</span>
     </footer>
   </section>
@@ -2627,7 +3085,7 @@ tbody tr:last-child td {
   "use strict";
 
   /* -------- Print helper -------- */
-  window.catbaloganPrint = function () {
+  window.catbaRidePrint = function () {
     window.print();
   };
 
