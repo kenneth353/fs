@@ -1121,11 +1121,9 @@
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label yes">YES</span>
-                    <div class="flow-node rider success">Rider Assigned</div>
+                    <div class="flow-node rider success">Rider Goes to Pickup</div>
                 </div>
             </div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Rider Goes to Pickup</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node passenger">Passenger Pickup</div>
             <div class="flow-arrow down"></div>
@@ -1450,9 +1448,9 @@
             <div class="flow-arrow down"></div>
             <div class="flow-node rider">Travel to Pickup</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node passenger">Passenger Presents DRM-QR</div>
+            <div class="flow-node rider">Arrive at Pickup</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Scan DRM-QR</div>
+            <div class="flow-node rider">Scan Passenger DRM-QR</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node decision">Authentication Successful?</div>
             <div class="flow-branch">
@@ -1595,6 +1593,8 @@
             <div class="flow-arrow down"></div>
             <div class="flow-node rider">Travels to Pickup</div>
             <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Arrives at Pickup</div>
+            <div class="flow-arrow down"></div>
             <div class="flow-node rider">Scans Passenger DRM-QR</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node rider">Starts Trip After Successful Verification</div>
@@ -1677,11 +1677,15 @@
             <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
                 <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Receive Request</div>
                 <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">View Trip Details</div>
+                <span style="color:#cbd5e0;">→</span>
                 <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Accept</div>
                 <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Travel to Pickup</div>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Proceed to Pickup</div>
                 <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Scan QR</div>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Arrive at Pickup</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Scan Passenger DRM-QR</div>
                 <span style="color:#cbd5e0;">→</span>
                 <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Start Trip</div>
                 <span style="color:#cbd5e0;">→</span>
@@ -1808,7 +1812,7 @@
             <div class="flow-arrow down"></div>
             <div class="flow-node system">10–15 Second Acceptance Window</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node decision">Accept / Reject</div>
+            <div class="flow-node decision">Rider Decision</div>
             <div class="flow-branch">
                 <div class="flow-branch-item">
                     <span class="branch-label yes">ACCEPT</span>
