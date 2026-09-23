@@ -38,7 +38,6 @@
             box-shadow: 0 8px 40px rgba(0,0,0,0.15);
         }
 
-        /* Animated background orbs */
         .hero::before {
             content: '';
             position: absolute;
@@ -70,7 +69,6 @@
             50% { transform: translate(30px, -30px) scale(1.1); }
         }
 
-        /* Grid pattern overlay */
         .hero-grid-overlay {
             position: absolute;
             inset: 0;
@@ -218,7 +216,6 @@
             transform: translateY(-2px);
         }
 
-        /* ---------- HERO ACTORS ---------- */
         .hero-actors {
             position: relative;
             z-index: 2;
@@ -332,7 +329,6 @@
             100% { left: 100%; }
         }
 
-        /* Floating particles */
         .hero-particles {
             position: absolute;
             inset: 0;
@@ -487,7 +483,7 @@
             display: block;
         }
 
-        /* ---------- FLOW ELEMENTS (CSS-based) ---------- */
+        /* ---------- FLOW ELEMENTS ---------- */
         .flow-vertical {
             display: flex;
             flex-direction: column;
@@ -1018,7 +1014,6 @@
 <div class="hero">
     <div class="hero-grid-overlay"></div>
 
-    <!-- Floating particles -->
     <div class="hero-particles">
         <div class="particle" style="left: 15%; bottom: 20%; animation-duration: 8s; animation-delay: 0s;"></div>
         <div class="particle" style="left: 25%; bottom: 10%; animation-duration: 10s; animation-delay: 1s;"></div>
@@ -1098,10 +1093,10 @@
     <!-- SECTION 1 — HOW VOYAGO WORKS AT A GLANCE -->
     <!-- ============================================================ -->
     <h2>1. How Voyago Works at a Glance</h2>
-    <p class="section-lead">The complete high-level flow of a Voyago trip — from booking to end-of-day reporting.</p>
+    <p class="section-lead">The complete high-level flow of a Voyago trip — showing the interaction between Passenger, System, Rider, and Operations.</p>
 
     <div class="diagram-box">
-        <span class="diagram-label">MASTER FLOW — HIGH LEVEL</span>
+        <span class="diagram-label">MASTER FLOW — ALL ACTORS</span>
         <div class="flow-vertical">
             <div class="flow-node start-end">START</div>
             <div class="flow-arrow down"></div>
@@ -1109,13 +1104,15 @@
             <div class="flow-arrow down"></div>
             <div class="flow-node passenger">Passenger Enters Pickup &amp; Destination</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Fare Negotiation</div>
+            <div class="flow-node system">System Receives Ride Details</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Fare Negotiation Process</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node decision">Fare Agreed?</div>
             <div class="flow-branch">
                 <div class="flow-branch-item">
                     <span class="branch-label no">NO</span>
-                    <div class="flow-node">Continue Negotiation</div>
+                    <div class="flow-node fail">Continue Negotiation</div>
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label yes">YES</span>
@@ -1123,19 +1120,19 @@
                 </div>
             </div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">DRM-QR Generated</div>
+            <div class="flow-node system">System Generates DRM-QR</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Ride Request Created</div>
+            <div class="flow-node system">System Creates Ride Request</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Ride Dispatching</div>
+            <div class="flow-node system">System Dispatches Ride</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node rider">Rider Receives Request</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node decision">Rider Accepts?</div>
+            <div class="flow-node decision">Rider Accepts Within 10–15 Seconds?</div>
             <div class="flow-branch">
                 <div class="flow-branch-item">
                     <span class="branch-label no">NO</span>
-                    <div class="flow-node fail">Request Handling</div>
+                    <div class="flow-node fail">Request Handling<br><span style="font-size:0.65rem;color:#a0aec0;">[EXACT NEXT STEP NOT SPECIFIED IN MANUSCRIPT]</span></div>
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label yes">YES</span>
@@ -1143,37 +1140,51 @@
                 </div>
             </div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Rider Goes to Pickup</div>
+            <div class="flow-node system">System Updates Ride Status</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node passenger">Passenger Pickup</div>
+            <div class="flow-node rider">Rider Travels to Pickup</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">DRM-QR Scan</div>
+            <div class="flow-node passenger">Passenger Waits for Rider</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Arrives at Pickup</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Passenger Presents DRM-QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Scans DRM-QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">System Verifies Passenger + Ride</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node decision">Authentication Successful?</div>
             <div class="flow-branch">
                 <div class="flow-branch-item">
                     <span class="branch-label no">NO</span>
-                    <div class="flow-node fail">Ride Denied / Support</div>
+                    <div class="flow-node fail">Ride Cannot Proceed / Support</div>
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label yes">YES</span>
-                    <div class="flow-node system success">Trip Starts</div>
+                    <div class="flow-node system success">Trip Verified — Trip Can Start</div>
                 </div>
             </div>
             <div class="flow-arrow down"></div>
+            <div class="flow-node system success">TRIP STARTS</div>
+            <div class="flow-arrow down"></div>
             <div class="flow-node system">GPS Tracking Active</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Operations Monitoring</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node system">Ride In Progress</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node rider">Destination Reached</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Payment Collection</div>
+            <div class="flow-node passenger">Passenger Pays Agreed Fare</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Payment Collected / Transaction Recorded</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node system success">Trip Completed</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Transaction Recorded</div>
+            <div class="flow-node rider">Rider Submits Trip Records</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node ops">End-of-Day Reporting</div>
+            <div class="flow-node ops">End-of-Day Operations Review</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node start-end">END</div>
         </div>
@@ -1183,12 +1194,12 @@
     <!-- SECTION 2 — WHO DOES WHAT? -->
     <!-- ============================================================ -->
     <h2>2. Who Does What?</h2>
-    <p class="section-lead">The four actors in the Voyago system and their specific roles.</p>
+    <p class="section-lead">The four actors in the Voyago system and their specific roles and responsibilities.</p>
 
     <div class="io-grid">
         <div class="io-card actor-passenger" style="border-left: 6px solid #3182ce;">
             <div class="io-title" style="color: #2b6cb0;">🧑 PASSENGER</div>
-            <div class="io-row"><span class="io-label">Requests</span><span class="io-value">a ride</span></div>
+            <div class="io-row"><span class="io-label">Books</span><span class="io-value">a ride through the app</span></div>
             <div class="io-row"><span class="io-label">Provides</span><span class="io-value">pickup and destination</span></div>
             <div class="io-row"><span class="io-label">Negotiates</span><span class="io-value">and agrees on fare</span></div>
             <div class="io-row"><span class="io-label">Confirms</span><span class="io-value">the booking</span></div>
@@ -1205,8 +1216,8 @@
             <div class="io-row"><span class="io-label">Locks</span><span class="io-value">agreed fare</span></div>
             <div class="io-row"><span class="io-label">Generates</span><span class="io-value">DRM-QR</span></div>
             <div class="io-row"><span class="io-label">Dispatches</span><span class="io-value">ride request</span></div>
-            <div class="io-row"><span class="io-label">Supports</span><span class="io-value">GPS tracking</span></div>
             <div class="io-row"><span class="io-label">Verifies</span><span class="io-value">DRM-QR</span></div>
+            <div class="io-row"><span class="io-label">Tracks</span><span class="io-value">GPS during trip</span></div>
             <div class="io-row"><span class="io-label">Records</span><span class="io-value">trip and payment info</span></div>
         </div>
 
@@ -1214,40 +1225,41 @@
             <div class="io-title" style="color: #276749;">🏍️ RIDER</div>
             <div class="io-row"><span class="io-label">Receives</span><span class="io-value">ride request</span></div>
             <div class="io-row"><span class="io-label">Reviews</span><span class="io-value">trip details</span></div>
-            <div class="io-row"><span class="io-label">Accepts</span><span class="io-value">the request</span></div>
-            <div class="io-row"><span class="io-label">Travels</span><span class="io-value">to pickup</span></div>
+            <div class="io-row"><span class="io-label">Accepts</span><span class="io-value">within 10–15 seconds</span></div>
+            <div class="io-row"><span class="io-label">Travels</span><span class="io-value">to pickup location</span></div>
             <div class="io-row"><span class="io-label">Scans</span><span class="io-value">DRM-QR</span></div>
-            <div class="io-row"><span class="io-label">Starts</span><span class="io-value">verified trip</span></div>
             <div class="io-row"><span class="io-label">Transports</span><span class="io-value">passenger</span></div>
             <div class="io-row"><span class="io-label">Completes</span><span class="io-value">trip</span></div>
-            <div class="io-row"><span class="io-label">Handles</span><span class="io-value">end-of-shift records</span></div>
+            <div class="io-row"><span class="io-label">Submits</span><span class="io-value">end-of-shift records</span></div>
         </div>
 
         <div class="io-card actor-ops" style="border-left: 6px solid #d69e2e;">
-            <div class="io-title" style="color: #975a16;">📋 OPERATIONS / ADMIN</div>
-            <div class="io-row"><span class="io-label">Monitors</span><span class="io-value">active rides</span></div>
+            <div class="io-title" style="color: #975a16;">📋 ADMIN / OPERATIONS</div>
+            <div class="io-row"><span class="io-label">Monitors</span><span class="io-value">active rides via GPS</span></div>
             <div class="io-row"><span class="io-label">Supports</span><span class="io-value">riders and passengers</span></div>
-            <div class="io-row"><span class="io-label">Reviews</span><span class="io-value">transactions and records</span></div>
-            <div class="io-row"><span class="io-label">Prepares</span><span class="io-value">daily reports</span></div>
             <div class="io-row"><span class="io-label">Responds</span><span class="io-value">to alerts and issues</span></div>
+            <div class="io-row"><span class="io-label">Reviews</span><span class="io-value">booking records</span></div>
+            <div class="io-row"><span class="io-label">Reviews</span><span class="io-value">transaction records</span></div>
+            <div class="io-row"><span class="io-label">Reviews</span><span class="io-value">driver trip records</span></div>
+            <div class="io-row"><span class="io-label">Prepares</span><span class="io-value">daily reports</span></div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 3 — PASSENGER JOURNEY -->
+    <!-- SECTION 3 — PASSENGER POV -->
     <!-- ============================================================ -->
-    <h2>3. Passenger Journey</h2>
-    <p class="section-lead">Step-by-step walkthrough of what the passenger experiences.</p>
+    <h2>3. Passenger POV — Step-by-Step Journey</h2>
+    <p class="section-lead">What the passenger does, step by step, and how the system responds.</p>
 
     <div class="timeline">
         <div class="timeline-step"><div class="step-label">STEP 01</div><div class="step-name">Open App</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 02</div><div class="step-name">Create Request</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 02</div><div class="step-name">Enter Pickup &amp; Destination</div></div>
         <div class="timeline-step"><div class="step-label">STEP 03</div><div class="step-name">Fare Negotiation</div></div>
         <div class="timeline-step"><div class="step-label">STEP 04</div><div class="step-name">Fare Agreement</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 05</div><div class="step-name">DRM-QR Generated</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 06</div><div class="step-name">Rider Dispatch</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 07</div><div class="step-name">Pickup</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 08</div><div class="step-name">QR Verification</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 05</div><div class="step-name">Fare Locked</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 06</div><div class="step-name">DRM-QR Generated</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 07</div><div class="step-name">Wait for Rider</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 08</div><div class="step-name">Present DRM-QR</div></div>
         <div class="timeline-step"><div class="step-label">STEP 09</div><div class="step-name">Trip Start</div></div>
         <div class="timeline-step"><div class="step-label">STEP 10</div><div class="step-name">Trip In Progress</div></div>
         <div class="timeline-step"><div class="step-label">STEP 11</div><div class="step-name">Destination</div></div>
@@ -1268,10 +1280,13 @@
     <div class="card actor-passenger">
         <div class="card-header">
             <span class="badge badge-passenger">PASSENGER</span>
-            <span class="title">Step 02 — Create Ride Request</span>
+            <span class="title">Step 02 — Enter Pickup &amp; Destination</span>
         </div>
         <div class="card-body">
-            The passenger provides their <strong>pickup location</strong> and <strong>destination</strong>. The system uses this information to prepare the ride request.
+            The passenger provides their <strong>pickup location</strong> and <strong>destination</strong>.
+            <div class="panel-guide">
+                <strong>System Response:</strong> The system receives the ride details and prepares the booking request.
+            </div>
         </div>
     </div>
 
@@ -1290,7 +1305,7 @@
             </ul>
             <div class="panel-guide">
                 <strong>How to explain this to the panel:</strong><br>
-                "The fare is not simply assumed by the system. The passenger and rider agree on the trip fare based on the trip conditions. Once they agree, the fare is locked before the trip begins."
+                "The fare is not assumed by the system. The passenger and rider agree on the trip fare based on the trip conditions. Once they agree, the fare is locked before the trip begins."
             </div>
         </div>
     </div>
@@ -1307,8 +1322,22 @@
                 <div class="flow-node" style="min-width:auto; max-width:100%;">Discussion / Negotiation</div>
                 <div class="flow-arrow down" style="padding-left:80px;"></div>
                 <div class="flow-node" style="min-width:auto; max-width:100%;">Agreement</div>
-                <div class="flow-arrow down" style="padding-left:80px;"></div>
-                <div class="flow-node system success" style="min-width:auto; max-width:100%;">Fare Locked</div>
+            </div>
+            <div class="panel-guide">
+                <strong>System Response:</strong> Once both parties agree, the system locks the fare.
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-passenger">
+        <div class="card-header">
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 05 — Fare Locked</span>
+        </div>
+        <div class="card-body">
+            The fare is now fixed. The passenger knows the exact cost before the trip begins.
+            <div class="panel-guide">
+                <strong>System Response:</strong> The system locks the agreed fare and proceeds to generate the DRM-QR.
             </div>
         </div>
     </div>
@@ -1316,40 +1345,39 @@
     <div class="card actor-system">
         <div class="card-header">
             <span class="badge badge-system">SYSTEM</span>
-            <span class="title">Step 05 — DRM-QR Generation</span>
+            <span class="title">Step 06 — DRM-QR Generated</span>
         </div>
         <div class="card-body">
-            After the ride is confirmed and the fare is locked, the Voyago system generates the passenger's <strong>Digital Ride-Match QR (DRM-QR)</strong> code.
+            The Voyago system generates the passenger's <strong>Digital Ride-Match QR (DRM-QR)</strong> code.
+            <div class="panel-guide">
+                <strong>System Response:</strong> The system dispatches the ride request to an available rider.
+            </div>
         </div>
     </div>
 
-    <div class="card actor-rider">
+    <div class="card actor-passenger">
         <div class="card-header">
-            <span class="badge badge-rider">RIDER</span>
-            <span class="title">Step 06 — Rider Dispatch</span>
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 07 — Wait for Rider</span>
         </div>
         <div class="card-body">
-            The selected rider receives the trip details, including pickup location, destination, and the agreed fare.
+            The passenger waits for the rider to arrive at the pickup location. The passenger can track the rider's arrival through the app.
+            <div class="panel-guide">
+                <strong>System Response:</strong> The system updates the ride status and provides the passenger with rider information.
+            </div>
         </div>
     </div>
 
-    <div class="card actor-rider">
+    <div class="card actor-passenger">
         <div class="card-header">
-            <span class="badge badge-rider">RIDER</span>
-            <span class="title">Step 07 — Pickup</span>
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 08 — Present DRM-QR</span>
         </div>
         <div class="card-body">
-            The rider travels to the passenger's pickup location. The passenger can track the rider and estimated arrival time through the app.
-        </div>
-    </div>
-
-    <div class="card actor-system">
-        <div class="card-header">
-            <span class="badge badge-system">SYSTEM</span>
-            <span class="title">Step 08 — QR Verification</span>
-        </div>
-        <div class="card-body">
-            The passenger presents the DRM-QR. The rider scans it using the driver app. The system verifies that the QR matches the passenger and ride details.
+            Upon the rider's arrival, the passenger presents their DRM-QR code for scanning.
+            <div class="panel-guide">
+                <strong>System Response:</strong> The system verifies the QR code against the passenger and ride details.
+            </div>
         </div>
     </div>
 
@@ -1359,7 +1387,10 @@
             <span class="title">Step 09 — Trip Start</span>
         </div>
         <div class="card-body">
-            Only after successful QR verification does the trip officially start. The "Start Trip" feature remains locked until verification is complete.
+            Only after successful QR verification does the trip officially start.
+            <div class="panel-guide">
+                <strong>System Response:</strong> GPS tracking becomes active and the ride is now in progress.
+            </div>
         </div>
     </div>
 
@@ -1373,23 +1404,26 @@
         </div>
     </div>
 
-    <div class="card actor-rider">
+    <div class="card actor-passenger">
         <div class="card-header">
-            <span class="badge badge-rider">RIDER</span>
-            <span class="title">Step 11 — Destination</span>
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 11 — Destination Reached</span>
         </div>
         <div class="card-body">
             The rider transports the passenger to the agreed destination.
         </div>
     </div>
 
-    <div class="card actor-system">
+    <div class="card actor-passenger">
         <div class="card-header">
-            <span class="badge badge-system">SYSTEM</span>
+            <span class="badge badge-passenger">PASSENGER</span>
             <span class="title">Step 12 — Payment</span>
         </div>
         <div class="card-body">
-            The passenger pays the agreed fare through cash or available digital payment options. Voyago records its booking fee, while the rider keeps the agreed trip fare.
+            The passenger pays the agreed fare through cash or available digital payment options.
+            <div class="panel-guide">
+                <strong>System Response:</strong> Voyago records its booking fee, while the rider keeps the agreed trip fare. All transactions are digitally recorded.
+            </div>
         </div>
     </div>
 
@@ -1399,117 +1433,415 @@
             <span class="title">Step 13 — Completion</span>
         </div>
         <div class="card-body">
-            The system records the completed transaction. All trip and payment information is logged digitally.
+            The system records the completed transaction. The ride is now officially completed.
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 4 — WHAT HAPPENS AFTER I CONFIRM MY RIDE? -->
+    <!-- SECTION 4 — RIDER POV -->
     <!-- ============================================================ -->
-    <h2>4. What Happens After I Confirm My Ride?</h2>
-    <p class="section-lead">A detailed swimlane view showing the behind-the-scenes process between Passenger, System, and Rider.</p>
+    <h2>4. Rider POV — Step-by-Step Journey</h2>
+    <p class="section-lead">What the rider does, step by step, from receiving a request to end-of-shift reporting.</p>
 
-    <div class="swimlane">
-        <div class="swimlane-label passenger">PASSENGER</div>
-        <div class="swimlane-content">
-            <div class="flow-node passenger">Confirm Ride</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node passenger">Wait for Rider</div>
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 01 — Rider Available</span>
         </div>
-    </div>
-    <div class="swimlane-row"></div>
-    <div class="swimlane">
-        <div class="swimlane-label system">SYSTEM</div>
-        <div class="swimlane-content">
-            <div class="flow-node system">Receive Ride Request</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node system">Process Ride Details</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node system">Lock Agreed Fare</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node system">Generate DRM-QR</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node system">Dispatch Ride Request</div>
-        </div>
-    </div>
-    <div class="swimlane-row"></div>
-    <div class="swimlane">
-        <div class="swimlane-label rider">RIDER</div>
-        <div class="swimlane-content">
-            <div class="flow-node rider">Receive Ride Request</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node rider">View Trip Details</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node decision" style="min-width:120px; max-width:160px; font-size:0.75rem; padding:10px 16px;">Accept / Reject</div>
+        <div class="card-body">
+            The rider is available and ready to receive ride requests through the Voyago driver app.
         </div>
     </div>
 
-    <h3>If Accepted — Rider Proceeds to Pickup</h3>
-    <div class="swimlane">
-        <div class="swimlane-label rider">RIDER</div>
-        <div class="swimlane-content">
-            <div class="flow-node rider success">Accept Request</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node rider">Proceed to Pickup</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node rider">Arrives at Pickup</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node system">Scan Passenger DRM-QR</div>
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 02 — Ride Request Received</span>
         </div>
-    </div>
-    <div class="swimlane-row"></div>
-    <div class="swimlane">
-        <div class="swimlane-label system">SYSTEM</div>
-        <div class="swimlane-content">
-            <div class="flow-node system">Update Ride Status</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node system">Verify QR</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node decision" style="min-width:130px; max-width:170px; font-size:0.75rem; padding:10px 16px;">Authentication Successful?</div>
-        </div>
-    </div>
-    <div class="swimlane-row"></div>
-    <div class="swimlane">
-        <div class="swimlane-label rider">RIDER</div>
-        <div class="swimlane-content">
-            <div class="flow-node rider">Arrives at Pickup</div>
-            <div class="flow-arrow right"></div>
-            <div class="flow-node system">Scan Passenger DRM-QR</div>
+        <div class="card-body">
+            The rider receives a ride request with trip details including pickup location and destination.
         </div>
     </div>
 
-    <div style="margin-top: 24px;">
-        <div class="flow-branch" style="gap:60px;">
-            <div class="flow-branch-item">
-                <span class="branch-label no" style="font-size:0.8rem; padding:4px 12px;">NO</span>
-                <div class="flow-node fail" style="min-width:160px;">Ride Denied / Support</div>
-            </div>
-            <div class="flow-branch-item">
-                <span class="branch-label yes" style="font-size:0.8rem; padding:4px 12px;">YES</span>
-                <div class="flow-node system success" style="min-width:160px;">Unlock / Allow Trip Start</div>
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 03 — View / Review Trip Details</span>
+        </div>
+        <div class="card-body">
+            The rider reviews the trip details, including pickup location, destination, and the agreed fare.
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 04 — 10–15 Second Acceptance Window</span>
+        </div>
+        <div class="card-body">
+            The rider has a <strong>10 to 15-second acceptance period</strong> to accept or reject the request. This reduces distracted driving and prevents drivers from accepting cash trips outside the platform.
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 05 — Accept or Reject</span>
+        </div>
+        <div class="card-body">
+            <div class="flow-branch" style="gap:40px;">
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">ACCEPT</span>
+                    <div class="flow-node rider success">Ride Assigned</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label no">REJECT</span>
+                    <div class="flow-node fail">Request Handling<br><span style="font-size:0.65rem;color:#a0aec0;">[EXACT NEXT STEP NOT SPECIFIED IN MANUSCRIPT]</span></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <h3>Trip Execution</h3>
-    <div class="flow-vertical">
-        <div class="flow-node system success">TRIP START</div>
-        <div class="flow-arrow down"></div>
-        <div class="flow-node system">GPS Tracking</div>
-        <div class="flow-arrow down"></div>
-        <div class="flow-node system">Trip In Progress</div>
-        <div class="flow-arrow down"></div>
-        <div class="flow-node rider">Destination Reached</div>
-        <div class="flow-arrow down"></div>
-        <div class="flow-node system">Payment Collection</div>
-        <div class="flow-arrow down"></div>
-        <div class="flow-node system success">Trip Completed</div>
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 06 — Travel to Pickup</span>
+        </div>
+        <div class="card-body">
+            After accepting, the rider travels to the passenger's pickup location.
+            <div class="panel-guide">
+                <strong>System Response:</strong> The system updates the ride status and the passenger sees the rider's arrival information.
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 07 — Arrive at Pickup</span>
+        </div>
+        <div class="card-body">
+            The rider arrives at the pickup location and meets the passenger.
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 08 — Scan DRM-QR</span>
+        </div>
+        <div class="card-body">
+            The passenger presents their DRM-QR. The rider scans it using the driver app.
+            <div class="panel-guide">
+                <strong>System Response:</strong> The system verifies the QR code against the passenger and ride details.
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-system">
+        <div class="card-header">
+            <span class="badge badge-system">SYSTEM</span>
+            <span class="title">Step 09 — System Verification</span>
+        </div>
+        <div class="card-body">
+            <div class="flow-vertical">
+                <div class="flow-node decision">Authentication Successful?</div>
+                <div class="flow-branch">
+                    <div class="flow-branch-item">
+                        <span class="branch-label no">NO</span>
+                        <div class="flow-node fail">Ride Cannot Proceed / Support</div>
+                    </div>
+                    <div class="flow-branch-item">
+                        <span class="branch-label yes">YES</span>
+                        <div class="flow-node system success">Trip Verified — Trip Can Start</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 10 — Trip Starts</span>
+        </div>
+        <div class="card-body">
+            After successful verification, the trip officially starts.
+            <div class="panel-guide">
+                <strong>System Response:</strong> GPS monitoring becomes active for the duration of the trip.
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 11 — Transport Passenger</span>
+        </div>
+        <div class="card-body">
+            The rider transports the passenger to the agreed destination.
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 12 — Complete Trip</span>
+        </div>
+        <div class="card-body">
+            The rider reaches the destination and completes the trip.
+            <div class="panel-guide">
+                <strong>System Response:</strong> The system records the completed transaction and processes the payment.
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 13 — End-of-Shift Records</span>
+        </div>
+        <div class="card-body">
+            After the shift, the rider submits trip records and undergoes vehicle safety checks.
+        </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 5 — FARE NEGOTIATION PROCESS -->
+    <!-- SECTION 5 — ADMIN / OPERATIONS POV -->
     <!-- ============================================================ -->
-    <h2>5. Fare Negotiation Process</h2>
+    <h2>5. Admin / Operations POV — What They Do During and After Rides</h2>
+    <p class="section-lead">What the operations team does while a ride is happening and after trips are completed.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">OPERATIONS WORKFLOW</span>
+        <div class="flow-vertical">
+            <div class="flow-node system">Ride Request Created</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Dispatch / Operational Process</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Receives Request</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Accepts</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Active Ride</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">GPS / Ride Monitoring</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Issue Detected?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node success">Continue Ride</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node fail">Operations Response / Support</div>
+                </div>
+            </div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system success">Trip Completed</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Booking / Transaction Records</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Driver Trip Records Submitted</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Vehicle Safety Check</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Operations Review</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Reporting</div>
+        </div>
+    </div>
+
+    <div class="io-grid">
+        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
+            <div class="io-title" style="color:#975a16;">DISPATCH SUPPORT SPECIALIST</div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Handles active bookings</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Assists riders and passengers with real-time issues</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Supports route operations</span></div>
+        </div>
+
+        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
+            <div class="io-title" style="color:#975a16;">OPERATIONS MANAGER</div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Oversees daily transportation operations</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Ensures safety and schedule compliance</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Provides operational supervision</span></div>
+        </div>
+
+        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
+            <div class="io-title" style="color:#975a16;">FINANCE STAFF</div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Manages transactions and financial records</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Handles driver payouts</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Conducts financial monitoring</span></div>
+        </div>
+
+        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
+            <div class="io-title" style="color:#975a16;">MAINTENANCE TECHNICIAN</div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Ensures equipment reliability</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Ensures vehicle reliability</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Conducts safety checks</span></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 6 — WHAT HAPPENS AFTER I CONFIRM MY RIDE? -->
+    <!-- ============================================================ -->
+    <h2>6. What Happens After I Confirm My Ride?</h2>
+    <p class="section-lead">A detailed timeline showing the complete process after the passenger confirms the booking.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">POST-CONFIRMATION TIMELINE</span>
+        <div class="flow-vertical">
+            <div class="flow-node passenger">Passenger Confirms / Proceeds with Ride</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">System Receives Ride Request</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Fare Agreement / Fare Locked</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">System Generates DRM-QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">System Dispatches Ride</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Receives Request</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Accepts Within 10–15 Seconds</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">System Updates Ride / Dispatch Status</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Travels to Pickup</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Passenger Waits for Rider</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Arrives at Pickup</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Passenger Presents DRM-QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Scans DRM-QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">System Verifies Ride</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Authentication Successful?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node fail">Trip Cannot Proceed / Support</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node system success">Trip Starts</div>
+                </div>
+            </div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">GPS / Ride Monitoring</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Destination Reached</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Payment</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system success">Transaction Recorded</div>
+        </div>
+    </div>
+
+    <div class="panel-guide">
+        <strong>How to explain this to the panel:</strong><br>
+        "After the passenger confirms the ride, the system processes the booking, locks the agreed fare, generates the DRM-QR, and dispatches the request to a rider. The rider accepts within 10–15 seconds, travels to the pickup location, and scans the passenger's DRM-QR. The system verifies the QR, and if successful, the trip starts. GPS monitoring remains active until the destination is reached, after which payment is collected and the transaction is recorded."
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 7 — FOUR-LANE SWIMLANE -->
+    <!-- ============================================================ -->
+    <h2>7. Complete System Swimlane — All Four Actors</h2>
+    <p class="section-lead">The entire Voyago journey across Passenger, System, Rider, and Operations lanes.</p>
+
+    <div style="border: 2px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin: 24px 0;">
+        <div style="display: grid; grid-template-columns: 100px 1fr; border-bottom: 2px solid #e2e8f0;">
+            <div style="background:#ebf8ff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#2b6cb0; padding:12px 0; border-right:2px solid #e2e8f0;">PASSENGER</div>
+            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Request Ride</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Provide Pickup + Destination</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Fare Negotiation</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Agree on Fare</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Wait for Rider</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Present DRM-QR</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Ride</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Pay</div>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 100px 1fr; border-bottom: 2px solid #e2e8f0;">
+            <div style="background:#faf5ff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#6b46c1; padding:12px 0; border-right:2px solid #e2e8f0;">SYSTEM</div>
+            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Receive Request</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Process Ride Details</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Lock Agreed Fare</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Generate DRM-QR</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Dispatch Request</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Verify QR</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Monitor Ride</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Track Ride</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Record Transaction</div>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 100px 1fr; border-bottom: 2px solid #e2e8f0;">
+            <div style="background:#f0fff4; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#276749; padding:12px 0; border-right:2px solid #e2e8f0;">RIDER</div>
+            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Receive Request</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Review</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Accept</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Travel to Pickup</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Scan DRM-QR</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Start Trip</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Transport Passenger</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Complete Trip</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Submit Records</div>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 100px 1fr;">
+            <div style="background:#fffff0; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#975a16; padding:12px 0; border-right:2px solid #e2e8f0;">ADMIN / OPS</div>
+            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Monitor</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Support</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Respond to Issues</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Review Booking Records</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Review Transaction Records</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Review Driver Records</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Reporting</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 8 — FARE NEGOTIATION PROCESS -->
+    <!-- ============================================================ -->
+    <h2>8. Fare Negotiation Process</h2>
     <p class="section-lead">Voyago uses a driver-negotiated fare system where the passenger and rider agree on the fare before the trip.</p>
 
     <div class="diagram-box">
@@ -1519,9 +1851,11 @@
             <div class="flow-arrow down"></div>
             <div class="flow-node passenger">Pickup + Destination Provided</div>
             <div class="flow-arrow down"></div>
+            <div class="flow-node system">System Processes Ride Details</div>
+            <div class="flow-arrow down"></div>
             <div class="flow-node system">Fare Discussion</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Distance / Route / Travel Time / Road Conditions</div>
+            <div class="flow-node system">Factors Considered:<br>Distance · Route · Drop-off Location · Road Conditions · Travel Time</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node system">Fare Proposed</div>
             <div class="flow-arrow down"></div>
@@ -1537,19 +1871,19 @@
                 </div>
             </div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Continue Booking</div>
+            <div class="flow-node system">Continue Ride Process</div>
         </div>
     </div>
 
     <div class="panel-guide">
         <strong>How to explain this to the panel:</strong><br>
-        "The fare is not simply assumed by the system. The passenger and rider agree on the trip fare based on the trip conditions — distance, route, travel time, and road conditions. Once they agree, the fare is locked before the trip begins."
+        "The fare is not assumed by the system. The passenger and rider agree on the trip fare based on the trip conditions — distance, route, drop-off location, road conditions, and travel time. Once they agree, the fare is locked before the trip begins."
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 6 — DRM-QR AUTHENTICATION -->
+    <!-- SECTION 9 — DRM-QR AUTHENTICATION -->
     <!-- ============================================================ -->
-    <h2>6. DRM-QR Authentication</h2>
+    <h2>9. DRM-QR Authentication</h2>
     <p class="section-lead">The Digital Ride-Match QR system is a mandatory verification process before the trip begins.</p>
 
     <div class="qr-checkpoint">
@@ -1558,33 +1892,23 @@
             <div class="flow-arrow down"></div>
             <div class="flow-node system">DRM-QR Generated</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node passenger">Passenger Shows QR</div>
+            <div class="flow-node passenger">Passenger Displays QR</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Rider Arrives at Pickup</div>
+            <div class="flow-node rider">Rider Arrives</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Open Driver App Camera</div>
+            <div class="flow-node rider">Rider Scans QR</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Scan DRM-QR</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node system">Receive QR Scan</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node system">Verify Passenger + Ride Details</div>
+            <div class="flow-node system">System Verifies</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node decision">Authentication Successful?</div>
             <div class="flow-branch">
                 <div class="flow-branch-item">
                     <span class="branch-label no">NO</span>
-                    <div class="flow-node fail">Ride Cannot Proceed</div>
-                    <div class="flow-arrow down"></div>
-                    <div class="flow-node fail">Support / Resolution</div>
+                    <div class="flow-node fail">Ride Cannot Proceed / Support</div>
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label yes">YES</span>
-                    <div class="flow-node system success">Ride Verified</div>
-                    <div class="flow-arrow down"></div>
-                    <div class="flow-node system success">Trip Can Start</div>
-                    <div class="flow-arrow down"></div>
-                    <div class="flow-node system success">Trip Becomes Official / Billable</div>
+                    <div class="flow-node system success">Trip Verified — Trip Can Start</div>
                 </div>
             </div>
         </div>
@@ -1608,76 +1932,23 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 7 — RIDER JOURNEY -->
+    <!-- SECTION 10 — RIDE DISPATCHING -->
     <!-- ============================================================ -->
-    <h2>7. Rider Journey</h2>
-    <p class="section-lead">The rider's complete workflow from receiving a request to end-of-shift reporting.</p>
-
-    <div class="diagram-box">
-        <span class="diagram-label">RIDER WORKFLOW</span>
-        <div class="flow-vertical">
-            <div class="flow-node rider">Rider Available</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Ride Request Received</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">View Ride Details</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node system">10–15 SECOND ACCEPTANCE WINDOW</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node decision">Accept or Reject</div>
-            <div class="flow-branch">
-                <div class="flow-branch-item">
-                    <span class="branch-label no">REJECT</span>
-                    <div class="flow-node fail">Request Handling</div>
-                </div>
-                <div class="flow-branch-item">
-                    <span class="branch-label yes">ACCEPT</span>
-                    <div class="flow-node rider success">Ride Assigned</div>
-                </div>
-            </div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Travel to Pickup</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Arrive</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node system">Scan DRM-QR</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node system">Verification</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node system success">Trip Starts</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Transport Passenger</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Destination</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Complete Trip</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node system">Payment / Record</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node ops">End-of-Shift Reporting</div>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- SECTION 8 — RIDE DISPATCHING -->
-    <!-- ============================================================ -->
-    <h2>8. Ride Dispatching</h2>
+    <h2>10. Ride Dispatching</h2>
     <p class="section-lead">How a ride request moves from the passenger to a rider.</p>
 
     <div class="diagram-box">
         <span class="diagram-label">DISPATCH FLOW</span>
         <div class="flow-vertical">
-            <div class="flow-node passenger">Passenger</div>
+            <div class="flow-node passenger">Passenger Request</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Ride Request</div>
+            <div class="flow-node system">Voyago Dispatch Process</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Voyago Dispatch System</div>
+            <div class="flow-node rider">Rider Receives Request</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Selected / Nearby / Available Rider</div>
+            <div class="flow-node system">10–15 Second Acceptance Window</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Ride Request Delivered</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node decision">Rider Decision</div>
+            <div class="flow-node decision">Accept / Reject</div>
             <div class="flow-branch">
                 <div class="flow-branch-item">
                     <span class="branch-label yes">ACCEPT</span>
@@ -1685,92 +1956,12 @@
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label no">REJECT</span>
-                    <div class="flow-node fail">Request Handling</div>
+                    <div class="flow-node fail">Request Handling<br><span style="font-size:0.65rem;color:#a0aec0;">[EXACT NEXT STEP NOT SPECIFIED IN MANUSCRIPT]</span></div>
                 </div>
             </div>
         </div>
         <div class="note" style="text-align:center; margin-top:16px;">
             <span class="confirmation-tag">[MATCHING LOGIC — NOT SPECIFIED IN MANUSCRIPT]</span>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- SECTION 9 — RIDE STATUS LIFECYCLE -->
-    <!-- ============================================================ -->
-    <h2>9. Ride Status Lifecycle</h2>
-    <p class="section-lead">The complete status progression of a Voyago ride.</p>
-
-    <div class="diagram-box">
-        <span class="diagram-label">STATUS LIFECYCLE</span>
-        <div class="flow-vertical" style="gap:0;">
-            <div class="flow-node passenger" style="border-radius:8px;">BOOKING REQUEST</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node system" style="border-radius:8px;">FARE NEGOTIATION</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node system" style="border-radius:8px;">FARE AGREED</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node system" style="border-radius:8px;">DRM-QR GENERATED</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node system" style="border-radius:8px;">DISPATCHED</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node rider" style="border-radius:8px;">RIDER ACCEPTED</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node rider" style="border-radius:8px;">PICKUP</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node system" style="border-radius:8px;">QR VERIFICATION</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node system success" style="border-radius:8px;">TRIP STARTED</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node system" style="border-radius:8px;">TRIP IN PROGRESS</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node rider" style="border-radius:8px;">DESTINATION</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node system" style="border-radius:8px;">PAYMENT</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node system success" style="border-radius:8px;">COMPLETED</div>
-            <div class="flow-arrow down" style="font-size:0.8rem; padding:0;">↓</div>
-            <div class="flow-node ops" style="border-radius:8px;">RECORDED</div>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- SECTION 10 — PICK-UP & TRIP EXECUTION -->
-    <!-- ============================================================ -->
-    <h2>10. Pick-Up &amp; Trip Execution</h2>
-    <p class="section-lead">Detailed process from rider arrival to trip completion.</p>
-
-    <div class="diagram-box">
-        <span class="diagram-label">PICKUP &amp; TRIP EXECUTION</span>
-        <div class="flow-vertical">
-            <div class="flow-node rider">Rider Travels to Pickup</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node passenger">Passenger Meets Rider</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node passenger">Passenger Presents DRM-QR</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Rider Scans QR</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node system">System Verifies</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node decision">Verification Successful?</div>
-            <div class="flow-branch">
-                <div class="flow-branch-item">
-                    <span class="branch-label no">NO</span>
-                    <div class="flow-node fail">Ride Denied / Support</div>
-                </div>
-                <div class="flow-branch-item">
-                    <span class="branch-label yes">YES</span>
-                    <div class="flow-node system success">Trip Starts</div>
-                    <div class="flow-arrow down"></div>
-                    <div class="flow-node system">GPS Tracking Active</div>
-                    <div class="flow-arrow down"></div>
-                    <div class="flow-node system">Ride In Progress</div>
-                    <div class="flow-arrow down"></div>
-                    <div class="flow-node rider">Destination Reached</div>
-                    <div class="flow-arrow down"></div>
-                    <div class="flow-node system success">Trip Completed</div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -1787,13 +1978,11 @@
             <div class="flow-arrow down"></div>
             <div class="flow-node system">GPS TRACKING</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">LOCATION / ROUTE MONITORING</div>
+            <div class="flow-node system">RIDE MONITORING</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node ops">OPERATIONS TEAM</div>
+            <div class="flow-node ops">OPERATIONS AWARENESS</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node ops">Monitor Active Ride</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node decision">Delayed Pickup / Unusual Route Change?</div>
+            <div class="flow-node decision">Issue Detected?</div>
             <div class="flow-branch">
                 <div class="flow-branch-item">
                     <span class="branch-label no">NO</span>
@@ -1801,7 +1990,7 @@
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label yes">YES</span>
-                    <div class="flow-node fail">Alert / Admin Response</div>
+                    <div class="flow-node fail">Operations Response</div>
                 </div>
             </div>
         </div>
@@ -1819,19 +2008,17 @@
     <div class="diagram-box">
         <span class="diagram-label">PAYMENT FLOW</span>
         <div class="flow-vertical">
-            <div class="flow-node system">TRIP COMPLETED / PAYMENT POINT</div>
+            <div class="flow-node system">TRIP COMPLETED</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node passenger">Passenger Pays Agreed Fare</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node system">Cash or Available Digital Payment</div>
+            <div class="flow-node system">Cash or Available Digital Payment Options</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node system">Transaction Recorded</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node system">Voyago Booking Fee Recorded</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node rider">Rider Keeps Agreed Trip Fare</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node system success">Transaction Complete</div>
         </div>
         <div class="note" style="text-align:center; margin-top:16px;">
             The passenger pays the agreed fare through cash or available digital payment options. Voyago records its booking fee, while the driver keeps the agreed trip fare.
@@ -1847,67 +2034,26 @@
     <div class="diagram-box">
         <span class="diagram-label">END-OF-DAY OPERATIONS</span>
         <div class="flow-vertical">
-            <div class="flow-node system">TRIPS COMPLETED</div>
+            <div class="flow-node system">COMPLETED TRIPS</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node rider">Driver Submits Trip Records</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node ops">Vehicle Safety Check</div>
+            <div class="flow-node ops">Vehicle Safety Checks</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node ops">Operations Team Reviews</div>
+            <div class="flow-node ops">Operations Reviews</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node ops">Booking Records Reviewed</div>
+            <div class="flow-node ops">Booking Records</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node ops">Transactions Reviewed</div>
+            <div class="flow-node ops">Transaction Records</div>
             <div class="flow-arrow down"></div>
-            <div class="flow-node ops">Reports Prepared</div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node ops success">End-of-Day Operations Complete</div>
+            <div class="flow-node ops">Reports</div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 14 — ADMIN / OPERATIONS ROLE -->
+    <!-- SECTION 14 — ALTERNATIVE / EXCEPTION FLOWS -->
     <!-- ============================================================ -->
-    <h2>14. Admin / Operations Role</h2>
-    <p class="section-lead">The operational team roles that support the Voyago system.</p>
-
-    <div class="io-grid">
-        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
-            <div class="io-title" style="color:#975a16;">DISPATCH SUPPORT</div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Active bookings</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Assists riders/passengers</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Handles real-time issues</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Supports route operations</span></div>
-        </div>
-
-        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
-            <div class="io-title" style="color:#975a16;">OPERATIONS MANAGER</div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Daily transportation operations</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Safety</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Schedule</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Operational supervision</span></div>
-        </div>
-
-        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
-            <div class="io-title" style="color:#975a16;">FINANCE STAFF</div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Transactions</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Financial records</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Driver payouts</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Financial monitoring</span></div>
-        </div>
-
-        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
-            <div class="io-title" style="color:#975a16;">MAINTENANCE TECHNICIAN</div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Equipment reliability</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Vehicle reliability</span></div>
-            <div class="io-row"><span class="io-label">→</span><span class="io-value">Safety checks</span></div>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- SECTION 15 — ALTERNATIVE / EXCEPTION FLOWS -->
-    <!-- ============================================================ -->
-    <h2>15. Alternative / Exception Flows</h2>
+    <h2>14. Alternative / Exception Flows</h2>
     <p class="section-lead">What happens when things don't go as planned.</p>
 
     <h3>A. Fare Not Agreed</h3>
@@ -1964,88 +2110,9 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 16 — COMPLETE SYSTEM SWIMLANE -->
+    <!-- SECTION 15 — INPUT → PROCESS → OUTPUT -->
     <!-- ============================================================ -->
-    <h2>16. Complete System Swimlane</h2>
-    <p class="section-lead">The entire Voyago journey across all four actors.</p>
-
-    <div style="border: 2px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin: 24px 0;">
-        <div style="display: grid; grid-template-columns: 90px 1fr; border-bottom: 2px solid #e2e8f0;">
-            <div style="background:#ebf8ff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#2b6cb0; padding:12px 0; border-right:2px solid #e2e8f0;">PASSENGER</div>
-            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-                <div class="flow-node passenger" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Request</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node passenger" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Details</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node passenger" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Fare Agreement</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node passenger" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Confirm</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node passenger" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">QR</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node passenger" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Pickup</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node passenger" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Ride</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node passenger" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Payment</div>
-            </div>
-        </div>
-        <div style="display: grid; grid-template-columns: 90px 1fr; border-bottom: 2px solid #e2e8f0;">
-            <div style="background:#faf5ff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#6b46c1; padding:12px 0; border-right:2px solid #e2e8f0;">SYSTEM</div>
-            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-                <div class="flow-node system" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Process</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node system" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Fare</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node system" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">QR</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node system" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Dispatch</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node system" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Verification</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node system" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">GPS</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node system" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Record</div>
-            </div>
-        </div>
-        <div style="display: grid; grid-template-columns: 90px 1fr; border-bottom: 2px solid #e2e8f0;">
-            <div style="background:#f0fff4; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#276749; padding:12px 0; border-right:2px solid #e2e8f0;">RIDER</div>
-            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-                <div class="flow-node rider" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Receive</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node rider" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Accept</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node rider" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Pickup</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node rider" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Scan</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node rider" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Ride</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node rider" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Complete</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node rider" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Report</div>
-            </div>
-        </div>
-        <div style="display: grid; grid-template-columns: 90px 1fr;">
-            <div style="background:#fffff0; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#975a16; padding:12px 0; border-right:2px solid #e2e8f0;">OPS</div>
-            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-                <div class="flow-node ops" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Monitor</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node ops" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Support</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node ops" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Review</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node ops" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">Record</div>
-                <span style="color:#cbd5e0;">→</span>
-                <div class="flow-node ops" style="min-width:100px; font-size:0.75rem; padding:6px 12px;">End-of-Day</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- SECTION 17 — INPUT → PROCESS → OUTPUT -->
-    <!-- ============================================================ -->
-    <h2>17. Input → Process → Output</h2>
+    <h2>15. Input → Process → Output</h2>
     <p class="section-lead">A breakdown of each major system function.</p>
 
     <div class="io-grid">
@@ -2093,9 +2160,9 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 18 — IF THIS HAPPENS, THEN WHAT? -->
+    <!-- SECTION 16 — IF THIS HAPPENS, THEN WHAT? -->
     <!-- ============================================================ -->
-    <h2>18. If This Happens, Then What?</h2>
+    <h2>16. If This Happens, Then What?</h2>
     <p class="section-lead">Quick troubleshooting guide for common scenarios.</p>
 
     <div class="io-grid">
@@ -2122,19 +2189,34 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 19 — PANEL EXPLANATION GUIDE -->
+    <!-- SECTION 17 — PANEL EXPLANATION GUIDE -->
     <!-- ============================================================ -->
-    <h2>19. Panel Explanation Guide</h2>
+    <h2>17. Panel Explanation Guide</h2>
     <p class="section-lead">Simple scripts you can use when presenting each major workflow.</p>
 
     <div class="panel-guide">
-        <strong>Booking &amp; Fare Negotiation:</strong><br>
-        "First, the passenger creates a ride request by entering the pickup and destination. The passenger and rider then agree on the fare based on the trip conditions — distance, route, travel time, and road conditions. Once the fare is confirmed, the system generates the DRM-QR and dispatches the request to the rider."
+        <strong>Passenger POV:</strong><br>
+        "The passenger starts by providing the pickup and destination. The fare is negotiated based on the trip conditions. Once the fare is agreed upon, the system locks the fare and generates the DRM-QR."
     </div>
 
     <div class="panel-guide">
-        <strong>Ride Dispatching:</strong><br>
-        "The Voyago Dispatch System sends the ride request to a selected rider. The rider has a 10 to 15-second acceptance window. If the rider accepts, they travel to the pickup location. If not, the request is handled by the dispatch system."
+        <strong>Rider POV:</strong><br>
+        "The rider receives the ride request and has a 10–15 second acceptance period. After accepting, the rider travels to the pickup location and scans the passenger's DRM-QR before the trip can start."
+    </div>
+
+    <div class="panel-guide">
+        <strong>Voyago System POV:</strong><br>
+        "The system processes the booking, handles the ride dispatch, generates and verifies the DRM-QR, monitors the active ride, and records the transaction."
+    </div>
+
+    <div class="panel-guide">
+        <strong>Admin / Operations POV:</strong><br>
+        "The operations side supports and monitors the service and reviews the necessary booking, transaction, and driver records after trips are completed."
+    </div>
+
+    <div class="panel-guide">
+        <strong>Fare Negotiation:</strong><br>
+        "The fare is not assumed by the system. The passenger and rider agree on the trip fare based on the trip conditions — distance, route, drop-off location, road conditions, and travel time. Once they agree, the fare is locked before the trip begins."
     </div>
 
     <div class="panel-guide">
@@ -2143,7 +2225,7 @@
     </div>
 
     <div class="panel-guide">
-        <strong>Trip Execution &amp; GPS:</strong><br>
+        <strong>GPS &amp; Safety Monitoring:</strong><br>
         "Once verified, the trip starts and GPS tracking becomes active. The operations team can monitor the active ride. An automatic trip time-out feature detects delayed pickups or unusual route changes during late-night trips."
     </div>
 
@@ -2158,9 +2240,9 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- SECTION 20 — ONE-PAGE MASTER FLOW -->
+    <!-- SECTION 18 — ONE-PAGE MASTER FLOW -->
     <!-- ============================================================ -->
-    <h2>20. One-Page Master Flow</h2>
+    <h2>18. One-Page Master Flow</h2>
     <p class="section-lead">The simplest, most presentable summary of the entire Voyago system.</p>
 
     <div class="diagram-box" style="background: #0b1a2e; border: none; border-radius: 24px; padding: 48px 32px;">
@@ -2168,13 +2250,13 @@
             <div style="color: #f5a623; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 24px;">VOYAGO — MASTER FLOW</div>
 
             <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0; align-items: center;">
-                <div style="background: #3182ce; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">BOOK</div>
+                <div style="background: #3182ce; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">BOOK RIDE</div>
                 <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
-                <div style="background: #3182ce; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">ENTER PICKUP + DESTINATION</div>
+                <div style="background: #3182ce; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">PICKUP + DESTINATION</div>
                 <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
-                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">NEGOTIATE FARE</div>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">FARE NEGOTIATION</div>
                 <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
-                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">AGREE</div>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">FARE AGREED</div>
                 <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
                 <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">FARE LOCKED</div>
                 <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
@@ -2198,11 +2280,13 @@
                 <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
                 <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">PAYMENT</div>
                 <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
-                <div style="background: #38a169; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">COMPLETION</div>
+                <div style="background: #38a169; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">TRIP COMPLETED</div>
                 <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
                 <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">TRANSACTION RECORD</div>
                 <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
-                <div style="background: #d69e2e; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">END-OF-DAY OPERATIONS</div>
+                <div style="background: #d69e2e; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">OPERATIONS REVIEW</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #edf2f7; color: #2d3748; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">END</div>
             </div>
         </div>
     </div>
