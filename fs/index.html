@@ -1,3141 +1,2041 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CatbaRide — Functional Specification &amp; UI/UX Design Specification</title>
-<style>
-/* ============================================================
-   CATBARIDE — PARTS 1 + 2
-   Reset, Design System, A4 Print Layout, Cover, TOC,
-   Sections 1–10 (Introduction through Admin Process)
-   ============================================================ */
-
-/* ---------- CSS RESET ---------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  background: #e9edf2;
-  color: #1f2937;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-ul,
-ol {
-  list-style: none;
-}
-
-/* ---------- DESIGN TOKENS ---------- */
-:root {
-  --cr-primary: #0f5c4a;
-  --cr-primary-dark: #0a4133;
-  --cr-primary-light: #1a7d66;
-  --cr-secondary: #f2b705;
-  --cr-secondary-dark: #c99400;
-  --cr-accent: #d64545;
-  --cr-accent-soft: #fdecea;
-
-  --cr-bg: #ffffff;
-  --cr-bg-alt: #f6f8fa;
-  --cr-bg-soft: #eef3f1;
-  --cr-border: #d8dee4;
-  --cr-border-strong: #b9c2cb;
-
-  --cr-text: #1f2937;
-  --cr-text-soft: #4b5563;
-  --cr-text-muted: #6b7280;
-  --cr-text-invert: #ffffff;
-
-  --cr-success: #1a7d4f;
-  --cr-success-soft: #e6f5ec;
-  --cr-warning: #b7791f;
-  --cr-warning-soft: #fdf3e0;
-  --cr-info: #1f6feb;
-  --cr-info-soft: #e8f0fe;
-  --cr-danger: #c0392b;
-  --cr-danger-soft: #fdecea;
-
-  --sp-1: 4px;
-  --sp-2: 8px;
-  --sp-3: 12px;
-  --sp-4: 16px;
-  --sp-5: 24px;
-  --sp-6: 32px;
-  --sp-7: 48px;
-  --sp-8: 64px;
-
-  --r-sm: 4px;
-  --r-md: 8px;
-  --r-lg: 12px;
-  --r-xl: 18px;
-  --r-pill: 999px;
-
-  --sh-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --sh-md: 0 4px 10px rgba(15, 23, 42, 0.08);
-  --sh-lg: 0 10px 25px rgba(15, 23, 42, 0.10);
-
-  --page-width: 210mm;
-  --page-min-height: 297mm;
-  --page-padding: 18mm 16mm;
-}
-
-/* ---------- DOCUMENT SHELL ---------- */
-.doc-shell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--sp-5) var(--sp-3) var(--sp-8);
-  gap: var(--sp-5);
-  width: 100%;
-  max-width: 100%;
-}
-
-/* ---------- TOOLBAR ---------- */
-.doc-toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  width: 100%;
-  max-width: var(--page-width);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  background: var(--cr-primary-dark);
-  color: var(--cr-text-invert);
-  padding: var(--sp-3) var(--sp-4);
-  border-radius: var(--r-lg);
-  box-shadow: var(--sh-lg);
-}
-
-.doc-toolbar__brand {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
-  min-width: 0;
-}
-
-.doc-toolbar__logo {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--r-md);
-  background: var(--cr-secondary);
-  color: var(--cr-primary-dark);
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  font-size: 1rem;
-  letter-spacing: 0.5px;
-  flex-shrink: 0;
-}
-
-.doc-toolbar__title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.doc-toolbar__subtitle {
-  font-size: 0.75rem;
-  opacity: 0.8;
-}
-
-.doc-toolbar__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-2);
-  padding: 9px 14px;
-  border-radius: var(--r-md);
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: background 0.15s ease, transform 0.05s ease;
-  border: 1px solid transparent;
-  white-space: nowrap;
-}
-
-.btn:active {
-  transform: translateY(1px);
-}
-
-.btn--primary {
-  background: var(--cr-secondary);
-  color: var(--cr-primary-dark);
-}
-
-.btn--primary:hover {
-  background: #ffc72c;
-}
-
-.btn--ghost {
-  background: transparent;
-  color: var(--cr-text-invert);
-  border-color: rgba(255, 255, 255, 0.35);
-}
-
-.btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* ---------- A4 PAGE ---------- */
-.page {
-  width: var(--page-width);
-  max-width: 100%;
-  min-height: var(--page-min-height);
-  background: var(--cr-bg);
-  padding: var(--page-padding);
-  box-shadow: var(--sh-lg);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.page__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-  border-bottom: 1px solid var(--cr-border);
-  padding-bottom: var(--sp-2);
-  margin-bottom: var(--sp-5);
-  font-size: 0.72rem;
-  color: var(--cr-text-muted);
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-
-.page__header-left,
-.page__header-right {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-}
-
-.page__footer {
-  margin-top: auto;
-  padding-top: var(--sp-3);
-  border-top: 1px solid var(--cr-border);
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-  font-size: 0.7rem;
-  color: var(--cr-text-muted);
-}
-
-.page--cover .page__header,
-.page--cover .page__footer {
-  display: none;
-}
-
-/* ---------- COVER PAGE ---------- */
-.cover {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: var(--sp-6) 0;
-}
-
-.cover__top {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-}
-
-.cover__eyebrow {
-  font-size: 0.75rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--cr-primary);
-  font-weight: 700;
-}
-
-.cover__rule {
-  width: 68px;
-  height: 4px;
-  background: var(--cr-secondary);
-  border-radius: var(--r-pill);
-}
-
-.cover__middle {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-4);
-  padding: var(--sp-6) 0;
-}
-
-.cover__brand {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-4);
-  flex-wrap: wrap;
-}
-
-.cover__brand-mark {
-  width: 72px;
-  height: 72px;
-  border-radius: var(--r-xl);
-  background: var(--cr-primary);
-  color: var(--cr-text-invert);
-  display: grid;
-  place-items: center;
-  font-size: 1.9rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  box-shadow: var(--sh-md);
-  flex-shrink: 0;
-}
-
-.cover__brand-name {
-  font-size: 2.6rem;
-  font-weight: 800;
-  color: var(--cr-primary-dark);
-  line-height: 1.05;
-  letter-spacing: -0.5px;
-}
-
-.cover__brand-tag {
-  font-size: 1rem;
-  color: var(--cr-text-soft);
-  margin-top: var(--sp-1);
-}
-
-.cover__title {
-  font-size: 1.55rem;
-  font-weight: 700;
-  color: var(--cr-text);
-  line-height: 1.35;
-  max-width: 150mm;
-}
-
-.cover__subtitle {
-  font-size: 1rem;
-  color: var(--cr-text-soft);
-}
-
-.cover__meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-4);
-  padding: var(--sp-5) 0;
-  border-top: 1px solid var(--cr-border);
-  border-bottom: 1px solid var(--cr-border);
-}
-
-.cover__meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.cover__meta-label {
-  font-size: 0.7rem;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--cr-text-muted);
-  font-weight: 700;
-}
-
-.cover__meta-value {
-  font-size: 0.95rem;
-  color: var(--cr-text);
-  font-weight: 600;
-}
-
-.cover__meta-value .placeholder {
-  color: var(--cr-primary);
-  font-weight: 700;
-  background: var(--cr-bg-soft);
-  padding: 1px 6px;
-  border-radius: var(--r-sm);
-  border: 1px dashed var(--cr-primary-light);
-}
-
-.cover__bottom {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-  font-size: 0.8rem;
-  color: var(--cr-text-muted);
-}
-
-.cover__notice {
-  background: var(--cr-bg-soft);
-  border-left: 4px solid var(--cr-secondary);
-  padding: var(--sp-3) var(--sp-4);
-  border-radius: var(--r-sm);
-  font-size: 0.8rem;
-  color: var(--cr-text-soft);
-  line-height: 1.5;
-}
-
-/* ---------- TYPOGRAPHY ---------- */
-.page h1,
-.page h2,
-.page h3,
-.page h4 {
-  color: var(--cr-primary-dark);
-  line-height: 1.25;
-}
-
-.section {
-  margin-bottom: var(--sp-6);
-  scroll-margin-top: 90px;
-}
-
-.section__header {
-  display: flex;
-  align-items: baseline;
-  gap: var(--sp-3);
-  border-bottom: 2px solid var(--cr-primary);
-  padding-bottom: var(--sp-2);
-  margin-bottom: var(--sp-4);
-  flex-wrap: wrap;
-}
-
-.section__number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 34px;
-  height: 34px;
-  padding: 0 var(--sp-2);
-  background: var(--cr-primary);
-  color: var(--cr-text-invert);
-  border-radius: var(--r-md);
-  font-weight: 800;
-  font-size: 0.9rem;
-  flex-shrink: 0;
-}
-
-.section__title {
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.section__subtitle {
-  font-size: 0.85rem;
-  color: var(--cr-text-muted);
-  margin-top: 2px;
-}
-
-.subsection {
-  margin: var(--sp-5) 0 var(--sp-3);
-}
-
-.subsection__title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--cr-primary);
-  margin-bottom: var(--sp-2);
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-}
-
-.subsection__title::before {
-  content: "";
-  width: 6px;
-  height: 18px;
-  background: var(--cr-secondary);
-  border-radius: var(--r-pill);
-  flex-shrink: 0;
-}
-
-p {
-  margin-bottom: var(--sp-3);
-  color: var(--cr-text-soft);
-  font-size: 0.92rem;
-}
-
-strong {
-  color: var(--cr-text);
-}
-
-.placeholder {
-  color: var(--cr-primary);
-  font-weight: 700;
-  background: var(--cr-bg-soft);
-  padding: 1px 6px;
-  border-radius: var(--r-sm);
-  border: 1px dashed var(--cr-primary-light);
-  font-size: 0.85em;
-}
-
-/* Callouts */
-.callout {
-  border-radius: var(--r-md);
-  padding: var(--sp-3) var(--sp-4);
-  margin: var(--sp-3) 0;
-  font-size: 0.85rem;
-  line-height: 1.55;
-  border-left: 4px solid;
-}
-
-.callout--info {
-  background: var(--cr-info-soft);
-  border-color: var(--cr-info);
-  color: #103a7a;
-}
-
-.callout--warning {
-  background: var(--cr-warning-soft);
-  border-color: var(--cr-warning);
-  color: #6b4300;
-}
-
-.callout--danger {
-  background: var(--cr-danger-soft);
-  border-color: var(--cr-danger);
-  color: #7a1f17;
-}
-
-.callout--success {
-  background: var(--cr-success-soft);
-  border-color: var(--cr-success);
-  color: #0f4d31;
-}
-
-.callout__label {
-  display: block;
-  font-weight: 800;
-  font-size: 0.72rem;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-/* Badges */
-.badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: var(--r-pill);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-
-.badge--confirm {
-  background: var(--cr-warning-soft);
-  color: var(--cr-warning);
-  border: 1px solid #f0d9a8;
-}
-
-.badge--sample {
-  background: var(--cr-info-soft);
-  color: var(--cr-info);
-  border: 1px solid #c3d7fb;
-}
-
-.badge--future {
-  background: #ede9fe;
-  color: #5b21b6;
-  border: 1px solid #ddd6fe;
-}
-
-/* ---------- TABLES ---------- */
-.table-wrap {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin: var(--sp-3) 0 var(--sp-4);
-  border: 1px solid var(--cr-border);
-  border-radius: var(--r-md);
-  background: var(--cr-bg);
-}
-
-table {
-  width: 100%;
-  min-width: 520px;
-  border-collapse: collapse;
-  font-size: 0.82rem;
-}
-
-thead {
-  background: var(--cr-primary);
-  color: var(--cr-text-invert);
-}
-
-thead th {
-  text-align: left;
-  padding: 10px 12px;
-  font-weight: 700;
-  font-size: 0.78rem;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  border-right: 1px solid rgba(255, 255, 255, 0.15);
-  white-space: nowrap;
-}
-
-thead th:last-child {
-  border-right: none;
-}
-
-tbody td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--cr-border);
-  border-right: 1px solid var(--cr-border);
-  color: var(--cr-text-soft);
-  vertical-align: top;
-  word-break: break-word;
-}
-
-tbody td:last-child {
-  border-right: none;
-}
-
-tbody tr:nth-child(even) {
-  background: var(--cr-bg-alt);
-}
-
-tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* ---------- CARDS ---------- */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--sp-3);
-  margin: var(--sp-3) 0 var(--sp-4);
-}
-
-.card {
-  background: var(--cr-bg-alt);
-  border: 1px solid var(--cr-border);
-  border-radius: var(--r-md);
-  padding: var(--sp-3) var(--sp-4);
-  min-width: 0;
-}
-
-.card__title {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--cr-primary-dark);
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  flex-wrap: wrap;
-}
-
-.card__text {
-  font-size: 0.8rem;
-  color: var(--cr-text-soft);
-  line-height: 1.5;
-}
-
-.card__icon {
-  width: 26px;
-  height: 26px;
-  border-radius: var(--r-sm);
-  background: var(--cr-secondary);
-  color: var(--cr-primary-dark);
-  display: grid;
-  place-items: center;
-  font-weight: 800;
-  font-size: 0.75rem;
-  flex-shrink: 0;
-}
-
-/* Role cards */
-.role-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--sp-3);
-  margin: var(--sp-3) 0;
-}
-
-.role-card {
-  border: 1px solid var(--cr-border);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  background: var(--cr-bg);
-  min-width: 0;
-}
-
-.role-card__head {
-  background: var(--cr-primary);
-  color: var(--cr-text-invert);
-  padding: var(--sp-3) var(--sp-4);
-}
-
-.role-card__head h4 {
-  color: var(--cr-text-invert);
-  font-size: 0.95rem;
-}
-
-.role-card__head span {
-  font-size: 0.72rem;
-  opacity: 0.85;
-}
-
-.role-card__body {
-  padding: var(--sp-3) var(--sp-4);
-}
-
-.role-card__body ul {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.role-card__body li {
-  font-size: 0.8rem;
-  color: var(--cr-text-soft);
-  padding-left: 16px;
-  position: relative;
-  line-height: 1.45;
-}
-
-.role-card__body li::before {
-  content: "▸";
-  position: absolute;
-  left: 0;
-  color: var(--cr-secondary-dark);
-  font-weight: 800;
-}
-
-/* ---------- FLOW DIAGRAMS ---------- */
-.flow {
-  background: var(--cr-bg-alt);
-  border: 1px solid var(--cr-border);
-  border-radius: var(--r-lg);
-  padding: var(--sp-4);
-  margin: var(--sp-3) 0 var(--sp-4);
-  min-width: 0;
-}
-
-.flow__title {
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: var(--cr-primary-dark);
-  margin-bottom: var(--sp-3);
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-
-.flow__steps {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-}
-
-.flow__node {
-  background: var(--cr-bg);
-  border: 2px solid var(--cr-primary);
-  border-radius: var(--r-md);
-  padding: 8px 16px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--cr-primary-dark);
-  text-align: center;
-  min-width: 220px;
-  max-width: 320px;
-  width: 100%;
-  word-break: break-word;
-}
-
-.flow__node--start {
-  background: var(--cr-primary);
-  color: var(--cr-text-invert);
-  border-color: var(--cr-primary);
-}
-
-.flow__node--end {
-  background: var(--cr-secondary);
-  color: var(--cr-primary-dark);
-  border-color: var(--cr-secondary-dark);
-}
-
-.flow__node--decision {
-  background: var(--cr-warning-soft);
-  border-color: var(--cr-warning);
-  color: #6b4300;
-  border-style: dashed;
-}
-
-.flow__arrow {
-  color: var(--cr-primary-light);
-  font-size: 1.1rem;
-  line-height: 1;
-  padding: 4px 0;
-  font-weight: 700;
-}
-
-/* Horizontal flow */
-.flow-h {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--sp-2);
-  margin: var(--sp-3) 0;
-}
-
-.flow-h__node {
-  background: var(--cr-bg);
-  border: 1.5px solid var(--cr-primary);
-  border-radius: var(--r-md);
-  padding: 6px 12px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--cr-primary-dark);
-}
-
-.flow-h__arrow {
-  color: var(--cr-secondary-dark);
-  font-weight: 800;
-}
-
-/* Three-column flow */
-.flow-3col {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--sp-3);
-  margin: var(--sp-3) 0;
-}
-
-/* ---------- TABLE OF CONTENTS ---------- */
-.toc {
-  background: var(--cr-bg-alt);
-  border: 1px solid var(--cr-border);
-  border-radius: var(--r-lg);
-  padding: var(--sp-5);
-}
-
-.toc__title {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--cr-primary-dark);
-  margin-bottom: var(--sp-2);
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-}
-
-.toc__title::before {
-  content: "";
-  width: 6px;
-  height: 22px;
-  background: var(--cr-secondary);
-  border-radius: var(--r-pill);
-  flex-shrink: 0;
-}
-
-.toc__hint {
-  font-size: 0.78rem;
-  color: var(--cr-text-muted);
-  margin-bottom: var(--sp-4);
-}
-
-.toc__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-2) var(--sp-5);
-}
-
-.toc__item {
-  display: flex;
-  align-items: baseline;
-  gap: var(--sp-2);
-  padding: 6px 8px;
-  border-radius: var(--r-sm);
-  font-size: 0.85rem;
-  color: var(--cr-text-soft);
-  border-bottom: 1px dotted transparent;
-  transition: background 0.12s ease, color 0.12s ease;
-}
-
-.toc__item:hover {
-  background: var(--cr-bg-soft);
-  color: var(--cr-primary-dark);
-}
-
-.toc__num {
-  font-weight: 800;
-  color: var(--cr-primary);
-  min-width: 26px;
-  font-size: 0.8rem;
-}
-
-.toc__label {
-  flex: 1;
-}
-
-.toc__group {
-  grid-column: 1 / -1;
-  margin-top: var(--sp-3);
-  padding-top: var(--sp-2);
-  border-top: 1px solid var(--cr-border);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--cr-primary-light);
-}
-
-/* ---------- LISTS ---------- */
-.list-check {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: var(--sp-2) 0 var(--sp-4);
-}
-
-.list-check li {
-  font-size: 0.85rem;
-  color: var(--cr-text-soft);
-  padding-left: 24px;
-  position: relative;
-  line-height: 1.5;
-  word-break: break-word;
-}
-
-.list-check li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--cr-success);
-  font-weight: 800;
-}
-
-.list-cross li::before {
-  content: "✕";
-  color: var(--cr-danger);
-}
-
-/* ---------- PRINT ---------- */
-@page {
-  size: A4 portrait;
-  margin: 14mm 12mm;
-}
-
-@media print {
-  html,
-  body {
-    background: #ffffff;
-    font-size: 11pt;
-  }
-
-  .doc-shell {
-    padding: 0;
-    gap: 0;
-    display: block;
-  }
-
-  .doc-toolbar,
-  .doc-toolbar * {
-    display: none !important;
-  }
-
-  .page {
-    width: auto;
-    min-height: auto;
-    box-shadow: none;
-    padding: 0;
-    margin: 0;
-    page-break-after: always;
-    break-after: page;
-  }
-
-  .page:last-child {
-    page-break-after: auto;
-    break-after: auto;
-  }
-
-  .page__header,
-  .page__footer {
-    display: flex !important;
-  }
-
-  .page--cover {
-    min-height: 265mm;
-    display: flex;
-  }
-
-  .page--cover .page__header,
-  .page--cover .page__footer {
-    display: none !important;
-  }
-
-  .section {
-    page-break-inside: auto;
-  }
-
-  .section__header,
-  .subsection__title {
-    page-break-after: avoid;
-    break-after: avoid;
-  }
-
-  table,
-  figure,
-  .callout,
-  .card,
-  .flow,
-  .role-card {
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-
-  thead {
-    display: table-header-group;
-  }
-
-  tr {
-    page-break-inside: avoid;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .no-print {
-    display: none !important;
-  }
-
-  .table-wrap {
-    overflow: visible;
-    border: 1px solid var(--cr-border);
-  }
-
-  table {
-    min-width: 0;
-  }
-
-  .flow-3col {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
-/* ---------- RESPONSIVE ---------- */
-@media screen and (max-width: 900px) {
-  .doc-shell {
-    padding: var(--sp-3) var(--sp-2) var(--sp-6);
-  }
-
-  .page {
-    width: 100%;
-    min-height: auto;
-    padding: var(--sp-5) var(--sp-4);
-  }
-
-  .toc__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .flow-3col {
-    grid-template-columns: 1fr;
-  }
-
-  .cover__brand-name {
-    font-size: 2rem;
-  }
-
-  .cover__meta {
-    grid-template-columns: 1fr;
-  }
-
-  .doc-toolbar {
-    border-radius: var(--r-md);
-  }
-}
-
-@media screen and (max-width: 768px) {
-  html {
-    font-size: 15px;
-  }
-
-  .doc-shell {
-    padding: var(--sp-2) var(--sp-2) var(--sp-5);
-    gap: var(--sp-3);
-  }
-
-  .page {
-    padding: var(--sp-4) var(--sp-3);
-  }
-
-  .page__header {
-    font-size: 0.65rem;
-    margin-bottom: var(--sp-4);
-  }
-
-  .page__footer {
-    font-size: 0.65rem;
-  }
-
-  .doc-toolbar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--sp-2);
-    padding: var(--sp-3);
-  }
-
-  .doc-toolbar__brand {
-    justify-content: center;
-  }
-
-  .doc-toolbar__actions {
-    justify-content: center;
-  }
-
-  .doc-toolbar__actions .btn {
-    flex: 1 1 auto;
-    min-width: 120px;
-    padding: 11px 14px;
-    font-size: 0.85rem;
-  }
-
-  .cover {
-    padding: var(--sp-4) 0;
-  }
-
-  .cover__brand {
-    gap: var(--sp-3);
-  }
-
-  .cover__brand-mark {
-    width: 56px;
-    height: 56px;
-    font-size: 1.4rem;
-    border-radius: var(--r-lg);
-  }
-
-  .cover__brand-name {
-    font-size: 1.6rem;
-  }
-
-  .cover__brand-tag {
-    font-size: 0.85rem;
-  }
-
-  .cover__title {
-    font-size: 1.25rem;
-    max-width: 100%;
-  }
-
-  .cover__subtitle {
-    font-size: 0.9rem;
-  }
-
-  .cover__meta {
-    gap: var(--sp-3);
-    padding: var(--sp-4) 0;
-  }
-
-  .cover__notice {
-    font-size: 0.75rem;
-    padding: var(--sp-2) var(--sp-3);
-  }
-
-  .section__header {
-    gap: var(--sp-2);
-  }
-
-  .section__number {
-    min-width: 28px;
-    height: 28px;
-    font-size: 0.8rem;
-  }
-
-  .section__title {
-    font-size: 1.1rem;
-  }
-
-  .section__subtitle {
-    font-size: 0.78rem;
-  }
-
-  .subsection__title {
-    font-size: 0.92rem;
-  }
-
-  p {
-    font-size: 0.88rem;
-  }
-
-  .callout {
-    font-size: 0.8rem;
-    padding: var(--sp-2) var(--sp-3);
-  }
-
-  .card-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .role-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .flow {
-    padding: var(--sp-3);
-  }
-
-  .flow__node {
-    min-width: 0;
-    max-width: 100%;
-    font-size: 0.78rem;
-    padding: 7px 12px;
-  }
-
-  .flow__title {
-    font-size: 0.78rem;
-  }
-
-  .table-wrap {
-    margin: var(--sp-2) 0 var(--sp-3);
-    border-radius: var(--r-sm);
-  }
-
-  table {
-    font-size: 0.75rem;
-    min-width: 460px;
-  }
-
-  thead th {
-    padding: 8px 10px;
-    font-size: 0.7rem;
-  }
-
-  tbody td {
-    padding: 8px 10px;
-  }
-
-  .toc {
-    padding: var(--sp-4);
-  }
-
-  .toc__title {
-    font-size: 1rem;
-  }
-
-  .toc__item {
-    font-size: 0.8rem;
-    padding: 7px 6px;
-  }
-
-  .list-check li {
-    font-size: 0.82rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  html {
-    font-size: 14px;
-  }
-
-  .doc-shell {
-    padding: var(--sp-1) var(--sp-1) var(--sp-4);
-    gap: var(--sp-2);
-  }
-
-  .page {
-    padding: var(--sp-3) var(--sp-2);
-    box-shadow: var(--sh-md);
-    border-radius: var(--r-sm);
-  }
-
-  .page__header {
-    font-size: 0.6rem;
-    letter-spacing: 0.2px;
-    margin-bottom: var(--sp-3);
-  }
-
-  .page__footer {
-    font-size: 0.6rem;
-  }
-
-  .doc-toolbar {
-    border-radius: var(--r-sm);
-    padding: var(--sp-2);
-  }
-
-  .doc-toolbar__logo {
-    width: 30px;
-    height: 30px;
-    font-size: 0.85rem;
-  }
-
-  .doc-toolbar__title {
-    font-size: 0.85rem;
-  }
-
-  .doc-toolbar__subtitle {
-    font-size: 0.68rem;
-  }
-
-  .doc-toolbar__actions {
-    flex-direction: column;
-  }
-
-  .doc-toolbar__actions .btn {
-    width: 100%;
-    min-width: 0;
-    padding: 12px 14px;
-  }
-
-  .cover__eyebrow {
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-  }
-
-  .cover__brand-mark {
-    width: 48px;
-    height: 48px;
-    font-size: 1.2rem;
-    border-radius: var(--r-md);
-  }
-
-  .cover__brand-name {
-    font-size: 1.35rem;
-  }
-
-  .cover__brand-tag {
-    font-size: 0.78rem;
-  }
-
-  .cover__title {
-    font-size: 1.1rem;
-  }
-
-  .cover__subtitle {
-    font-size: 0.82rem;
-  }
-
-  .cover__meta-label {
-    font-size: 0.62rem;
-  }
-
-  .cover__meta-value {
-    font-size: 0.85rem;
-  }
-
-  .cover__notice {
-    font-size: 0.7rem;
-  }
-
-  .section__number {
-    min-width: 24px;
-    height: 24px;
-    font-size: 0.72rem;
-  }
-
-  .section__title {
-    font-size: 1rem;
-  }
-
-  .subsection__title {
-    font-size: 0.85rem;
-  }
-
-  p {
-    font-size: 0.84rem;
-  }
-
-  .callout {
-    font-size: 0.76rem;
-  }
-
-  .flow__node {
-    font-size: 0.72rem;
-    padding: 6px 10px;
-    border-width: 1.5px;
-  }
-
-  .flow__arrow {
-    font-size: 0.9rem;
-    padding: 2px 0;
-  }
-
-  table {
-    font-size: 0.7rem;
-    min-width: 400px;
-  }
-
-  thead th {
-    padding: 6px 8px;
-    font-size: 0.65rem;
-  }
-
-  tbody td {
-    padding: 6px 8px;
-  }
-
-  .toc {
-    padding: var(--sp-3);
-  }
-
-  .toc__title {
-    font-size: 0.92rem;
-  }
-
-  .toc__hint {
-    font-size: 0.7rem;
-  }
-
-  .toc__item {
-    font-size: 0.75rem;
-    padding: 6px 4px;
-    gap: var(--sp-1);
-  }
-
-  .toc__num {
-    min-width: 20px;
-    font-size: 0.72rem;
-  }
-
-  .toc__group {
-    font-size: 0.65rem;
-    letter-spacing: 1px;
-  }
-
-  .list-check li {
-    font-size: 0.78rem;
-    padding-left: 20px;
-  }
-
-  .card {
-    padding: var(--sp-2) var(--sp-3);
-  }
-
-  .card__title {
-    font-size: 0.82rem;
-  }
-
-  .card__text {
-    font-size: 0.75rem;
-  }
-
-  .role-card__head {
-    padding: var(--sp-2) var(--sp-3);
-  }
-
-  .role-card__head h4 {
-    font-size: 0.88rem;
-  }
-
-  .role-card__body {
-    padding: var(--sp-2) var(--sp-3);
-  }
-
-  .role-card__body li {
-    font-size: 0.75rem;
-  }
-
-  .placeholder {
-    font-size: 0.78em;
-    padding: 0 4px;
-  }
-}
-
-/* Very small devices — minimal but readable */
-@media screen and (max-width: 360px) {
-  html {
-    font-size: 13px;
-  }
-
-  .page {
-    padding: var(--sp-2) var(--sp-2);
-  }
-
-  .flow__node {
-    font-size: 0.68rem;
-    padding: 5px 8px;
-  }
-
-  table {
-    font-size: 0.65rem;
-    min-width: 360px;
-  }
-
-  thead th {
-    padding: 5px 6px;
-    font-size: 0.6rem;
-  }
-
-  tbody td {
-    padding: 5px 6px;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <title>VOYAGO — How the App Works · System Process Guide</title>
+  <style>
+    /* ---------- RESET & VARIABLES ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --navy: #0a1a2b;
+      --navy-light: #1c2f44;
+      --electric: #0066ff;
+      --electric-glow: #3b82f6;
+      --cyan: #00c8ff;
+      --cyan-soft: #9de1ff;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-300: #cbd5e1;
+      --gray-600: #475569;
+      --gray-800: #1e293b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
+      --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.07), 0 4px 10px rgba(0, 0, 0, 0.03);
+      --shadow-lg: 0 24px 50px rgba(0, 20, 60, 0.12), 0 8px 20px rgba(0, 0, 0, 0.05);
+      --radius-card: 28px;
+      --radius-sm: 14px;
+      --font: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--gray-50);
+      color: var(--gray-800);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 4rem;
+    }
+
+    /* ---------- TYPOGRAPHY ---------- */
+    h1, h2, h3, h4 {
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .section-title {
+      font-size: 2.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      color: var(--navy);
+    }
+
+    .section-title span {
+      background: var(--electric);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ---------- LAYOUT ---------- */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      margin-bottom: 5rem;
+    }
+
+    /* ---------- NAVIGATION ---------- */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0.75rem 0;
+      transition: box-shadow 0.2s;
+    }
+
+    .sticky-nav.scrolled {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--navy);
+      letter-spacing: -0.03em;
+    }
+
+    .nav-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray-600);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.4rem 0.8rem;
+      border-radius: 30px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .nav-links a:hover {
+      background: var(--gray-100);
+      color: var(--navy);
+    }
+
+    .btn-print {
+      background: var(--navy);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background 0.2s, transform 0.1s;
+      font-family: var(--font);
+    }
+
+    .btn-print:hover {
+      background: var(--electric);
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      background: linear-gradient(145deg, var(--navy) 0%, #0f2338 100%);
+      color: white;
+      border-radius: 0 0 60px 60px;
+      padding: 4rem 0 5rem;
+      margin-bottom: 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 102, 255, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -20%;
+      left: -5%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(0, 200, 255, 0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 3rem;
+    }
+
+    .hero-left h1 {
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      background: linear-gradient(135deg, #fff 30%, var(--cyan) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-left .sub {
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--cyan-soft);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-left p {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.75);
+      max-width: 500px;
+      margin-bottom: 2rem;
+    }
+
+    .version-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--cyan-soft);
+      margin-bottom: 1rem;
+    }
+
+    .hero-graphic {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .actor-circle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .actor-circle .circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.07);
+      border: 2px solid rgba(0, 200, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .actor-circle .circle:hover {
+      transform: scale(1.05);
+      border-color: var(--cyan);
+    }
+
+    .actor-circle .circle svg {
+      width: 42px;
+      height: 42px;
+      stroke: var(--cyan-soft);
+      stroke-width: 1.6;
+      fill: none;
+    }
+
+    .actor-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .connector-line {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+      position: relative;
+      margin-top: -30px;
+    }
+
+    /* ---------- CARDS & GENERAL ---------- */
+    .card {
+      background: white;
+      border-radius: var(--radius-card);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-100);
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      border-radius: 40px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .badge-passenger {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .badge-rider {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-system {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .badge-admin {
+      background: #f3e8ff;
+      color: #6b21a8;
+    }
+
+    .badge-confirm {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .badge-proposed {
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .status-requested {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-searching {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-assigned {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-arriving {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .status-arrived {
+      background: #cffafe;
+      color: #155e75;
+    }
+
+    .status-progress {
+      background: #f3e8ff;
+      color: #6b21a8;
+    }
+
+    .status-completed {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-cancelled {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status-norider {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px dashed #f59e0b;
+    }
+
+    /* ---------- FLOWCHART / DIAGRAM ---------- */
+    .flow-vertical {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .flow-node {
+      background: white;
+      border: 2px solid var(--gray-200);
+      border-radius: 60px;
+      padding: 0.9rem 2rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      text-align: center;
+      width: fit-content;
+      max-width: 90%;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .flow-node:hover {
+      border-color: var(--electric);
+      box-shadow: var(--shadow-md);
+    }
+
+    .flow-node.start {
+      background: var(--navy);
+      color: white;
+      border-color: var(--navy);
+    }
+
+    .flow-node.decision {
+      background: #fffbeb;
+      border: 2px solid #fcd34d;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+      width: 200px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: #92400e;
+      background: #fffbeb;
+    }
+
+    .flow-arrow {
+      font-size: 1.4rem;
+      color: var(--gray-300);
+      line-height: 1;
+      user-select: none;
+    }
+
+    .flow-arrow-down {
+      display: block;
+      margin: 0.2rem 0;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .flow-connector-h {
+      width: 40px;
+      height: 2px;
+      background: var(--gray-300);
+      position: relative;
+    }
+
+    .flow-connector-h::after {
+      content: '›';
+      position: absolute;
+      right: -8px;
+      top: -12px;
+      font-size: 1.6rem;
+      color: var(--gray-300);
+    }
+
+    /* ---------- THREE ACTORS OVERVIEW ---------- */
+    .actors-triple {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .actor-card {
+      background: white;
+      border-radius: var(--radius-card);
+      padding: 2rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-100);
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .actor-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .actor-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--navy);
+    }
+
+    .actor-card ul {
+      list-style: none;
+      margin-top: 1rem;
+      text-align: left;
+      font-size: 0.9rem;
+      color: var(--gray-600);
+    }
+
+    .actor-card ul li {
+      padding: 0.3rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .actor-arrow {
+      font-size: 2.2rem;
+      color: var(--electric);
+      opacity: 0.5;
+      animation: pulse-arrow 2s infinite;
+    }
+
+    @keyframes pulse-arrow {
+      0%, 100% { transform: translateX(0); opacity: 0.4; }
+      50% { transform: translateX(6px); opacity: 1; }
+    }
+
+    /* ---------- JOURNEY STEPS ---------- */
+    .journey-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .journey-step {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr 1fr;
+      align-items: start;
+      background: white;
+      border-radius: var(--radius-sm);
+      padding: 1.2rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-100);
+      transition: transform 0.2s, box-shadow 0.2s;
+      gap: 1rem;
+    }
+
+    .journey-step:hover {
+      transform: translateX(6px);
+      box-shadow: var(--shadow-md);
+      border-left: 4px solid var(--electric);
+    }
+
+    .step-num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--electric);
+      opacity: 0.4;
+      letter-spacing: -0.04em;
+    }
+
+    .step-col h4 {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-600);
+      margin-bottom: 0.2rem;
+      font-weight: 600;
+    }
+
+    .step-col p {
+      font-size: 0.9rem;
+      color: var(--navy);
+      font-weight: 500;
+    }
+
+    /* ---------- SWIMLANE ---------- */
+    .swimlane {
+      display: grid;
+      grid-template-columns: 140px 1fr 1fr 1fr;
+      background: white;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-200);
+    }
+
+    .swimlane-header {
+      background: var(--navy);
+      color: white;
+      padding: 1rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .swimlane-cell {
+      padding: 1rem;
+      border-bottom: 1px solid var(--gray-100);
+      border-right: 1px solid var(--gray-100);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: white;
+    }
+
+    .swimlane-cell:last-child {
+      border-right: none;
+    }
+
+    .swimlane-row:last-child .swimlane-cell {
+      border-bottom: none;
+    }
+
+    .swimlane-actor {
+      font-weight: 700;
+      background: var(--gray-50);
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    /* ---------- STATUS LIFECYCLE ---------- */
+    .status-lifecycle {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+
+    .status-node {
+      background: white;
+      border-radius: 50px;
+      padding: 0.7rem 1.4rem;
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: 2px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-node:hover {
+      transform: scale(1.03);
+    }
+
+    .status-node .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gray-300);
+    }
+
+    .status-node.active .dot {
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .status-node.warning .dot {
+      background: var(--warning);
+    }
+
+    .status-node.danger .dot {
+      background: var(--danger);
+    }
+
+    /* ---------- INPUT-PROCESS-OUTPUT ---------- */
+    .ipo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .ipo-card {
+      background: white;
+      border-radius: var(--radius-card);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-100);
+      transition: transform 0.2s;
+      position: relative;
+    }
+
+    .ipo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .ipo-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gray-600);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .ipo-card .ipo-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ---------- SUMMARY ONE-VIEW ---------- */
+    .one-view {
+      background: linear-gradient(145deg, var(--navy) 0%, #112a44 100%);
+      border-radius: var(--radius-card);
+      padding: 3rem 2rem;
+      color: white;
+      text-align: center;
+    }
+
+    .one-view h2 {
+      color: white;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+    }
+
+    .summary-flow {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.6rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .summary-node {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: white;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s;
+    }
+
+    .summary-node:hover {
+      background: rgba(0, 200, 255, 0.2);
+      border-color: var(--cyan);
+    }
+
+    .summary-arrow {
+      color: var(--cyan);
+      font-size: 1.2rem;
+      opacity: 0.7;
+    }
+
+    /* ---------- TABLE / COMPARISON ---------- */
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .comparison-card {
+      background: white;
+      border-radius: var(--radius-card);
+      padding: 2rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-100);
+    }
+
+    .comparison-card h3 {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .comparison-card ul {
+      list-style: none;
+    }
+
+    .comparison-card li {
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--gray-600);
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .comparison-card li:last-child {
+      border-bottom: none;
+    }
+
+    /* ---------- MISC ---------- */
+    .caption {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .legend {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 1rem;
+      background: var(--gray-100);
+      border-radius: 60px;
+      margin-bottom: 1.5rem;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--gray-200);
+      margin: 3rem 0;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 1024px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .hero-left p {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .actors-triple {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+      .actor-arrow {
+        transform: rotate(90deg);
+        animation: none;
+      }
+      .journey-step {
+        grid-template-columns: 50px 1fr;
+        gap: 0.8rem;
+      }
+      .journey-step .step-col {
+        grid-column: 2 / -1;
+      }
+      .swimlane {
+        grid-template-columns: 1fr;
+      }
+      .swimlane-header {
+        justify-content: flex-start;
+        padding-left: 1.5rem;
+      }
+      .ipo-grid {
+        grid-template-columns: 1fr;
+      }
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .section-title {
+        font-size: 1.6rem;
+        flex-wrap: wrap;
+      }
+      .journey-step {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+      }
+      .step-num {
+        font-size: 1.2rem;
+      }
+      .flow-node {
+        font-size: 0.8rem;
+        padding: 0.7rem 1.2rem;
+      }
+      .hero-left h1 {
+        font-size: 2.8rem;
+      }
+      .hero-left .sub {
+        font-size: 1.2rem;
+      }
+      .container {
+        padding: 0 1rem;
+      }
+    }
+
+    /* ---------- PRINT ---------- */
+    @page {
+      size: A4;
+      margin: 12mm;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+        font-size: 11pt;
+      }
+      .sticky-nav,
+      .btn-print,
+      .hero-graphic,
+      .actor-arrow,
+      .no-print {
+        display: none !important;
+      }
+      .hero {
+        background: var(--navy) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        border-radius: 0;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+      }
+      .hero-left h1 {
+        -webkit-text-fill-color: white;
+        color: white;
+        background: none;
+        font-size: 3rem;
+      }
+      .hero-left .sub {
+        color: var(--cyan-soft);
+      }
+      .card, .actor-card, .journey-step, .ipo-card, .comparison-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        break-inside: avoid;
+      }
+      .flow-node {
+        box-shadow: none;
+        border: 1px solid #aaa;
+      }
+      section {
+        margin-bottom: 2rem;
+        break-inside: avoid;
+      }
+      .swimlane {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+      .one-view {
+        background: #f0f4fa !important;
+        color: #0a1a2b;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .one-view h2 {
+        color: #0a1a2b;
+      }
+      .summary-node {
+        background: white;
+        border: 1px solid #ccc;
+        color: #0a1a2b;
+      }
+      .summary-arrow {
+        color: #0066ff;
+      }
+      .status-node {
+        border: 1px solid #aaa;
+      }
+      .journey-step:hover {
+        transform: none;
+      }
+      .print-break {
+        break-before: page;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- ============================================================
-     TOOLBAR
-     ============================================================ -->
-<div class="doc-shell">
-
-  <div class="doc-toolbar no-print" role="toolbar" aria-label="Document actions">
-    <div class="doc-toolbar__brand">
-      <div class="doc-toolbar__logo" aria-hidden="true">CR</div>
-      <div>
-        <div class="doc-toolbar__title">CatbaRide</div>
-        <div class="doc-toolbar__subtitle">Functional Spec &amp; UI/UX Design Document</div>
+  <!-- ========== STICKY NAVIGATION ========== -->
+  <nav class="sticky-nav" id="mainNav">
+    <div class="container nav-inner">
+      <div class="nav-logo">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="14" cy="14" r="12" stroke="#0066ff" stroke-width="2"/>
+          <path d="M8 14 L14 8 L20 14 L14 20 Z" fill="#0066ff" opacity="0.8"/>
+        </svg>
+        VOYAGO
       </div>
-    </div>
-    <div class="doc-toolbar__actions">
-      <button class="btn btn--ghost" type="button" onclick="document.getElementById('toc').scrollIntoView({behavior:'smooth'});">
-        Table of Contents
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#flow">Flow</a>
+        <a href="#passenger">Passenger</a>
+        <a href="#booking">Booking</a>
+        <a href="#after-confirm">Confirm</a>
+        <a href="#rider">Rider</a>
+        <a href="#status">Status</a>
+        <a href="#completion">Completion</a>
+        <a href="#payment">Payment</a>
+        <a href="#rating">Rating</a>
+        <a href="#history">History</a>
+        <a href="#summary">Summary</a>
+      </div>
+      <button class="btn-print" onclick="window.print()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        PRINT / SAVE AS PDF
       </button>
-      <button class="btn btn--primary" type="button" onclick="window.print();">
-        Save / Print as PDF
-      </button>
     </div>
-  </div>
+  </nav>
 
-<!-- ============================================================
-     PAGE 1 — COVER
-     ============================================================ -->
-  <section class="page page--cover" id="cover">
-    <div class="cover">
-
-      <div class="cover__top">
-        <div class="cover__eyebrow">Capstone Project — System Proposal</div>
-        <div class="cover__rule"></div>
-      </div>
-
-      <div class="cover__middle">
-        <div class="cover__brand">
-          <div class="cover__brand-mark" aria-hidden="true">CR</div>
-          <div>
-            <div class="cover__brand-name">CATBARIDE</div>
-            <div class="cover__brand-tag">Local Ride-Hailing &amp; Motorcycle Transportation System</div>
-          </div>
-        </div>
-
-        <h1 class="cover__title">
-          Functional Specification &amp;<br>
-          UI/UX Design Specification
-        </h1>
-
-        <p class="cover__subtitle">
-          A proposed digital platform for motorcycle-based passenger transport
-          within Catbalogan City, Samar, Philippines.
+  <!-- ========== 1. HERO / COVER ========== -->
+  <header class="hero">
+    <div class="container hero-content">
+      <div class="hero-left">
+        <div class="version-badge">System Process Guide · Capstone Documentation</div>
+        <h1>VOYAGO</h1>
+        <div class="sub">How the App Works</div>
+        <p>
+          A visual guide to how passengers, riders, and the Voyago system interact 
+          throughout the complete ride-booking journey — from opening the app to 
+          rating and ride history.
         </p>
       </div>
-
-      <div class="cover__meta">
-        <div class="cover__meta-item">
-          <span class="cover__meta-label">School / Institution</span>
-          <span class="cover__meta-value"><span class="placeholder">[School Name]</span></span>
+      <div class="hero-graphic">
+        <div class="actor-circle">
+          <div class="circle">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="7" r="4"/>
+              <path d="M4 21v-2a6 6 0 0 1 12 0v2"/>
+            </svg>
+          </div>
+          <span class="actor-label">Passenger</span>
         </div>
-        <div class="cover__meta-item">
-          <span class="cover__meta-label">Program / Section</span>
-          <span class="cover__meta-value"><span class="placeholder">[Program / Section]</span></span>
+        <div class="connector-line"></div>
+        <div class="actor-circle">
+          <div class="circle">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
+              <circle cx="12" cy="12" r="9" stroke-dasharray="4 4"/>
+            </svg>
+          </div>
+          <span class="actor-label">System</span>
         </div>
-        <div class="cover__meta-item">
-          <span class="cover__meta-label">Student Researcher(s)</span>
-          <span class="cover__meta-value"><span class="placeholder">[Student Name/s]</span></span>
-        </div>
-        <div class="cover__meta-item">
-          <span class="cover__meta-label">Adviser</span>
-          <span class="cover__meta-value"><span class="placeholder">[Adviser Name]</span></span>
-        </div>
-        <div class="cover__meta-item">
-          <span class="cover__meta-label">Document Version</span>
-          <span class="cover__meta-value">1.0</span>
-        </div>
-        <div class="cover__meta-item">
-          <span class="cover__meta-label">Status</span>
-          <span class="cover__meta-value">Draft for Review</span>
-        </div>
-        <div class="cover__meta-item">
-          <span class="cover__meta-label">Document Type</span>
-          <span class="cover__meta-value">Software System Proposal</span>
-        </div>
-        <div class="cover__meta-item">
-          <span class="cover__meta-label">Location</span>
-          <span class="cover__meta-value">Catbalogan City, Samar, Philippines</span>
+        <div class="connector-line"></div>
+        <div class="actor-circle">
+          <div class="circle">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="7" r="3"/>
+              <path d="M6 21v-2a5 5 0 0 1 10 0v2"/>
+              <path d="M15 10l3 3-3 3"/>
+            </svg>
+          </div>
+          <span class="actor-label">Rider</span>
         </div>
       </div>
-
-      <div class="cover__bottom">
-        <div class="cover__notice">
-          <strong>Notice:</strong> This document describes a <em>proposed</em> capstone project.
-          The accompanying HTML prototype is a documentation and UI/UX mockup only and does
-          not represent a deployed, production ride-hailing service. All local operational
-          details (fares, coverage, regulations) are placeholders that require
-          <strong>stakeholder confirmation</strong>.
-        </div>
-        <div>
-          Prepared for academic presentation and panel review.
-        </div>
-      </div>
-
     </div>
-  </section>
+  </header>
 
-<!-- ============================================================
-     PAGE 2 — TABLE OF CONTENTS
-     ============================================================ -->
-  <section class="page" id="toc-page">
-    <header class="page__header">
-      <div class="page__header-left">CatbaRide — Functional Specification</div>
-      <div class="page__header-right">Version 1.0 · Draft</div>
-    </header>
+  <main class="container">
 
-    <div class="toc" id="toc">
-      <h2 class="toc__title">Table of Contents</h2>
-      <p class="toc__hint">
-        Click any entry to jump to that section. On screen, the toolbar stays available
-        at the top; when printing, the toolbar is hidden and the document flows as A4 pages.
+    <!-- ========== 2. QUICK SYSTEM OVERVIEW ========== -->
+    <section id="overview">
+      <div class="section-title">
+        <span>01</span> Quick System Overview
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">🧑 <span>Passenger</span></div>
+        <div class="legend-item">🏍 <span>Rider</span></div>
+        <div class="legend-item">⚙️ <span>System</span></div>
+        <div class="legend-item">👨‍💼 <span>Admin</span></div>
+        <div class="legend-item">⚠️ <span>[FOR CONFIRMATION]</span></div>
+      </div>
+
+      <div class="actors-triple">
+        <div class="actor-card">
+          <div class="badge badge-passenger" style="margin-bottom:0.5rem;">🧑 PASSENGER</div>
+          <h3>Requests the ride</h3>
+          <ul>
+            <li>✦ Enters pickup &amp; destination</li>
+            <li>✦ Confirms booking</li>
+            <li>✦ Tracks ride status</li>
+            <li>✦ Completes ride &amp; rates</li>
+          </ul>
+        </div>
+        <div class="actor-arrow">→</div>
+        <div class="actor-card" style="border-color: var(--electric);">
+          <div class="badge badge-system" style="margin-bottom:0.5rem;">⚙️ VOYAGO SYSTEM</div>
+          <h3>Processes the request</h3>
+          <ul>
+            <li>✦ Receives booking</li>
+            <li>✦ Finds / assigns rider</li>
+            <li>✦ Updates ride status</li>
+            <li>✦ Records ride information</li>
+          </ul>
+        </div>
+        <div class="actor-arrow">→</div>
+        <div class="actor-card">
+          <div class="badge badge-rider" style="margin-bottom:0.5rem;">🏍 RIDER</div>
+          <h3>Performs the ride</h3>
+          <ul>
+            <li>✦ Receives ride request</li>
+            <li>✦ Accepts or rejects</li>
+            <li>✦ Goes to pickup location</li>
+            <li>✦ Starts &amp; completes ride</li>
+          </ul>
+        </div>
+      </div>
+      <p class="caption" style="text-align:center;">Actors and their primary responsibilities in the Voyago ecosystem.</p>
+    </section>
+
+    <!-- ========== 3. COMPLETE SYSTEM FLOW ========== -->
+    <section id="flow">
+      <div class="section-title">
+        <span>02</span> Complete Voyago System Flow
+      </div>
+      <p style="margin-bottom:2rem; color:var(--gray-600); max-width:700px;">
+        The main flowchart — from opening the app to ride saved in history. 
+        Items marked <span class="badge badge-confirm">[FOR CONFIRMATION]</span> 
+        or <span class="badge badge-proposed">[PROPOSED]</span> require validation.
       </p>
 
-      <div class="toc__grid">
-
-        <div class="toc__group">Part I — Introduction &amp; System Overview</div>
-        <a class="toc__item" href="#sec-1"><span class="toc__num">1</span><span class="toc__label">Introduction</span></a>
-        <a class="toc__item" href="#sec-2"><span class="toc__num">2</span><span class="toc__label">Project Overview</span></a>
-        <a class="toc__item" href="#sec-3"><span class="toc__num">3</span><span class="toc__label">System Objectives</span></a>
-        <a class="toc__item" href="#sec-4"><span class="toc__num">4</span><span class="toc__label">Scope and Limitations</span></a>
-        <a class="toc__item" href="#sec-5"><span class="toc__num">5</span><span class="toc__label">Target Users</span></a>
-        <a class="toc__item" href="#sec-6"><span class="toc__num">6</span><span class="toc__label">User Roles</span></a>
-
-        <div class="toc__group">Part II — System Processes</div>
-        <a class="toc__item" href="#sec-7"><span class="toc__num">7</span><span class="toc__label">Overall System Process</span></a>
-        <a class="toc__item" href="#sec-8"><span class="toc__num">8</span><span class="toc__label">Passenger Process</span></a>
-        <a class="toc__item" href="#sec-9"><span class="toc__num">9</span><span class="toc__label">Rider / Driver Process</span></a>
-        <a class="toc__item" href="#sec-10"><span class="toc__num">10</span><span class="toc__label">Admin Process</span></a>
-
-        <div class="toc__group">Part III — Detailed Functions</div>
-        <a class="toc__item" href="#sec-11"><span class="toc__num">11</span><span class="toc__label">Ride Booking Process</span></a>
-        <a class="toc__item" href="#sec-12"><span class="toc__num">12</span><span class="toc__label">Driver Matching Process</span></a>
-        <a class="toc__item" href="#sec-13"><span class="toc__num">13</span><span class="toc__label">GPS and Location Process</span></a>
-        <a class="toc__item" href="#sec-14"><span class="toc__num">14</span><span class="toc__label">Fare Calculation Process</span></a>
-        <a class="toc__item" href="#sec-15"><span class="toc__num">15</span><span class="toc__label">Payment Process</span></a>
-        <a class="toc__item" href="#sec-16"><span class="toc__num">16</span><span class="toc__label">Cancellation Process</span></a>
-        <a class="toc__item" href="#sec-17"><span class="toc__num">17</span><span class="toc__label">Notification Process</span></a>
-        <a class="toc__item" href="#sec-18"><span class="toc__num">18</span><span class="toc__label">Rating and Feedback Process</span></a>
-        <a class="toc__item" href="#sec-19"><span class="toc__num">19</span><span class="toc__label">Ride History</span></a>
-        <a class="toc__item" href="#sec-20"><span class="toc__num">20</span><span class="toc__label">Account Management</span></a>
-        <a class="toc__item" href="#sec-21"><span class="toc__num">21</span><span class="toc__label">Security Requirements</span></a>
-        <a class="toc__item" href="#sec-22"><span class="toc__num">22</span><span class="toc__label">Functional Requirements</span></a>
-        <a class="toc__item" href="#sec-23"><span class="toc__num">23</span><span class="toc__label">Non-Functional Requirements</span></a>
-
-        <div class="toc__group">Part IV — Use Cases, Rules &amp; Acceptance</div>
-        <a class="toc__item" href="#sec-24"><span class="toc__num">24</span><span class="toc__label">Use Cases</span></a>
-        <a class="toc__item" href="#sec-25"><span class="toc__num">25</span><span class="toc__label">Business Rules</span></a>
-        <a class="toc__item" href="#sec-26"><span class="toc__num">26</span><span class="toc__label">Data Requirements</span></a>
-        <a class="toc__item" href="#sec-27"><span class="toc__num">27</span><span class="toc__label">UI/UX Design System</span></a>
-        <a class="toc__item" href="#sec-28"><span class="toc__num">28</span><span class="toc__label">Passenger UI Screens</span></a>
-        <a class="toc__item" href="#sec-29"><span class="toc__num">29</span><span class="toc__label">Rider UI Screens</span></a>
-        <a class="toc__item" href="#sec-30"><span class="toc__num">30</span><span class="toc__label">Admin Dashboard</span></a>
-        <a class="toc__item" href="#sec-31"><span class="toc__num">31</span><span class="toc__label">System Flow Diagram</span></a>
-        <a class="toc__item" href="#sec-32"><span class="toc__num">32</span><span class="toc__label">Exception / Alternative Flows</span></a>
-        <a class="toc__item" href="#sec-33"><span class="toc__num">33</span><span class="toc__label">Acceptance Criteria</span></a>
-
-        <div class="toc__group">Part V — Assumptions &amp; Closing</div>
-        <a class="toc__item" href="#sec-34"><span class="toc__num">34</span><span class="toc__label">Assumptions</span></a>
-        <a class="toc__item" href="#sec-35"><span class="toc__num">35</span><span class="toc__label">Stakeholder Confirmation Checklist</span></a>
-        <a class="toc__item" href="#sec-36"><span class="toc__num">36</span><span class="toc__label">Conclusion</span></a>
-
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+        <div class="flow-node start">📱 Passenger Opens Voyago</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🔐 Login / Registration</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🏠 Passenger Dashboard</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📋 Select "Book a Ride"</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📍 Enter Pickup Location</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🏁 Enter Destination</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">💲 System Calculates / Displays Ride Info <span class="badge badge-confirm">[FC]</span></div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📄 Passenger Reviews Ride Details</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node" style="border-color:var(--success); border-width:2.5px;">✅ Confirm Ride</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🔄 System Creates Ride Request</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🔍 System Searches for Available Rider</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📲 Rider Receives Request</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node" style="border-color:var(--success); border-width:2.5px;">👍 Rider Accepts Request</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🔗 System Assigns Rider</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📨 Passenger Receives Rider Information</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🏍 Rider Travels to Pickup Location</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📍 Rider Arrives</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🚀 Ride Starts</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🛣 Ride In Progress</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node" style="border-color:var(--success); border-width:2.5px;">🏁 Ride Completed</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">💳 Payment / Fare Status <span class="badge badge-confirm">[FC]</span></div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">⭐ Passenger Rates Rider</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📚 Ride Saved to History</div>
       </div>
-    </div>
+      <p class="caption" style="text-align:center; margin-top:1.5rem;">
+        [FC] = For Confirmation · The exact fare calculation and payment mechanism are to be validated.
+      </p>
+    </section>
 
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 2</span>
-    </footer>
-  </section>
+    <!-- ========== 4. PASSENGER JOURNEY ========== -->
+    <section id="passenger">
+      <div class="section-title">
+        <span>03</span> Passenger Journey — From Opening the App to Completed Ride
+      </div>
 
-<!-- ============================================================
-     PAGE 3 — SECTION 1: INTRODUCTION
-     ============================================================ -->
-  <section class="page" id="sec-1">
-    <header class="page__header">
-      <div class="page__header-left">Section 1 — Introduction</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">1</span>
-        <div>
-          <h2 class="section__title">Introduction</h2>
-          <div class="section__subtitle">Proposed local ride-hailing and motorcycle transportation system</div>
+      <div class="journey-grid">
+        <!-- Steps 1-17 -->
+        <div class="journey-step">
+          <div class="step-num">01</div>
+          <div class="step-col"><h4>User Action</h4><p>Open Voyago app</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Displays splash / login screen</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>App ready for authentication</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">02</div>
+          <div class="step-col"><h4>User Action</h4><p>Login or Register</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Validates credentials</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Access to passenger dashboard</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">03</div>
+          <div class="step-col"><h4>User Action</h4><p>View Dashboard</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Loads main interface with map / options</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>User sees "Book a Ride" button</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">04</div>
+          <div class="step-col"><h4>User Action</h4><p>Tap "Book a Ride"</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Opens booking form</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Pickup field is active</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">05</div>
+          <div class="step-col"><h4>User Action</h4><p>Enter pickup location</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Suggests / validates location <span class="badge badge-confirm">[FC]</span></p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Pickup set</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">06</div>
+          <div class="step-col"><h4>User Action</h4><p>Enter destination</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Validates destination</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Destination set</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">07</div>
+          <div class="step-col"><h4>User Action</h4><p>Review ride details</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Shows estimated info <span class="badge badge-confirm">[FC]</span></p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Passenger sees summary</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">08</div>
+          <div class="step-col"><h4>User Action</h4><p>Confirm Ride</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Creates ride request</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Request sent to system</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">09</div>
+          <div class="step-col"><h4>User Action</h4><p>Wait for rider assignment</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Searching for available rider</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Status: Searching</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">10</div>
+          <div class="step-col"><h4>User Action</h4><p>View rider info</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Displays rider name / details <span class="badge badge-confirm">[FC]</span></p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Passenger knows who is coming</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">11</div>
+          <div class="step-col"><h4>User Action</h4><p>Wait for rider arrival</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Updates status to "Arriving" / "Arrived"</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Passenger sees rider approaching</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">12</div>
+          <div class="step-col"><h4>User Action</h4><p>Board the ride</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Rider marks "Start Ride"</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Ride begins</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">13</div>
+          <div class="step-col"><h4>User Action</h4><p>Ride in progress</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Tracks ride status <span class="badge badge-confirm">[FC]</span></p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Passenger en route</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">14</div>
+          <div class="step-col"><h4>User Action</h4><p>Arrive at destination</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Rider marks "Completed"</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Ride finished</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">15</div>
+          <div class="step-col"><h4>User Action</h4><p>Review fare / payment</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Displays fare amount <span class="badge badge-confirm">[FC]</span></p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Passenger sees total</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">16</div>
+          <div class="step-col"><h4>User Action</h4><p>Rate &amp; provide feedback</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Saves rating</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Feedback recorded</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">17</div>
+          <div class="step-col"><h4>User Action</h4><p>View ride history</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Retrieves past rides</p></div>
+          <div class="step-col"><h4>Expected Result</h4><p>Ride appears in history</p></div>
         </div>
       </div>
+    </section>
 
-      <p>
-        <strong>CatbaRide</strong> is a proposed local ride-hailing and motorcycle
-        transportation system intended for <strong>Catbalogan City, Samar, Philippines</strong>.
-        It is designed as a capstone project to demonstrate how a digital platform could
-        help organize motorcycle-based passenger transport within the city by allowing
-        passengers to request rides through a mobile application and enabling registered
-        riders to receive, accept, and complete those ride requests.
+    <!-- ========== 5. PASSENGER BOOKING FLOWCHART ========== -->
+    <section id="booking">
+      <div class="section-title">
+        <span>04</span> Passenger Booking Flowchart
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <div class="flow-node start">📋 Open Booking</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📍 Enter Pickup</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🏁 Enter Destination</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">⚙️ System Validates Details</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+
+        <!-- Decision diamond -->
+        <div class="flow-node decision">Are Details Complete?</div>
+
+        <div style="display:flex; gap:4rem; flex-wrap:wrap; justify-content:center; margin-top:0.5rem;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+            <div class="flow-arrow" style="color:var(--success); font-size:1rem; font-weight:700;">YES ▼</div>
+            <div class="flow-node" style="border-color:var(--success);">✅ Continue</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+            <div class="flow-arrow" style="color:var(--danger); font-size:1rem; font-weight:700;">NO ▼</div>
+            <div class="flow-node" style="border-color:var(--danger); background:#fff5f5;">⚠️ Show Missing/Invalid Info</div>
+            <div class="flow-arrow flow-arrow-down">▼</div>
+            <div class="flow-node" style="background:#fff5f5;">✏️ Passenger Corrects Details</div>
+            <div class="flow-arrow flow-arrow-down">▼</div>
+            <div class="flow-node" style="background:#fff5f5; border-style:dashed;">↩️ Return to Validation</div>
+          </div>
+        </div>
+
+        <div class="flow-arrow flow-arrow-down" style="margin-top:0.5rem;">▼</div>
+        <div class="flow-node">📄 Show Ride Details</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">👀 Passenger Reviews</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+
+        <div class="flow-node decision">Confirm Ride?</div>
+
+        <div style="display:flex; gap:4rem; flex-wrap:wrap; justify-content:center; margin-top:0.5rem;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+            <div class="flow-arrow" style="color:var(--success); font-size:1rem; font-weight:700;">YES ▼</div>
+            <div class="flow-node" style="border-color:var(--success);">📨 Create Ride Request</div>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+            <div class="flow-arrow" style="color:var(--danger); font-size:1rem; font-weight:700;">NO ▼</div>
+            <div class="flow-node" style="border-color:var(--danger); background:#fff5f5;">↩️ Return to Booking</div>
+          </div>
+        </div>
+      </div>
+      <p class="caption" style="text-align:center; margin-top:1.5rem;">
+        Decision points are shown in diamond shapes. Validation and correction loop ensures complete data.
+      </p>
+    </section>
+
+    <!-- ========== 6. AFTER CONFIRM RIDE — SWIMLANE ========== -->
+    <section id="after-confirm">
+      <div class="section-title">
+        <span>05</span> "What Happens After I Click Confirm Ride?"
+      </div>
+      <p style="margin-bottom:2rem; color:var(--gray-600);">
+        Behind-the-scenes sequence — three lanes showing Passenger, Voyago System, and Rider interaction.
       </p>
 
-      <p>
-        The system is presented as a <strong>concept and academic proposal</strong>. It does
-        not represent an existing commercial service, and it is not affiliated with any
-        established ride-hailing company. The accompanying HTML document is a
-        documentation and UI/UX prototype only — it does not include real GPS, real-time
-        maps, real payments, a database, or a production backend.
+      <div class="swimlane">
+        <!-- Header row -->
+        <div class="swimlane-header">PASSENGER</div>
+        <div class="swimlane-header">VOYAGO SYSTEM</div>
+        <div class="swimlane-header">RIDER</div>
+        <div class="swimlane-header">STATUS / OUTPUT</div>
+
+        <!-- Row 1 -->
+        <div class="swimlane-cell">🖱 Click "Confirm Ride"</div>
+        <div class="swimlane-cell">📥 Receives request</div>
+        <div class="swimlane-cell">—</div>
+        <div class="swimlane-cell"><span class="status-badge status-requested">REQUESTED</span></div>
+
+        <!-- Row 2 -->
+        <div class="swimlane-cell">⏳ Wait for rider</div>
+        <div class="swimlane-cell">🔄 Creates ride request</div>
+        <div class="swimlane-cell">—</div>
+        <div class="swimlane-cell"><span class="status-badge status-searching">SEARCHING</span></div>
+
+        <!-- Row 3 -->
+        <div class="swimlane-cell">—</div>
+        <div class="swimlane-cell">🔍 Searches available rider</div>
+        <div class="swimlane-cell">📲 Receives request</div>
+        <div class="swimlane-cell"><span class="status-badge status-searching">SEARCHING</span></div>
+
+        <!-- Row 4 -->
+        <div class="swimlane-cell">—</div>
+        <div class="swimlane-cell">📤 Sends request to rider</div>
+        <div class="swimlane-cell">👀 Reviews request</div>
+        <div class="swimlane-cell"><span class="status-badge status-searching">SEARCHING</span></div>
+
+        <!-- Row 5 -->
+        <div class="swimlane-cell">—</div>
+        <div class="swimlane-cell">⏳ Waiting for response</div>
+        <div class="swimlane-cell">✅ Accepts / ❌ Rejects</div>
+        <div class="swimlane-cell"><span class="status-badge status-searching">SEARCHING</span></div>
+
+        <!-- Row 6 — accept path -->
+        <div class="swimlane-cell">—</div>
+        <div class="swimlane-cell">🔗 System assigns rider</div>
+        <div class="swimlane-cell">🏍 Rider accepts</div>
+        <div class="swimlane-cell"><span class="status-badge status-assigned">RIDER ASSIGNED</span></div>
+
+        <!-- Row 7 -->
+        <div class="swimlane-cell">📨 Receives rider info</div>
+        <div class="swimlane-cell">📤 Notifies passenger</div>
+        <div class="swimlane-cell">🧭 Navigate to pickup</div>
+        <div class="swimlane-cell"><span class="status-badge status-arriving">RIDER ARRIVING</span></div>
+
+        <!-- Row 8 -->
+        <div class="swimlane-cell">👋 Meets rider</div>
+        <div class="swimlane-cell">📍 Updates status</div>
+        <div class="swimlane-cell">📍 Arrives at pickup</div>
+        <div class="swimlane-cell"><span class="status-badge status-arrived">ARRIVED</span></div>
+      </div>
+      <p class="caption" style="text-align:center; margin-top:1rem;">
+        Swimlane diagram — each column represents an actor's actions. Rows show the sequence.
       </p>
+    </section>
 
-      <div class="callout callout--info">
-        <span class="callout__label">Positioning Statement</span>
-        This project is a <strong>proposed capstone system</strong> composed of a
-        Functional Specification and a UI/UX Design Specification. It is intended
-        for academic presentation, panel review, and PDF submission. Any operational
-        details such as fare amounts, coverage areas, and rider requirements are
-        placeholders that require <strong>stakeholder confirmation</strong>.
+    <!-- ========== 7. RIDER JOURNEY ========== -->
+    <section id="rider">
+      <div class="section-title">
+        <span>06</span> Rider Journey — From Receiving Request to Completing Ride
       </div>
 
-      <div class="subsection">
-        <h3 class="subsection__title">1.1 Purpose of the Proposed System</h3>
-        <p>
-          The purpose of CatbaRide is to propose a structured, digital way for
-          passengers and motorcycle riders in Catbalogan City to connect for local
-          trips. Instead of relying solely on informal arrangements, the proposed
-          system aims to provide a single platform where:
-        </p>
-        <ul class="list-check">
-          <li>Passengers can enter a pickup point and destination.</li>
-          <li>An estimated fare can be shown before confirming a ride.</li>
-          <li>A registered rider can receive and accept the request.</li>
-          <li>Both parties can see the status of the ride.</li>
-          <li>A record of the trip, payment, and rating can be stored.</li>
-          <li>Administrators can manage users, riders, and ride activity.</li>
-        </ul>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">1.2 Local Context</h3>
-        <p>
-          Catbalogan City is the capital of Samar Province and is composed of urban
-          and rural barangays. Motorcycle-based transport is a common and practical
-          way to move around the city, especially for short-distance trips. The
-          proposed system is therefore designed with this local context in mind:
-          simple flows, landmark-friendly pickup and destination entry, and
-          cash-based payment as a primary option.
-        </p>
-
-        <div class="callout callout--warning">
-          <span class="callout__label">Local Information Rule</span>
-          This document does <strong>not</strong> claim official Catbalogan fare rates,
-          government regulations, transportation statistics, or existing operational
-          service details. Where such information would be needed, it is marked
-          <span class="placeholder">[For Stakeholder Confirmation]</span> or
-          <span class="placeholder">[To Be Determined]</span>.
+      <div class="journey-grid">
+        <div class="journey-step">
+          <div class="step-num">01</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Rider Logs In</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Validates credentials, loads dashboard</p></div>
+          <div class="step-col"><h4>Result</h4><p>Rider online</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">02</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Becomes Available</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Marks rider as available <span class="badge badge-confirm">[FC]</span></p></div>
+          <div class="step-col"><h4>Result</h4><p>Rider can receive requests</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">03</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Ride Request Appears</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Pushes request to rider</p></div>
+          <div class="step-col"><h4>Result</h4><p>Request visible</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">04</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Reviews Request</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Shows pickup, destination, fare <span class="badge badge-confirm">[FC]</span></p></div>
+          <div class="step-col"><h4>Result</h4><p>Rider decides</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">05</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Accepts or Rejects</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Processes response</p></div>
+          <div class="step-col"><h4>Result</h4><p>Assignment updated</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">06</div>
+          <div class="step-col"><h4>Rider Action</h4><p>—</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Updates assignment status</p></div>
+          <div class="step-col"><h4>Result</h4><p>Passenger notified</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">07</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Travels to Pickup</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Updates status to "Arriving"</p></div>
+          <div class="step-col"><h4>Result</h4><p>Passenger sees progress</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">08</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Arrives</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Status → "Arrived"</p></div>
+          <div class="step-col"><h4>Result</h4><p>Passenger notified</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">09</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Ride Starts</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Status → "In Progress"</p></div>
+          <div class="step-col"><h4>Result</h4><p>Ride active</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">10</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Ride In Progress</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Monitors status</p></div>
+          <div class="step-col"><h4>Result</h4><p>En route</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">11</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Ride Completed</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Status → "Completed"</p></div>
+          <div class="step-col"><h4>Result</h4><p>Ride ends</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">12</div>
+          <div class="step-col"><h4>Rider Action</h4><p>Fare / Payment Status</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Records fare <span class="badge badge-confirm">[FC]</span></p></div>
+          <div class="step-col"><h4>Result</h4><p>Fare displayed</p></div>
+        </div>
+        <div class="journey-step">
+          <div class="step-num">13</div>
+          <div class="step-col"><h4>Rider Action</h4><p>—</p></div>
+          <div class="step-col"><h4>System Response</h4><p>Saves ride record</p></div>
+          <div class="step-col"><h4>Result</h4><p>Ride in history</p></div>
         </div>
       </div>
+    </section>
 
-      <div class="subsection">
-        <h3 class="subsection__title">1.3 Scope of This Document</h3>
-        <p>
-          This document combines two complementary specifications:
-        </p>
-        <div class="card-grid">
-          <div class="card">
-            <div class="card__title"><span class="card__icon">FS</span>Functional Specification</div>
-            <div class="card__text">
-              Describes how the proposed system should behave — users, processes,
-              requirements, use cases, business rules, and data needs.
-            </div>
-          </div>
-          <div class="card">
-            <div class="card__title"><span class="card__icon">UX</span>UI/UX Design Specification</div>
-            <div class="card__text">
-              Presents the proposed look and feel of the passenger, rider, and
-              admin interfaces through original visual mockups.
-            </div>
-          </div>
-          <div class="card">
-            <div class="card__title"><span class="card__icon">PR</span>Prototype</div>
-            <div class="card__text">
-              A self-contained HTML document that demonstrates the proposed flows
-              using simulated data only — no real backend or APIs.
-            </div>
-          </div>
-        </div>
+    <!-- ========== 8. RIDER ACCEPT / REJECT DECISION FLOW ========== -->
+    <section id="rider-decision">
+      <div class="section-title">
+        <span>07</span> Rider Accept / Reject Decision Flow
       </div>
 
-    </div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+        <div class="flow-node start">📲 Ride Request Received</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">👀 Rider Reviews Request</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node decision">Accept Request?</div>
 
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 3</span>
-    </footer>
-  </section>
-
-<!-- ============================================================
-     PAGE 4 — SECTION 2: PROJECT OVERVIEW
-     ============================================================ -->
-  <section class="page" id="sec-2">
-    <header class="page__header">
-      <div class="page__header-left">Section 2 — Project Overview</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">2</span>
-        <div>
-          <h2 class="section__title">Project Overview</h2>
-          <div class="section__subtitle">What the system is and how it is intended to work</div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">2.1 What CatbaRide Is</h3>
-        <p>
-          CatbaRide is a proposed ride-hailing and motorcycle transportation
-          booking system for Catbalogan City. It consists of three connected
-          application views:
-        </p>
-        <div class="role-grid">
-          <div class="role-card">
-            <div class="role-card__head">
-              <h4>Passenger App</h4>
-              <span>Request and track rides</span>
-            </div>
-            <div class="role-card__body">
-              <ul>
-                <li>Register and log in</li>
-                <li>Enter pickup and destination</li>
-                <li>View fare estimate</li>
-                <li>Confirm booking</li>
-                <li>Track ride status</li>
-                <li>Pay and rate</li>
-              </ul>
-            </div>
+        <div style="display:flex; gap:4rem; flex-wrap:wrap; justify-content:center; margin-top:0.5rem;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+            <div class="flow-arrow" style="color:var(--success); font-size:1rem; font-weight:700;">YES ▼</div>
+            <div class="flow-node" style="border-color:var(--success);">🔗 System Assigns Ride</div>
+            <div class="flow-arrow flow-arrow-down">▼</div>
+            <div class="flow-node">📨 Passenger Notified</div>
+            <div class="flow-arrow flow-arrow-down">▼</div>
+            <div class="flow-node">🧭 Navigate to Pickup</div>
           </div>
-          <div class="role-card">
-            <div class="role-card__head">
-              <h4>Rider App</h4>
-              <span>Receive and complete rides</span>
-            </div>
-            <div class="role-card__body">
-              <ul>
-                <li>Register and verify</li>
-                <li>Go online / offline</li>
-                <li>Receive ride requests</li>
-                <li>Accept or reject</li>
-                <li>Start and complete trips</li>
-                <li>View earnings and ratings</li>
-              </ul>
-            </div>
-          </div>
-          <div class="role-card">
-            <div class="role-card__head">
-              <h4>Admin Dashboard</h4>
-              <span>Manage the platform</span>
-            </div>
-            <div class="role-card__body">
-              <ul>
-                <li>Manage users and riders</li>
-                <li>Verify rider accounts</li>
-                <li>Monitor rides</li>
-                <li>Review reports</li>
-                <li>Handle feedback</li>
-                <li>Configure settings</li>
-              </ul>
-            </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+            <div class="flow-arrow" style="color:var(--danger); font-size:1rem; font-weight:700;">NO ▼</div>
+            <div class="flow-node" style="border-color:var(--danger); background:#fff5f5;">❌ Request Declined</div>
+            <div class="flow-arrow flow-arrow-down">▼</div>
+            <div class="flow-node" style="background:#fff5f5;">🔍 System Searches Another Rider <span class="badge badge-confirm">[FC]</span></div>
           </div>
         </div>
       </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">2.2 Intended Users</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>User Group</th>
-                <th>Description</th>
-                <th>Primary Need</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Passengers</strong></td>
-                <td>Residents and visitors in Catbalogan City who need local motorcycle transport.</td>
-                <td>A simple way to request a ride and know the estimated fare.</td>
-              </tr>
-              <tr>
-                <td><strong>Riders / Drivers</strong></td>
-                <td>Registered motorcycle operators who are willing to accept passenger trips through the platform.</td>
-                <td>A structured way to receive ride requests and record trips.</td>
-              </tr>
-              <tr>
-                <td><strong>Administrators</strong></td>
-                <td>Personnel responsible for managing users, riders, rides, and system settings.</td>
-                <td>Visibility and control over the platform’s operations.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">2.3 General System Concept</h3>
-        <p>
-          The system follows a simple request-and-match concept:
-        </p>
-        <div class="flow">
-          <div class="flow__title">Concept Flow</div>
-          <div class="flow__steps">
-            <div class="flow__node flow__node--start">Passenger Requests a Ride</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">System Computes Estimated Fare</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">System Searches for Available Rider</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rider Accepts Request</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Ride is Completed</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node flow__node--end">Payment, Rating, and History Recorded</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">2.4 How Passengers Request Rides</h3>
-        <p>
-          A passenger opens the app, logs in, enters a pickup point and destination,
-          views an estimated fare, and confirms the booking. The system then searches
-          for an available rider and shows the assigned rider’s information once the
-          request is accepted.
-        </p>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">2.5 How Riders Receive Requests</h3>
-        <p>
-          A verified rider logs in, sets their status to <strong>Online</strong>, and
-          waits to receive ride requests. When a request arrives, the rider can accept
-          or reject it. After accepting, the rider proceeds to the pickup point,
-          starts the ride, and completes it at the destination.
-        </p>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">2.6 How Administrators Manage the Platform</h3>
-        <p>
-          Administrators use a desktop-style dashboard to review rider applications,
-          manage passenger and rider accounts, monitor ongoing and completed rides,
-          review reports and feedback, and configure system settings such as fare
-          parameters.
-        </p>
-      </div>
-
-      <div class="callout callout--warning">
-        <span class="callout__label">Prototype Limitation</span>
-        The HTML prototype simulates these flows with static data. It does not
-        connect to real maps, GPS, payment gateways, SMS, push notifications, or
-        a production database.
-      </div>
-
-    </div>
-
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 4</span>
-    </footer>
-  </section>
-
-<!-- ============================================================
-     PAGE 5 — SECTION 3: SYSTEM OBJECTIVES
-     ============================================================ -->
-  <section class="page" id="sec-3">
-    <header class="page__header">
-      <div class="page__header-left">Section 3 — System Objectives</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">3</span>
-        <div>
-          <h2 class="section__title">System Objectives</h2>
-          <div class="section__subtitle">What the proposed system aims to accomplish</div>
-        </div>
-      </div>
-
-      <p>
-        The following objectives define the intended purpose of the proposed
-        CatbaRide system. Each objective is written as a goal that the
-        functional specification is designed to support.
+      <p class="caption" style="text-align:center; margin-top:1rem;">
+        <span class="badge badge-confirm">[FOR CONFIRMATION]</span> — exact matching behavior when rider rejects.
       </p>
+    </section>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:80px;">ID</th>
-              <th>Objective</th>
-              <th style="width:180px;">Primary Actor</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>OBJ-01</td><td>Provide a convenient way for passengers to request motorcycle rides within Catbalogan City.</td><td>Passenger</td></tr>
-            <tr><td>OBJ-02</td><td>Allow passengers to enter a pickup location and destination using text, landmarks, or map selection.</td><td>Passenger</td></tr>
-            <tr><td>OBJ-03</td><td>Display an estimated fare before the passenger confirms a booking.</td><td>Passenger</td></tr>
-            <tr><td>OBJ-04</td><td>Allow verified riders to receive, accept, or reject incoming ride requests.</td><td>Rider</td></tr>
-            <tr><td>OBJ-05</td><td>Provide a clear ride status that both passenger and rider can follow.</td><td>Passenger / Rider</td></tr>
-            <tr><td>OBJ-06</td><td>Maintain a record of completed, cancelled, and in-progress rides for each user.</td><td>Passenger / Rider</td></tr>
-            <tr><td>OBJ-07</td><td>Support a simple rating and feedback process after each completed ride.</td><td>Passenger</td></tr>
-            <tr><td>OBJ-08</td><td>Allow administrators to manage passenger accounts and rider accounts.</td><td>Admin</td></tr>
-            <tr><td>OBJ-09</td><td>Allow administrators to verify rider accounts before they can accept rides.</td><td>Admin</td></tr>
-            <tr><td>OBJ-10</td><td>Provide administrators with monitoring and reporting tools for rides, payments, and feedback.</td><td>Admin</td></tr>
-            <tr><td>OBJ-11</td><td>Support configurable fare parameters rather than hard-coded fare amounts.</td><td>Admin</td></tr>
-            <tr><td>OBJ-12</td><td>Present an original, professional UI/UX design appropriate for a local ride-hailing service.</td><td>All</td></tr>
-          </tbody>
-        </table>
+    <!-- ========== 9. RIDE STATUS LIFECYCLE ========== -->
+    <section id="status">
+      <div class="section-title">
+        <span>08</span> Ride Status Lifecycle
       </div>
 
-      <div class="callout callout--info">
-        <span class="callout__label">Note</span>
-        These objectives describe the <strong>proposed</strong> system. Actual
-        implementation of all objectives is subject to the final approved scope
-        and to the stakeholder confirmation checklist in Section 35.
+      <div class="status-lifecycle">
+        <div class="status-node"><span class="dot"></span> REQUESTED</div>
+        <div class="flow-arrow">→</div>
+        <div class="status-node"><span class="dot warning"></span> SEARCHING FOR RIDER</div>
+        <div class="flow-arrow">→</div>
+        <div class="status-node"><span class="dot active"></span> RIDER ASSIGNED</div>
+        <div class="flow-arrow">→</div>
+        <div class="status-node"><span class="dot"></span> RIDER ARRIVING</div>
+        <div class="flow-arrow">→</div>
+        <div class="status-node"><span class="dot"></span> ARRIVED</div>
+        <div class="flow-arrow">→</div>
+        <div class="status-node"><span class="dot"></span> IN PROGRESS</div>
+        <div class="flow-arrow">→</div>
+        <div class="status-node"><span class="dot active"></span> COMPLETED</div>
       </div>
 
-    </div>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-top:1.5rem;">
+        <div class="status-node danger"><span class="dot danger"></span> CANCELLED</div>
+        <div class="status-node warning"><span class="dot warning"></span> NO RIDER FOUND <span class="badge badge-confirm">[FC]</span></div>
+      </div>
 
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 5</span>
-    </footer>
-  </section>
-
-<!-- ============================================================
-     PAGE 6 — SECTION 4: SCOPE AND LIMITATIONS
-     ============================================================ -->
-  <section class="page" id="sec-4">
-    <header class="page__header">
-      <div class="page__header-left">Section 4 — Scope and Limitations</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">4</span>
-        <div>
-          <h2 class="section__title">Scope and Limitations</h2>
-          <div class="section__subtitle">What is included and what is explicitly excluded</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:1rem; margin-top:2rem;">
+        <div class="card" style="padding:1.2rem;">
+          <span class="status-badge status-requested">REQUESTED</span>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">Passenger submitted a ride request.</p>
+        </div>
+        <div class="card" style="padding:1.2rem;">
+          <span class="status-badge status-searching">SEARCHING</span>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">System is looking for an available rider.</p>
+        </div>
+        <div class="card" style="padding:1.2rem;">
+          <span class="status-badge status-assigned">ASSIGNED</span>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">A rider has accepted the ride request.</p>
+        </div>
+        <div class="card" style="padding:1.2rem;">
+          <span class="status-badge status-arriving">ARRIVING</span>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">Rider is on the way to the pickup location.</p>
+        </div>
+        <div class="card" style="padding:1.2rem;">
+          <span class="status-badge status-arrived">ARRIVED</span>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">Rider has arrived at the pickup point.</p>
+        </div>
+        <div class="card" style="padding:1.2rem;">
+          <span class="status-badge status-progress">IN PROGRESS</span>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">Ride is currently ongoing.</p>
+        </div>
+        <div class="card" style="padding:1.2rem;">
+          <span class="status-badge status-completed">COMPLETED</span>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">Ride has been successfully finished.</p>
+        </div>
+        <div class="card" style="padding:1.2rem; border-left:3px solid var(--danger);">
+          <span class="status-badge status-cancelled">CANCELLED</span>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">Ride was cancelled by passenger or rider.</p>
+        </div>
+        <div class="card" style="padding:1.2rem; border-left:3px dashed var(--warning);">
+          <span class="status-badge status-norider">NO RIDER FOUND <span class="badge badge-confirm">[FC]</span></span>
+          <p style="margin-top:0.5rem; font-size:0.85rem;">No available rider accepted the request.</p>
         </div>
       </div>
+    </section>
 
-      <div class="subsection">
-        <h3 class="subsection__title">4.1 In Scope</h3>
-        <p>
-          The following functions and deliverables are part of the proposed
-          CatbaRide system documentation and prototype:
+    <!-- ========== 10. RIDE IN PROGRESS FLOW ========== -->
+    <section id="in-progress">
+      <div class="section-title">
+        <span>09</span> Ride In Progress Flow
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+        <div class="flow-node start">✅ Ride Accepted</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🏍 Rider Goes to Pickup</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📍 Rider Arrives</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🧑 Passenger Boards</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🚀 Ride Starts</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🛣 Destination</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node" style="border-color:var(--success);">🏁 Ride Completed</div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; margin-top:2rem;">
+        <div class="card" style="border-top:4px solid var(--electric);">
+          <div class="badge badge-passenger">🧑 PASSENGER RESPONSIBILITY</div>
+          <ul style="margin-top:1rem; list-style:none;">
+            <li style="padding:0.3rem 0;">✓ Board the correct vehicle</li>
+            <li style="padding:0.3rem 0;">✓ Confirm ride start if needed <span class="badge badge-confirm">[FC]</span></li>
+            <li style="padding:0.3rem 0;">✓ Stay seated during ride</li>
+            <li style="padding:0.3rem 0;">✓ Alight at destination</li>
+          </ul>
+        </div>
+        <div class="card" style="border-top:4px solid #f59e0b;">
+          <div class="badge badge-rider">🏍 RIDER RESPONSIBILITY</div>
+          <ul style="margin-top:1rem; list-style:none;">
+            <li style="padding:0.3rem 0;">✓ Navigate to pickup safely</li>
+            <li style="padding:0.3rem 0;">✓ Mark "Arrived" upon arrival</li>
+            <li style="padding:0.3rem 0;">✓ Start ride when passenger boards</li>
+            <li style="padding:0.3rem 0;">✓ Complete ride at destination</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 11. RIDE COMPLETION FLOW ========== -->
+    <section id="completion">
+      <div class="section-title">
+        <span>10</span> Ride Completion Flow
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+        <div class="flow-node start">🏍 Rider Completes Ride</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">⚙️ System Updates Ride Status</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">💲 Fare / Payment Status Recorded <span class="badge badge-proposed">[PROPOSED]</span> <span class="badge badge-confirm">[FC]</span></div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🧑 Passenger Sees Completion</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">⭐ Rating / Feedback</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📚 Ride History Updated</div>
+      </div>
+      <p class="caption" style="text-align:center; margin-top:1rem;">
+        Payment details are marked [PROPOSED / FOR CONFIRMATION] — no real payment gateway is implied.
+      </p>
+    </section>
+
+    <!-- ========== 12. PAYMENT / FARE FLOW ========== -->
+    <section id="payment">
+      <div class="section-title">
+        <span>11</span> Payment / Fare Flow
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+        <div class="flow-node start">🏁 Ride Completed</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">💲 Fare Amount Determined <span class="badge badge-confirm">[FOR CONFIRMATION]</span></div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🧑 Passenger Reviews Fare</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">💳 Payment Method / Payment Status <span class="badge badge-confirm">[FOR CONFIRMATION]</span></div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">✅ Payment Completed <span class="badge badge-confirm">[FOR CONFIRMATION]</span></div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📝 Ride Record Updated</div>
+      </div>
+
+      <div class="card" style="margin-top:2rem; background:#fff7ed; border:1px solid #fed7aa;">
+        <div class="badge badge-confirm">IMPORTANT NOTE</div>
+        <p style="margin-top:0.5rem; font-size:0.9rem;">
+          Voyago does <strong>not</strong> claim to support GCash, cash, credit cards, e-wallets, 
+          or any specific payment gateway at this stage. Payment functionality is conceptual 
+          and must be confirmed. Use "Payment Processing — [FOR CONFIRMATION]" in the actual system.
         </p>
-        <ul class="list-check">
-          <li>Passenger registration and login (conceptual)</li>
-          <li>Rider registration and login (conceptual)</li>
-          <li>Ride booking flow with pickup and destination entry</li>
-          <li>Estimated fare display based on configurable parameters</li>
-          <li>Conceptual rider matching</li>
-          <li>Ride status lifecycle and status display</li>
-          <li>Simulated notifications for key events</li>
-          <li>Ride history for passengers and riders</li>
-          <li>Rating and feedback after completed rides</li>
-          <li>Profile management screens</li>
-          <li>Administrator management of users, riders, and rides</li>
-          <li>Rider account verification workflow (conceptual)</li>
-          <li>Fare configuration screen for administrators (conceptual)</li>
-          <li>UI/UX prototype mockups for passenger, rider, and admin</li>
-          <li>Functional and non-functional requirements documentation</li>
-        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 13. RATING AND FEEDBACK FLOW ========== -->
+    <section id="rating">
+      <div class="section-title">
+        <span>12</span> Rating and Feedback Flow
       </div>
 
-      <div class="subsection">
-        <h3 class="subsection__title">4.2 Out of Scope</h3>
-        <p>
-          The following are <strong>explicitly excluded</strong> from the prototype.
-          They may be discussed as future production features, but they are not
-          implemented in the HTML file.
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+        <div class="flow-node start">🏁 Ride Completed</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">⭐ Passenger Opens Rating</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🔢 Select Rating (1–5)</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">💬 Optional Feedback</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📤 Submit</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">💾 System Saves Feedback</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">🔗 Rating Associated with Ride / Rider</div>
+      </div>
+      <p class="caption" style="text-align:center; margin-top:1rem;">
+        Rating and feedback storage may vary — <span class="badge badge-confirm">[FOR CONFIRMATION]</span>.
+      </p>
+    </section>
+
+    <!-- ========== 14. RIDE HISTORY FLOW ========== -->
+    <section id="history">
+      <div class="section-title">
+        <span>13</span> Ride History Flow
+      </div>
+
+      <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem;">
+        <div class="flow-node start">📚 Passenger Opens Ride History</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">⚙️ System Retrieves Previous Ride Records</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📋 Passenger Selects Ride</div>
+        <div class="flow-arrow flow-arrow-down">▼</div>
+        <div class="flow-node">📄 View Ride Details</div>
+      </div>
+
+      <div class="card" style="margin-top:2rem;">
+        <h4 style="margin-bottom:1rem;">Possible Information Displayed</h4>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:0.8rem;">
+          <div style="background:var(--gray-50); padding:0.6rem 1rem; border-radius:40px; font-size:0.85rem;">📅 Date</div>
+          <div style="background:var(--gray-50); padding:0.6rem 1rem; border-radius:40px; font-size:0.85rem;">📍 Pickup</div>
+          <div style="background:var(--gray-50); padding:0.6rem 1rem; border-radius:40px; font-size:0.85rem;">🏁 Destination</div>
+          <div style="background:var(--gray-50); padding:0.6rem 1rem; border-radius:40px; font-size:0.85rem;">🏍 Rider</div>
+          <div style="background:var(--gray-50); padding:0.6rem 1rem; border-radius:40px; font-size:0.85rem;">💲 Fare <span class="badge badge-confirm">[FC]</span></div>
+          <div style="background:var(--gray-50); padding:0.6rem 1rem; border-radius:40px; font-size:0.85rem;">📊 Ride Status</div>
+        </div>
+        <p class="caption" style="margin-top:1rem;">Fields marked [FC] require confirmation based on the final system design.</p>
+      </div>
+    </section>
+
+    <!-- ========== 15. ADMIN / MANAGEMENT PROCESS ========== -->
+    <section id="admin">
+      <div class="section-title">
+        <span>14</span> Admin / Management Process
+      </div>
+
+      <div class="card" style="border:2px dashed var(--warning); background:#fffbeb; text-align:center; padding:2rem;">
+        <div class="badge badge-confirm" style="font-size:0.9rem; padding:0.5rem 1.5rem;">ADMIN PROCESS — [FOR CONFIRMATION]</div>
+        <p style="margin-top:1rem; font-size:0.95rem; color:#92400e;">
+          No admin role or capabilities have been confirmed in the source information. 
+          The following workflow is proposed for discussion.
         </p>
-        <ul class="list-check list-cross">
-          <li>Real GPS or device location services</li>
-          <li>Real-time maps or map tile providers</li>
-          <li>Real payment gateway or e-wallet integration</li>
-          <li>Real database or server-side storage</li>
-          <li>Production-grade authentication or authorization</li>
-          <li>Real SMS or push notifications</li>
-          <li>Real-time driver tracking</li>
-          <li>Production backend or cloud infrastructure</li>
-          <li>Actual deployment to app stores or web hosting</li>
-          <li>Real fare collection, commission, or rider payout</li>
-        </ul>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem; margin-top:1.5rem; opacity:0.7;">
+          <div class="flow-node" style="background:#fffbeb;">👨‍💼 Admin Login</div>
+          <div class="flow-arrow flow-arrow-down">▼</div>
+          <div class="flow-node" style="background:#fffbeb;">📊 Admin Dashboard</div>
+          <div class="flow-arrow flow-arrow-down">▼</div>
+          <div class="flow-node" style="background:#fffbeb;">👥 Manage Users</div>
+          <div class="flow-arrow flow-arrow-down">▼</div>
+          <div class="flow-node" style="background:#fffbeb;">🏍 Manage Riders</div>
+          <div class="flow-arrow flow-arrow-down">▼</div>
+          <div class="flow-node" style="background:#fffbeb;">📈 Monitor Ride Records</div>
+          <div class="flow-arrow flow-arrow-down">▼</div>
+          <div class="flow-node" style="background:#fffbeb;">⭐ Review Reports / Feedback</div>
+          <div class="flow-arrow flow-arrow-down">▼</div>
+          <div class="flow-node" style="background:#fffbeb;">⚙️ Manage System Information</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 16. INPUT → PROCESS → OUTPUT ========== -->
+    <section id="ipo">
+      <div class="section-title">
+        <span>15</span> Input → Process → Output
       </div>
 
-      <div class="callout callout--danger">
-        <span class="callout__label">Important Clarification</span>
-        All interactions shown in the HTML prototype are <strong>simulated</strong>.
-        The prototype is a documentation and UI/UX artifact only. It is not a
-        working ride-hailing service, and it must not be presented as one.
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">4.3 Items Requiring Stakeholder Confirmation</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>Official fare amounts and structure</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
-              <tr><td>Service coverage area within Catbalogan City</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
-              <tr><td>Required rider documents and verification rules</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
-              <tr><td>Allowed payment methods</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
-              <tr><td>Cancellation policy and any related fees</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
-              <tr><td>Commission and rider payout rules</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
-              <tr><td>Whether rider-to-passenger rating is included</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
-              <tr><td>Service hours</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
-            </tbody>
-          </table>
+      <!-- A. Booking -->
+      <h3 style="margin:1.5rem 0 0.5rem; font-size:1.1rem;">A. Booking</h3>
+      <div class="ipo-grid">
+        <div class="ipo-card">
+          <div class="ipo-label">INPUT</div>
+          <div class="ipo-icon">📍</div>
+          <p>Pickup + Destination + Ride Details</p>
+        </div>
+        <div class="ipo-card" style="border:2px solid var(--electric);">
+          <div class="ipo-label">PROCESS</div>
+          <div class="ipo-icon">⚙️</div>
+          <p>Validate + Create Request + Find Rider</p>
+        </div>
+        <div class="ipo-card">
+          <div class="ipo-label">OUTPUT</div>
+          <div class="ipo-icon">📨</div>
+          <p>Ride Request / Rider Assignment</p>
         </div>
       </div>
 
-    </div>
-
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 6</span>
-    </footer>
-  </section>
-
-<!-- ============================================================
-     PAGE 7 — SECTION 5: TARGET USERS
-     ============================================================ -->
-  <section class="page" id="sec-5">
-    <header class="page__header">
-      <div class="page__header-left">Section 5 — Target Users</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">5</span>
-        <div>
-          <h2 class="section__title">Target Users</h2>
-          <div class="section__subtitle">Who the proposed system is designed for</div>
+      <!-- B. Ride Completion -->
+      <h3 style="margin:2rem 0 0.5rem; font-size:1.1rem;">B. Ride Completion</h3>
+      <div class="ipo-grid">
+        <div class="ipo-card">
+          <div class="ipo-label">INPUT</div>
+          <div class="ipo-icon">🛣</div>
+          <p>Active Ride</p>
+        </div>
+        <div class="ipo-card" style="border:2px solid var(--electric);">
+          <div class="ipo-label">PROCESS</div>
+          <div class="ipo-icon">⚙️</div>
+          <p>Complete Ride + Calculate/Record Fare <span class="badge badge-confirm">[FC]</span></p>
+        </div>
+        <div class="ipo-card">
+          <div class="ipo-label">OUTPUT</div>
+          <div class="ipo-icon">✅</div>
+          <p>Completed Ride Record</p>
         </div>
       </div>
 
-      <p>
-        The proposed system is intended for three groups of users who interact
-        with CatbaRide in different ways. Each group has distinct needs
-        and expected interactions with the platform.
-      </p>
+      <!-- C. Rating -->
+      <h3 style="margin:2rem 0 0.5rem; font-size:1.1rem;">C. Rating</h3>
+      <div class="ipo-grid">
+        <div class="ipo-card">
+          <div class="ipo-label">INPUT</div>
+          <div class="ipo-icon">⭐</div>
+          <p>Rating + Feedback</p>
+        </div>
+        <div class="ipo-card" style="border:2px solid var(--electric);">
+          <div class="ipo-label">PROCESS</div>
+          <div class="ipo-icon">⚙️</div>
+          <p>Validate + Save Feedback</p>
+        </div>
+        <div class="ipo-card">
+          <div class="ipo-label">OUTPUT</div>
+          <div class="ipo-icon">📝</div>
+          <p>Recorded Rating</p>
+        </div>
+      </div>
+    </section>
 
-      <div class="subsection">
-        <h3 class="subsection__title">5.1 Passengers</h3>
-        <p>
-          Passengers are individuals in Catbalogan City who need a motorcycle
-          ride from one point to another. They may be residents going to work,
-          students going to school, or visitors moving around the city.
+    <!-- ========== 17. WHO DOES WHAT? ========== -->
+    <section id="who">
+      <div class="section-title">
+        <span>16</span> Who Does What?
+      </div>
+
+      <div class="comparison-grid">
+        <div class="comparison-card" style="border-top:4px solid var(--electric);">
+          <div class="badge badge-passenger">🧑 PASSENGER</div>
+          <ul style="margin-top:1rem;">
+            <li>✦ Provides ride details</li>
+            <li>✦ Confirms booking</li>
+            <li>✦ Waits for rider</li>
+            <li>✦ Takes the ride</li>
+            <li>✦ Reviews fare / status</li>
+            <li>✦ Provides rating</li>
+          </ul>
+        </div>
+        <div class="comparison-card" style="border-top:4px solid #6366f1;">
+          <div class="badge badge-system">⚙️ SYSTEM</div>
+          <ul style="margin-top:1rem;">
+            <li>✦ Receives request</li>
+            <li>✦ Processes ride request</li>
+            <li>✦ Handles ride status</li>
+            <li>✦ Connects passenger &amp; rider</li>
+            <li>✦ Records ride information</li>
+          </ul>
+        </div>
+        <div class="comparison-card" style="border-top:4px solid #f59e0b;">
+          <div class="badge badge-rider">🏍 RIDER</div>
+          <ul style="margin-top:1rem;">
+            <li>✦ Receives request</li>
+            <li>✦ Accepts / rejects</li>
+            <li>✦ Goes to pickup</li>
+            <li>✦ Starts ride</li>
+            <li>✦ Completes ride</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 18. COMPLETE ONE-PAGE SUMMARY ========== -->
+    <section id="summary" class="print-break">
+      <div class="section-title">
+        <span>17</span> How Voyago Works — In One View
+      </div>
+
+      <div class="one-view">
+        <h2>HOW VOYAGO WORKS — IN ONE VIEW</h2>
+        <div class="summary-flow">
+          <div class="summary-node">🧑 PASSENGER</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">📋 BOOK RIDE</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">⚙️ VOYAGO RECEIVES REQUEST</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">🔗 RIDER MATCHING</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">✅ RIDER ACCEPTS</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">🏍 RIDER GOES TO PICKUP</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">🚀 RIDE STARTS</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">🛣 RIDE IN PROGRESS</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">🏁 RIDE COMPLETED</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">💲 FARE / PAYMENT STATUS <span class="badge badge-confirm" style="margin-left:0.3rem;">[FC]</span></div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">⭐ RATING &amp; FEEDBACK</div>
+          <div class="summary-arrow">→</div>
+          <div class="summary-node">📚 RIDE HISTORY</div>
+        </div>
+        <p style="margin-top:2rem; font-size:0.8rem; color:rgba(255,255,255,0.5);">
+          Screenshot this section for quick reference during presentations.
         </p>
-        <div class="card-grid">
-          <div class="card">
-            <div class="card__title">Primary Needs</div>
-            <div class="card__text">
-              A simple way to request a ride, know the estimated fare, and
-              see the status of the ride until completion.
-            </div>
-          </div>
-          <div class="card">
-            <div class="card__title">Expected Interaction</div>
-            <div class="card__text">
-              Register or log in, enter pickup and destination, confirm booking,
-              track the ride, pay, and rate the rider.
-            </div>
-          </div>
-        </div>
       </div>
+    </section>
 
-      <div class="subsection">
-        <h3 class="subsection__title">5.2 Riders / Drivers</h3>
-        <p>
-          Riders are motorcycle operators who are willing to accept passenger
-          trips through the platform. They must be registered and verified
-          before accepting rides.
-        </p>
-        <div class="card-grid">
-          <div class="card">
-            <div class="card__title">Primary Needs</div>
-            <div class="card__text">
-              A structured way to receive ride requests and a clear record of
-              completed trips, earnings, and ratings.
-            </div>
-          </div>
-          <div class="card">
-            <div class="card__title">Expected Interaction</div>
-            <div class="card__text">
-              Register, submit requirements, wait for verification, go online,
-              accept requests, complete trips, and review history.
-            </div>
-          </div>
-        </div>
-      </div>
+  </main>
 
-      <div class="subsection">
-        <h3 class="subsection__title">5.3 Administrators</h3>
-        <p>
-          Administrators are the personnel responsible for managing the platform.
-          They review rider applications, manage user accounts, monitor rides,
-          and configure system settings.
-        </p>
-        <div class="card-grid">
-          <div class="card">
-            <div class="card__title">Primary Needs</div>
-            <div class="card__text">
-              Visibility over users, rides, payments, and feedback, plus the
-              ability to configure fare-related and system-wide settings.
-            </div>
-          </div>
-          <div class="card">
-            <div class="card__title">Expected Interaction</div>
-            <div class="card__text">
-              Log in to a dashboard, verify riders, manage accounts, monitor
-              rides, review reports, and adjust settings.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout callout--info">
-        <span class="callout__label">Note</span>
-        The system is intended for use within Catbalogan City only. Any expansion
-        beyond the city would require separate review and stakeholder approval.
-      </div>
-
+  <!-- ========== FOOTER ========== -->
+  <footer style="text-align:center; padding:2rem 1rem; color:var(--gray-600); font-size:0.8rem; border-top:1px solid var(--gray-200); margin-top:2rem;">
+    <div class="container">
+      VOYAGO — System Process Guide · Version 1.0 · Capstone Documentation
+      <br>All unconfirmed features labeled <span class="badge badge-confirm">[FOR CONFIRMATION]</span> or <span class="badge badge-proposed">[PROPOSED]</span>
     </div>
+  </footer>
 
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 7</span>
-    </footer>
-  </section>
+  <!-- ========== JAVASCRIPT (smooth scroll + nav shadow) ========== -->
+  <script>
+    (function() {
+      // Smooth scrolling for nav links
+      document.querySelectorAll('.nav-links a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          const targetEl = document.querySelector(targetId);
+          if (targetEl) {
+            const offset = 80;
+            const elementPosition = targetEl.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
 
-<!-- ============================================================
-     PAGE 8 — SECTION 6: USER ROLES
-     ============================================================ -->
-  <section class="page" id="sec-6">
-    <header class="page__header">
-      <div class="page__header-left">Section 6 — User Roles</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">6</span>
-        <div>
-          <h2 class="section__title">User Roles</h2>
-          <div class="section__subtitle">Responsibilities and permissions per role</div>
-        </div>
-      </div>
-
-      <p>
-        CatbaRide defines three user roles. Each role has its own
-        responsibilities, main functions, permissions, and typical workflow.
-      </p>
-
-      <div class="subsection">
-        <h3 class="subsection__title">6.1 Passenger</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:180px;">Aspect</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Responsibilities</strong></td>
-                <td>Register, request rides, enter pickup and destination, view fare estimate, monitor ride status, complete payment, rate rider, view ride history.</td>
-              </tr>
-              <tr>
-                <td><strong>Main Functions</strong></td>
-                <td>Registration, login, profile management, booking, tracking, payment, rating, and history.</td>
-              </tr>
-              <tr>
-                <td><strong>Permissions</strong></td>
-                <td>Can create bookings, cancel bookings, view own ride history, and rate riders.</td>
-              </tr>
-              <tr>
-                <td><strong>Typical Workflow</strong></td>
-                <td>Login → Enter pickup → Enter destination → View fare → Confirm → Track → Pay → Rate.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">6.2 Rider / Driver</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:180px;">Aspect</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Responsibilities</strong></td>
-                <td>Register, submit required information, go online/offline, receive ride requests, accept or reject requests, pick up passengers, start and complete rides, view ride history, view ratings.</td>
-              </tr>
-              <tr>
-                <td><strong>Main Functions</strong></td>
-                <td>Registration, verification, online status, request handling, trip management, earnings, and history.</td>
-              </tr>
-              <tr>
-                <td><strong>Permissions</strong></td>
-                <td>Can accept or reject ride requests, start and complete trips, and view own earnings and ratings.</td>
-              </tr>
-              <tr>
-                <td><strong>Typical Workflow</strong></td>
-                <td>Login → Go online → Receive request → Accept → Navigate → Start → Complete → View earnings.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">6.3 Administrator</h3>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:180px;">Aspect</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Responsibilities</strong></td>
-                <td>Manage users, manage riders, verify accounts, monitor rides, review reports, manage feedback, configure system settings.</td>
-              </tr>
-              <tr>
-                <td><strong>Main Functions</strong></td>
-                <td>Dashboard, user management, rider verification, ride monitoring, reporting, feedback handling, and settings.</td>
-              </tr>
-              <tr>
-                <td><strong>Permissions</strong></td>
-                <td>Can approve or reject rider accounts, suspend accounts, configure fare parameters, and view platform-wide reports.</td>
-              </tr>
-              <tr>
-                <td><strong>Typical Workflow</strong></td>
-                <td>Login → Dashboard → Manage users → Verify riders → Monitor rides → Review reports → Configure settings.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="callout callout--warning">
-        <span class="callout__label">For Stakeholder Confirmation</span>
-        Additional admin roles, permission levels, and approval workflows may be
-        required depending on the final organizational structure. These are marked
-        <span class="placeholder">[For Stakeholder Confirmation]</span>.
-      </div>
-
-    </div>
-
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 8</span>
-    </footer>
-  </section>
-
-<!-- ============================================================
-     PAGE 9 — SECTION 7: OVERALL SYSTEM PROCESS
-     ============================================================ -->
-  <section class="page" id="sec-7">
-    <header class="page__header">
-      <div class="page__header-left">Section 7 — Overall System Process</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">7</span>
-        <div>
-          <h2 class="section__title">Overall System Process</h2>
-          <div class="section__subtitle">High-level process for passenger, rider, and admin</div>
-        </div>
-      </div>
-
-      <p>
-        The following diagrams show the overall process of the proposed system
-        from three perspectives: passenger, rider, and administrator. These are
-        conceptual and are not tied to a specific implementation.
-      </p>
-
-      <div class="flow-3col">
-
-        <div class="flow">
-          <div class="flow__title">Passenger Process</div>
-          <div class="flow__steps">
-            <div class="flow__node flow__node--start">Login / Registration</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Enter Pickup</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Enter Destination</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">View Estimated Fare</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Confirm Ride</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">System Searches for Rider</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rider Accepts</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rider Travels to Pickup</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Ride Starts</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Ride in Progress</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Ride Completed</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Payment</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rating / Feedback</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node flow__node--end">Ride History</div>
-          </div>
-        </div>
-
-        <div class="flow">
-          <div class="flow__title">Rider Process</div>
-          <div class="flow__steps">
-            <div class="flow__node flow__node--start">Login</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Go Online</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Receive Ride Request</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node flow__node--decision">Accept / Reject</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Travel to Pickup</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Arrive</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Start Ride</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Complete Ride</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Confirm Fare</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node flow__node--end">Ride Record</div>
-          </div>
-        </div>
-
-        <div class="flow">
-          <div class="flow__title">Admin Process</div>
-          <div class="flow__steps">
-            <div class="flow__node flow__node--start">Login</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Dashboard</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Manage Passengers</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Manage Riders</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Monitor Rides</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Manage Reports</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Review Feedback</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node flow__node--end">System Settings</div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 9</span>
-    </footer>
-  </section>
-
-<!-- ============================================================
-     PAGE 10 — SECTION 8: PASSENGER PROCESS
-     ============================================================ -->
-  <section class="page" id="sec-8">
-    <header class="page__header">
-      <div class="page__header-left">Section 8 — Passenger Process</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">8</span>
-        <div>
-          <h2 class="section__title">Passenger Process</h2>
-          <div class="section__subtitle">Detailed steps from registration to ride history</div>
-        </div>
-      </div>
-
-      <p>
-        This section describes the complete passenger experience in the proposed
-        system. Each step includes the user action, the expected system response,
-        and the expected result.
-      </p>
-
-      <div class="subsection">
-        <h3 class="subsection__title">8.1 Passenger Journey Overview</h3>
-        <div class="flow">
-          <div class="flow__title">Passenger Journey</div>
-          <div class="flow__steps">
-            <div class="flow__node flow__node--start">Registration</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Login</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Home Screen</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Pickup Location</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Destination</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Fare Estimate</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Confirm Booking</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Searching for Rider</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rider Assigned</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rider Arriving</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Ride Started</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Ride in Progress</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Ride Completed</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Payment</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rating</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node flow__node--end">Ride History</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">8.2 Step Details</h3>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:60px;">#</th>
-                <th style="width:180px;">Step</th>
-                <th>User Action</th>
-                <th>System Response</th>
-                <th>Expected Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td><strong>Registration</strong></td>
-                <td>Enters name, contact number, and credentials.</td>
-                <td>Validates input and creates a passenger account (conceptual).</td>
-                <td>Passenger account is created.</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td><strong>Login</strong></td>
-                <td>Enters credentials.</td>
-                <td>Verifies credentials and loads the home screen.</td>
-                <td>Passenger is logged in.</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td><strong>Home Screen</strong></td>
-                <td>Views available actions and options.</td>
-                <td>Displays map placeholder, pickup field, and ride options.</td>
-                <td>Passenger is ready to book.</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td><strong>Pickup Location</strong></td>
-                <td>Selects or types a pickup point (may add a landmark note).</td>
-                <td>Validates and stores the pickup point.</td>
-                <td>Pickup is set.</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td><strong>Destination</strong></td>
-                <td>Selects or types the destination.</td>
-                <td>Validates and stores the destination.</td>
-                <td>Destination is set.</td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td><strong>Fare Estimate</strong></td>
-                <td>Reviews the estimated fare.</td>
-                <td>Computes and displays the estimated fare based on configured rules.</td>
-                <td>Passenger sees the estimated cost.</td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td><strong>Confirm Booking</strong></td>
-                <td>Taps “Confirm Booking.”</td>
-                <td>Creates a booking request and starts rider search.</td>
-                <td>Booking is submitted.</td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td><strong>Searching for Rider</strong></td>
-                <td>Waits while the system searches.</td>
-                <td>Looks for available riders and sends requests.</td>
-                <td>System is actively searching.</td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td><strong>Rider Assigned</strong></td>
-                <td>Views assigned rider details.</td>
-                <td>Assigns a rider and displays rider information.</td>
-                <td>Passenger knows who will pick them up.</td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td><strong>Rider Arriving</strong></td>
-                <td>Watches the ride status.</td>
-                <td>Updates status as the rider approaches.</td>
-                <td>Passenger is informed of arrival.</td>
-              </tr>
-              <tr>
-                <td>11</td>
-                <td><strong>Ride Started</strong></td>
-                <td>Boards the motorcycle.</td>
-                <td>Updates ride status to “In Progress.”</td>
-                <td>Trip has begun.</td>
-              </tr>
-              <tr>
-                <td>12</td>
-                <td><strong>Ride in Progress</strong></td>
-                <td>Rides to the destination.</td>
-                <td>Displays the current ride status.</td>
-                <td>Passenger is en route.</td>
-              </tr>
-              <tr>
-                <td>13</td>
-                <td><strong>Ride Completed</strong></td>
-                <td>Arrives at the destination.</td>
-                <td>Marks the ride as completed and shows the final fare.</td>
-                <td>Trip is finished.</td>
-              </tr>
-              <tr>
-                <td>14</td>
-                <td><strong>Payment</strong></td>
-                <td>Pays using the selected method.</td>
-                <td>Records the payment status (simulated).</td>
-                <td>Payment is recorded.</td>
-              </tr>
-              <tr>
-                <td>15</td>
-                <td><strong>Rating</strong></td>
-                <td>Rates the rider and optionally leaves a comment.</td>
-                <td>Stores the rating.</td>
-                <td>Feedback is submitted.</td>
-              </tr>
-              <tr>
-                <td>16</td>
-                <td><strong>Ride History</strong></td>
-                <td>Views previous rides.</td>
-                <td>Displays a list of past rides with details.</td>
-                <td>Passenger can review history.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div>
-
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 10</span>
-    </footer>
-  </section>
-
-<!-- ============================================================
-     PAGE 11 — SECTION 9: RIDER / DRIVER PROCESS
-     ============================================================ -->
-  <section class="page" id="sec-9">
-    <header class="page__header">
-      <div class="page__header-left">Section 9 — Rider / Driver Process</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">9</span>
-        <div>
-          <h2 class="section__title">Rider / Driver Process</h2>
-          <div class="section__subtitle">From registration to ratings and profile</div>
-        </div>
-      </div>
-
-      <p>
-        This section describes how a rider interacts with the proposed system,
-        from registration and verification to completing rides and viewing
-        earnings and ratings.
-      </p>
-
-      <div class="subsection">
-        <h3 class="subsection__title">9.1 Rider Journey Overview</h3>
-        <div class="flow">
-          <div class="flow__title">Rider Journey</div>
-          <div class="flow__steps">
-            <div class="flow__node flow__node--start">Registration</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Account Verification</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Login</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rider Dashboard</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Online / Offline Status</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Receive Ride Request</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node flow__node--decision">Accept / Reject</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">View Passenger Information</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Travel to Pickup</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Arrive</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Start Ride</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Complete Ride</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Earnings / History</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Ratings</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node flow__node--end">Profile</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">9.2 Step Details</h3>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:60px;">#</th>
-                <th style="width:160px;">Step</th>
-                <th>Rider Action</th>
-                <th>System Response</th>
-                <th>Expected Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td><strong>Registration</strong></td>
-                <td>Enters personal and vehicle information.</td>
-                <td>Creates a pending rider account (conceptual).</td>
-                <td>Rider account is created.</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td><strong>Account Verification</strong></td>
-                <td>Submits required documents.</td>
-                <td>Flags the account for admin review.</td>
-                <td>Verification is pending.</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td><strong>Login</strong></td>
-                <td>Enters credentials.</td>
-                <td>Verifies credentials and loads the rider dashboard.</td>
-                <td>Rider is logged in.</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td><strong>Rider Dashboard</strong></td>
-                <td>Views dashboard summary.</td>
-                <td>Displays status, requests, and earnings summary.</td>
-                <td>Rider is ready to operate.</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td><strong>Online / Offline Status</strong></td>
-                <td>Toggles availability.</td>
-                <td>Updates the rider’s availability state.</td>
-                <td>Rider is marked available or unavailable.</td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td><strong>Receive Ride Request</strong></td>
-                <td>Receives a request notification.</td>
-                <td>Displays request details.</td>
-                <td>Rider can review the request.</td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td><strong>Accept / Reject</strong></td>
-                <td>Chooses to accept or reject.</td>
-                <td>Updates the request status accordingly.</td>
-                <td>Request is accepted or declined.</td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td><strong>View Passenger Information</strong></td>
-                <td>Views passenger and pickup details.</td>
-                <td>Displays passenger name, pickup point, and notes.</td>
-                <td>Rider knows where to go.</td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td><strong>Travel to Pickup</strong></td>
-                <td>Proceeds to the pickup point.</td>
-                <td>Updates the ride status.</td>
-                <td>Rider is en route.</td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td><strong>Arrive</strong></td>
-                <td>Marks arrival at pickup.</td>
-                <td>Updates the status to “Arrived.”</td>
-                <td>Passenger is notified (simulated).</td>
-              </tr>
-              <tr>
-                <td>11</td>
-                <td><strong>Start Ride</strong></td>
-                <td>Starts the trip.</td>
-                <td>Updates the status to “In Progress.”</td>
-                <td>Trip has begun.</td>
-              </tr>
-              <tr>
-                <td>12</td>
-                <td><strong>Complete Ride</strong></td>
-                <td>Marks the trip as completed.</td>
-                <td>Records the final fare and status.</td>
-                <td>Trip is finished.</td>
-              </tr>
-              <tr>
-                <td>13</td>
-                <td><strong>Earnings / History</strong></td>
-                <td>Views earnings and ride history.</td>
-                <td>Displays earnings summary and past rides.</td>
-                <td>Rider can review performance.</td>
-              </tr>
-              <tr>
-                <td>14</td>
-                <td><strong>Ratings</strong></td>
-                <td>Views ratings from passengers.</td>
-                <td>Displays average rating and feedback.</td>
-                <td>Rider sees feedback.</td>
-              </tr>
-              <tr>
-                <td>15</td>
-                <td><strong>Profile</strong></td>
-                <td>Views or updates profile details.</td>
-                <td>Saves changes (conceptual).</td>
-                <td>Rider profile is up to date.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="callout callout--warning">
-        <span class="callout__label">For Stakeholder Confirmation</span>
-        Required rider documents, verification criteria, and payout rules are
-        <span class="placeholder">[For Stakeholder Confirmation]</span> and are
-        not defined in this document.
-      </div>
-
-    </div>
-
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 11</span>
-    </footer>
-  </section>
-
-<!-- ============================================================
-     PAGE 12 — SECTION 10: ADMIN PROCESS
-     ============================================================ -->
-  <section class="page" id="sec-10">
-    <header class="page__header">
-      <div class="page__header-left">Section 10 — Admin Process</div>
-      <div class="page__header-right">CatbaRide v1.0</div>
-    </header>
-
-    <div class="section">
-      <div class="section__header">
-        <span class="section__number">10</span>
-        <div>
-          <h2 class="section__title">Admin Process</h2>
-          <div class="section__subtitle">Managing users, riders, rides, and settings</div>
-        </div>
-      </div>
-
-      <p>
-        Administrators are responsible for the overall operation of the proposed
-        platform. This section describes the main admin processes and the expected
-        system behavior for each.
-      </p>
-
-      <div class="subsection">
-        <h3 class="subsection__title">10.1 Admin Journey Overview</h3>
-        <div class="flow">
-          <div class="flow__title">Admin Journey</div>
-          <div class="flow__steps">
-            <div class="flow__node flow__node--start">Admin Login</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Dashboard</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Passenger Management</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rider Management</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Rider Verification</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Ride Monitoring</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Reports</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Feedback Management</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node">Account Status</div>
-            <div class="flow__arrow">↓</div>
-            <div class="flow__node flow__node--end">System Settings</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="subsection">
-        <h3 class="subsection__title">10.2 Admin Processes</h3>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:60px;">#</th>
-                <th style="width:180px;">Process</th>
-                <th>Description</th>
-                <th>Expected System Behavior</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td><strong>Admin Login</strong></td>
-                <td>Administrator signs in to the dashboard.</td>
-                <td>Validates credentials and loads the dashboard.</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td><strong>Dashboard</strong></td>
-                <td>Views high-level platform metrics.</td>
-                <td>Displays totals and summaries (configurable).</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td><strong>Passenger Management</strong></td>
-                <td>Views, searches, and manages passenger accounts.</td>
-                <td>Allows viewing, filtering, and status changes.</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td><strong>Rider Management</strong></td>
-                <td>Views and manages rider accounts.</td>
-                <td>Allows viewing, filtering, and status changes.</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td><strong>Rider Verification</strong></td>
-                <td>Reviews rider submissions and approves or rejects.</td>
-                <td>Updates rider verification status.</td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td><strong>Ride Monitoring</strong></td>
-                <td>Monitors ongoing and recent rides.</td>
-                <td>Displays ride list with status and details.</td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td><strong>Reports</strong></td>
-                <td>Views operational and financial summaries.</td>
-                <td>Generates report views (mock data).</td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td><strong>Feedback Management</strong></td>
-                <td>Reviews ratings and complaints.</td>
-                <td>Displays feedback list with status.</td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td><strong>Account Status</strong></td>
-                <td>Activates, suspends, or deactivates accounts.</td>
-                <td>Updates the account status and logs the action.</td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td><strong>System Settings</strong></td>
-                <td>Configures fare and system parameters.</td>
-                <td>Saves settings (conceptual).</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="callout callout--info">
-        <span class="callout__label">Note</span>
-        Dashboard metrics, report contents, and settings options are
-        <strong>configurable</strong> and may be adjusted based on stakeholder
-        requirements. Specific values are not defined in this document.
-      </div>
-
-    </div>
-
-    <footer class="page__footer">
-      <span>CatbaRide — Capstone Documentation</span>
-      <span>Page 12</span>
-    </footer>
-  </section>
-
-<!-- ============================================================
-     PLACEHOLDER FOR PART 3+
-     (Sections 11–36 will be inserted here in subsequent parts.)
-     ============================================================ -->
-
-<!--
-  END OF PARTS 1 + 2.
-  Part 3 will begin here and add Sections 11–23
-  (Ride Booking through Non-Functional Requirements).
--->
-
-</div><!-- /.doc-shell -->
-
-<!-- ============================================================
-     CORE JAVASCRIPT
-     ============================================================ -->
-<script>
-(function () {
-  "use strict";
-
-  /* -------- Print helper -------- */
-  window.catbaRidePrint = function () {
-    window.print();
-  };
-
-  /* -------- TOC smooth scroll with offset for sticky toolbar -------- */
-  document.addEventListener("click", function (e) {
-    var link = e.target.closest('a[href^="#"]');
-    if (!link) return;
-
-    var id = link.getAttribute("href").slice(1);
-    if (!id) return;
-
-    var target = document.getElementById(id);
-    if (!target) return;
-
-    e.preventDefault();
-
-    var toolbar = document.querySelector(".doc-toolbar");
-    var offset = toolbar && getComputedStyle(toolbar).display !== "none"
-      ? toolbar.offsetHeight + 16
-      : 0;
-
-    var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-
-    window.scrollTo({ top: top, behavior: "smooth" });
-
-    if (history.replaceState) {
-      history.replaceState(null, "", "#" + id);
-    }
-  });
-
-  /* -------- Auto-number pages in footers -------- */
-  function numberPages() {
-    var pages = document.querySelectorAll(".page");
-    pages.forEach(function (page, index) {
-      var footer = page.querySelector(".page__footer");
-      if (!footer) return;
-      var spans = footer.querySelectorAll("span");
-      if (spans.length >= 2) {
-        spans[spans.length - 1].textContent = "Page " + (index + 1);
-      }
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", numberPages);
-  } else {
-    numberPages();
-  }
-})();
-</script>
-
+      // Nav shadow on scroll
+      const nav = document.getElementById('mainNav');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 20) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      }, { passive: true });
+    })();
+  </script>
 </body>
 </html>
