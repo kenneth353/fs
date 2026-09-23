@@ -23,9 +23,9 @@
 
         /* ---------- HERO SECTION ---------- */
         .hero {
-            background: linear-gradient(135deg, #0a1628 0%, #0d2137 50%, #0a1628 100%);
-            border-radius: 0 0 32px 32px;
-            padding: 48px 56px 56px;
+            background: linear-gradient(135deg, #0a1628 0%, #0d2137 40%, #0a1628 100%);
+            border-radius: 0 0 40px 40px;
+            padding: 56px 64px 64px;
             margin: 0 -20px 0;
             position: relative;
             overflow: hidden;
@@ -33,64 +33,103 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 40px;
-            min-height: 380px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            gap: 48px;
+            min-height: 420px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
         }
 
+        /* Animated background orbs */
         .hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(245,166,35,0.06) 0%, transparent 70%);
+            top: -30%;
+            right: -10%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 65%);
             border-radius: 50%;
             pointer-events: none;
+            animation: orbFloat 12s ease-in-out infinite;
         }
 
         .hero::after {
             content: '';
             position: absolute;
-            bottom: -30%;
-            left: -10%;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(49,130,206,0.06) 0%, transparent 70%);
+            bottom: -40%;
+            left: -15%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(49,130,206,0.08) 0%, transparent 65%);
             border-radius: 50%;
             pointer-events: none;
+            animation: orbFloat 16s ease-in-out infinite reverse;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -30px) scale(1.1); }
+        }
+
+        /* Grid pattern overlay */
+        .hero-grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
             flex: 1;
-            min-width: 320px;
+            min-width: 340px;
+            max-width: 620px;
         }
 
         .hero-badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            color: #a0b4cc;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #8fa8c4;
             font-size: 0.65rem;
             font-weight: 600;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            padding: 6px 16px;
+            padding: 7px 18px;
             border-radius: 100px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(4px);
+            margin-bottom: 24px;
+            backdrop-filter: blur(8px);
+            animation: fadeUp 0.7s ease-out both;
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: #f5a623;
+            border-radius: 50%;
+            animation: pulseDot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
         }
 
         .hero h1 {
-            font-size: 4.2rem;
+            font-size: 4.5rem;
             font-weight: 800;
             line-height: 1;
             color: #ffffff;
             letter-spacing: -0.03em;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            animation: fadeUp 0.7s ease-out 0.1s both;
         }
 
         .hero h1 span {
@@ -98,24 +137,88 @@
         }
 
         .hero-sub {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 400;
             color: #cbd5e0;
-            letter-spacing: 0.02em;
-            margin-bottom: 16px;
+            letter-spacing: 0.01em;
+            margin-bottom: 20px;
             line-height: 1.3;
+            animation: fadeUp 0.7s ease-out 0.2s both;
+        }
+
+        .hero-sub .highlight {
+            color: #7eb8e0;
+            font-weight: 500;
         }
 
         .hero-desc {
             font-size: 0.95rem;
-            color: #8899aa;
-            max-width: 520px;
-            line-height: 1.7;
+            color: #7a8fa6;
+            max-width: 500px;
+            line-height: 1.75;
             margin: 0;
             padding: 0;
             border: none;
+            animation: fadeUp 0.7s ease-out 0.3s both;
         }
 
+        .hero-cta {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            animation: fadeUp 0.7s ease-out 0.4s both;
+        }
+
+        .hero-cta .btn-primary {
+            background: #f5a623;
+            color: #0a1628;
+            border: none;
+            border-radius: 100px;
+            padding: 12px 28px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: inherit;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-cta .btn-primary:hover {
+            background: #ffb94d;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(245,166,35,0.35);
+        }
+
+        .hero-cta .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            color: #cbd5e0;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 100px;
+            padding: 12px 28px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: inherit;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-cta .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* ---------- HERO ACTORS ---------- */
         .hero-actors {
             position: relative;
             z-index: 2;
@@ -123,52 +226,139 @@
             align-items: center;
             gap: 0;
             flex-shrink: 0;
+            animation: fadeUp 0.7s ease-out 0.5s both;
         }
 
         .actor-node {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 0 16px;
+            gap: 10px;
+            padding: 0 18px;
+            position: relative;
+            cursor: default;
         }
 
         .actor-circle {
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.12);
             display: flex;
             align-items: center;
             justify-content: center;
             background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(4px);
-            transition: all 0.3s;
+            backdrop-filter: blur(8px);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .actor-circle::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, rgba(245,166,35,0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.35s;
+            z-index: -1;
+        }
+
+        .actor-node:hover .actor-circle {
+            border-color: rgba(245,166,35,0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(245,166,35,0.15);
+        }
+
+        .actor-node:hover .actor-circle::after {
+            opacity: 1;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .actor-circle svg {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            height: 30px;
             stroke: #7eb8e0;
             fill: none;
             stroke-width: 1.8;
             stroke-linecap: round;
             stroke-linejoin: round;
+            transition: stroke 0.3s;
+        }
+
+        .actor-node:hover .actor-circle svg {
+            stroke: #f5a623;
         }
 
         .actor-label {
             font-size: 0.6rem;
             font-weight: 700;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: #7eb8e0;
+            transition: color 0.3s;
+        }
+
+        .actor-node:hover .actor-label {
+            color: #f5a623;
         }
 
         .actor-connector {
-            width: 32px;
-            height: 1px;
-            background: rgba(255,255,255,0.12);
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.15), rgba(255,255,255,0.06));
             flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .actor-connector::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245,166,35,0.5), transparent);
+            animation: connectorFlow 3s ease-in-out infinite;
+        }
+
+        @keyframes connectorFlow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Floating particles */
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .hero-particles .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(245,166,35,0.4);
+            border-radius: 50%;
+            animation: particleDrift linear infinite;
+        }
+
+        @keyframes particleDrift {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-400px) translateX(40px); opacity: 0; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* ---------- GUIDE WRAPPER ---------- */
@@ -679,22 +869,41 @@
         }
 
         /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 900px) {
+            .hero {
+                padding: 40px 32px 48px;
+                flex-direction: column;
+                align-items: flex-start;
+                min-height: auto;
+            }
+            .hero h1 { font-size: 3rem; }
+            .hero-sub { font-size: 1.3rem; }
+            .hero-actors { margin-top: 8px; }
+        }
+
         @media (max-width: 768px) {
             body { padding: 0 8px 24px; }
             .hero {
                 padding: 32px 24px 40px;
                 margin: 0 -8px 0;
-                border-radius: 0 0 20px 20px;
+                border-radius: 0 0 24px 24px;
                 min-height: auto;
                 flex-direction: column;
                 align-items: flex-start;
+                gap: 32px;
             }
             .hero h1 { font-size: 2.6rem; }
             .hero-sub { font-size: 1.2rem; }
-            .hero-actors { gap: 0; margin-top: 16px; }
-            .actor-circle { width: 48px; height: 48px; }
-            .actor-circle svg { width: 20px; height: 20px; }
-            .actor-connector { width: 20px; }
+            .hero-desc { font-size: 0.9rem; }
+            .hero-cta { flex-direction: column; width: 100%; }
+            .hero-cta .btn-primary,
+            .hero-cta .btn-secondary { width: 100%; justify-content: center; }
+            .hero-actors { gap: 0; margin-top: 16px; width: 100%; justify-content: center; }
+            .actor-circle { width: 52px; height: 52px; }
+            .actor-circle svg { width: 22px; height: 22px; }
+            .actor-connector { width: 24px; }
+            .actor-node { padding: 0 10px; }
+            .actor-label { font-size: 0.55rem; }
             .guide { padding: 24px 20px; border-radius: 20px; margin-top: 20px; }
             h2 { font-size: 1.4rem; }
             .swimlane { grid-template-columns: 60px 1fr; }
@@ -807,14 +1016,47 @@
 <!-- HERO SECTION -->
 <!-- ============================================================ -->
 <div class="hero">
+    <div class="hero-grid-overlay"></div>
+
+    <!-- Floating particles -->
+    <div class="hero-particles">
+        <div class="particle" style="left: 15%; bottom: 20%; animation-duration: 8s; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 25%; bottom: 10%; animation-duration: 10s; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 45%; bottom: 30%; animation-duration: 7s; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 65%; bottom: 15%; animation-duration: 11s; animation-delay: 0.5s;"></div>
+        <div class="particle" style="left: 80%; bottom: 25%; animation-duration: 9s; animation-delay: 1.5s;"></div>
+        <div class="particle" style="left: 55%; bottom: 5%; animation-duration: 12s; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 35%; bottom: 40%; animation-duration: 6s; animation-delay: 2.5s;"></div>
+    </div>
+
     <div class="hero-content">
-        <div class="hero-badge">System Process Guide · Capstone Documentation</div>
+        <div class="hero-badge">
+            <span class="dot"></span>
+            System Process Guide · Capstone Documentation
+        </div>
         <h1>VOYAGO<span>.</span></h1>
-        <div class="hero-sub">How the App Works</div>
+        <div class="hero-sub">How the <span class="highlight">App</span> Works</div>
         <p class="hero-desc">
             A visual guide to how passengers, riders, and the Voyago system interact throughout the complete ride-booking journey — from opening the app to rating and ride history.
         </p>
+        <div class="hero-cta">
+            <a href="#section-1" class="btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Start Reading
+            </a>
+            <a href="#" onclick="window.print(); return false;" class="btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9"/>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                    <rect x="6" y="14" width="12" height="8"/>
+                </svg>
+                Print / PDF
+            </a>
+        </div>
     </div>
+
     <div class="hero-actors">
         <div class="actor-node">
             <div class="actor-circle">
@@ -850,7 +1092,7 @@
     </div>
 </div>
 
-<div class="guide">
+<div class="guide" id="section-1">
 
     <!-- ============================================================ -->
     <!-- SECTION 1 — HOW VOYAGO WORKS AT A GLANCE -->
