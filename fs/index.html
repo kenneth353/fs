@@ -1032,7 +1032,7 @@
         <h1>VOYAGO<span>.</span></h1>
         <div class="hero-sub">How the <span class="highlight">App</span> Works</div>
         <p class="hero-desc">
-            A visual guide to how passengers, riders, and the Voyago system interact throughout the complete ride-booking journey — from opening the app to rating and ride history.
+            A visual guide to how passengers, riders, and the Voyago system interact throughout the complete ride-booking journey — from booking and fare negotiation to trip completion and operations review.
         </p>
         <div class="hero-cta">
             <a href="#section-1" class="btn-primary">
@@ -1130,7 +1130,7 @@
             <div class="flow-branch">
                 <div class="flow-branch-item">
                     <span class="branch-label no">NO</span>
-                    <div class="flow-node fail">Request Not Accepted Within Window<br><span style="font-size:0.65rem;color:#a0aec0;">[EXACT NEXT STEP NOT SPECIFIED IN MANUSCRIPT]</span></div>
+                    <div class="flow-node fail">Request Not Accepted Within Window</div>
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label yes">YES</span>
@@ -1250,14 +1250,16 @@
         <div class="timeline-step"><div class="step-label">STEP 1</div><div class="step-name">Create Request</div></div>
         <div class="timeline-step"><div class="step-label">STEP 2</div><div class="step-name">Fare Negotiation</div></div>
         <div class="timeline-step"><div class="step-label">STEP 3</div><div class="step-name">Fare Agreement</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 4</div><div class="step-name">DRM-QR Generated</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 5</div><div class="step-name">Rider Dispatch</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 6</div><div class="step-name">Rider Travels to Pickup</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 7</div><div class="step-name">DRM-QR Verification</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 8</div><div class="step-name">Trip Execution</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 9</div><div class="step-name">Destination</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 10</div><div class="step-name">Payment</div></div>
-        <div class="timeline-step"><div class="step-label">STEP 11</div><div class="step-name">Completion</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 4</div><div class="step-name">Fare Locked</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 5</div><div class="step-name">DRM-QR Generated</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 6</div><div class="step-name">Ride Dispatched</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 7</div><div class="step-name">Rider Travels to Pickup</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 8</div><div class="step-name">DRM-QR Verification</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 9</div><div class="step-name">Trip Starts</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 10</div><div class="step-name">GPS Tracking</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 11</div><div class="step-name">Destination</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 12</div><div class="step-name">Payment</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 13</div><div class="step-name">Completion</div></div>
     </div>
 
     <div class="card actor-passenger">
@@ -1330,11 +1332,10 @@
     <div class="card actor-system">
         <div class="card-header">
             <span class="badge badge-system">SYSTEM</span>
-            <span class="title">Step 5 — Rider Dispatch</span>
+            <span class="title">Step 5 — Ride Dispatched</span>
         </div>
         <div class="card-body">
-            The ride request is dispatched to a rider.
-            <div class="note"><span class="confirmation-tag">[MATCHING / RIDER SELECTION LOGIC — NOT SPECIFIED IN MANUSCRIPT]</span></div>
+            The ride request is dispatched to a rider according to the Voyago process.
         </div>
     </div>
 
@@ -1346,7 +1347,7 @@
         <div class="card-body">
             The rider travels to the pickup location. The passenger waits for the rider.
             <div class="panel-guide">
-                <strong>System Response:</strong> Passenger can track the rider/location through the system's GPS-based tracking.
+                <strong>System Response:</strong> Passenger can track the rider through GPS-based tracking.
             </div>
         </div>
     </div>
@@ -1380,7 +1381,7 @@
     <div class="card actor-system">
         <div class="card-header">
             <span class="badge badge-system">SYSTEM</span>
-            <span class="title">Step 8 — Trip Execution</span>
+            <span class="title">Step 8 — Trip Starts &amp; GPS Tracking</span>
         </div>
         <div class="card-body">
             After successful authentication, the trip starts. GPS tracking is active during the trip.
@@ -1442,7 +1443,7 @@
             <div class="flow-branch">
                 <div class="flow-branch-item">
                     <span class="branch-label no">NO</span>
-                    <div class="flow-node fail">Request Not Accepted Within Window<br><span style="font-size:0.65rem;color:#a0aec0;">[EXACT NEXT STEP NOT SPECIFIED IN MANUSCRIPT]</span></div>
+                    <div class="flow-node fail">Request Not Accepted Within Window</div>
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label yes">YES</span>
@@ -1753,10 +1754,6 @@
         </div>
     </div>
 
-    <div class="note" style="margin-top:8px;">
-        <span class="confirmation-tag">[FOR CONFIRMATION — FINANCIAL ASSUMPTION IN CHAPTER 5 MENTIONS A STANDARDIZED ₱75 FARE]</span>
-    </div>
-
     <div class="panel-guide">
         <strong>How to explain this to the panel:</strong><br>
         "The fare is not assumed by the system. The passenger and rider agree on the trip fare based on the trip conditions — distance, route, drop-off location, road conditions, and travel time. Once they agree, the fare is locked before the trip begins."
@@ -1840,12 +1837,9 @@
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label no">REJECT</span>
-                    <div class="flow-node fail">Request Not Accepted Within Window<br><span style="font-size:0.65rem;color:#a0aec0;">[EXACT NEXT STEP NOT SPECIFIED IN MANUSCRIPT]</span></div>
+                    <div class="flow-node fail">Request Not Accepted Within Window</div>
                 </div>
             </div>
-        </div>
-        <div class="note" style="text-align:center; margin-top:16px;">
-            <span class="confirmation-tag">[MATCHING / RIDER SELECTION LOGIC — NOT SPECIFIED IN MANUSCRIPT]</span>
         </div>
     </div>
 
@@ -1966,9 +1960,6 @@
                 <div class="flow-node fail">Request Not Accepted Within Window</div>
             </div>
         </div>
-        <div class="note" style="margin-top:8px;">
-            <span class="confirmation-tag">[EXACT NEXT STEP NOT SPECIFIED IN MANUSCRIPT]</span>
-        </div>
     </div>
 
     <h3>C. QR Authentication Failed</h3>
@@ -2086,22 +2077,22 @@
 
     <div class="panel-guide">
         <strong>How do I explain the Passenger side?</strong><br>
-        "The passenger creates a ride request by providing the pickup and destination. The passenger and rider negotiate the fare. Once they agree, the fare is locked and the system generates a DRM-QR. The rider scans the QR during pickup before the trip can start. GPS tracking then monitors the ride, and after reaching the destination, the passenger pays the agreed fare."
+        "The passenger creates a ride request by providing the pickup and destination. The passenger and rider negotiate the fare. Once they agree, the fare is locked and the system generates a DRM-QR. During pickup, the rider scans the QR to authenticate the ride before the trip can start. GPS tracking is active during the trip. After reaching the destination, the passenger pays the agreed fare."
     </div>
 
     <div class="panel-guide">
         <strong>How do I explain the Rider side?</strong><br>
-        "The rider receives the dispatched request, accepts within the 10–15 second acceptance period, travels to the pickup point, scans the passenger's DRM-QR, and after successful authentication starts the trip. GPS tracking remains active during the ride, and the rider collects the agreed fare."
+        "The rider receives the dispatched request and has a 10–15 second acceptance period. After accepting, the rider travels to the pickup point and scans the passenger's DRM-QR. Once authentication is successful, the trip can start. GPS tracking remains active during the ride. After reaching the destination, the rider collects the agreed fare and completes the trip record."
     </div>
 
     <div class="panel-guide">
         <strong>How do I explain the Admin/Operations side?</strong><br>
-        "Operations monitors the system and documented operational issues during the ride process, responds when support is needed, and reviews booking, transaction, and trip records during end-of-day operations."
+        "Operations monitors the documented system and ride activity and responds when operational support is needed. After trips, Operations reviews booking records, transactions, reports, and driver trip records as part of end-of-day operations."
     </div>
 
     <div class="panel-guide">
         <strong>Why is DRM-QR important?</strong><br>
-        "It authenticates the passenger and ride before the trip starts and helps prevent pickup errors and off-platform rides."
+        "DRM-QR is used to authenticate the passenger and ride before the trip starts. It helps prevent pickup errors and off-platform rides."
     </div>
 
     <div class="panel-guide">
