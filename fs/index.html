@@ -1442,11 +1442,9 @@
                 </div>
                 <div class="flow-branch-item">
                     <span class="branch-label yes">YES</span>
-                    <div class="flow-node rider success">Ride Assigned</div>
+                    <div class="flow-node rider success">Travel to Pickup</div>
                 </div>
             </div>
-            <div class="flow-arrow down"></div>
-            <div class="flow-node rider">Travel to Pickup</div>
             <div class="flow-arrow down"></div>
             <div class="flow-node rider">Arrive at Pickup</div>
             <div class="flow-arrow down"></div>
@@ -1979,7 +1977,7 @@
         <div class="io-card">
             <div class="io-title">📋 BOOKING</div>
             <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Pickup + Destination</span></div>
-            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Create Ride Request</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Customer Booking / Ride Request</span></div>
             <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Ride Request</span></div>
         </div>
 
@@ -1993,29 +1991,29 @@
         <div class="io-card">
             <div class="io-title">🔐 AUTHENTICATION</div>
             <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Confirmed Ride</span></div>
-            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">DRM-QR Generation</span></div>
-            <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Unique Ride QR</span></div>
-        </div>
-
-        <div class="io-card">
-            <div class="io-title">🛵 TRIP</div>
-            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Passenger DRM-QR</span></div>
-            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Rider QR Scan + Verification</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">DRM-QR Generation + Rider QR Scan + Verification</span></div>
             <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Trip Verified / Trip Can Start</span></div>
         </div>
 
         <div class="io-card">
-            <div class="io-title">💳 PAYMENT</div>
+            <div class="io-title">🛵 RIDE MONITORING</div>
             <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">GPS Ride Data</span></div>
             <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Ride Monitoring</span></div>
             <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Ride Status / Operational Monitoring</span></div>
         </div>
 
         <div class="io-card">
-            <div class="io-title">📊 REPORTING</div>
-            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Completed Ride</span></div>
-            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Payment + Recording</span></div>
+            <div class="io-title">💳 PAYMENT</div>
+            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Completed Ride / Agreed Fare</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Payment Collection + Transaction Recording</span></div>
             <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Completed Transaction</span></div>
+        </div>
+
+        <div class="io-card">
+            <div class="io-title">📊 OPERATIONS REVIEW</div>
+            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Completed Ride Records</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Operations Review</span></div>
+            <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Booking / Transaction / Trip Records</span></div>
         </div>
     </div>
 
