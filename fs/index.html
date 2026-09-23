@@ -1,0 +1,2683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catbalogan Ride — Functional Specification &amp; UI/UX Design Specification</title>
+<style>
+/* ============================================================
+   CATBALOGAN RIDE — PARTS 1 + 2
+   Reset, Design System, A4 Print Layout, Cover, TOC,
+   Sections 1–10 (Introduction through Admin Process)
+   ============================================================ */
+
+/* ---------- CSS RESET ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: #e9edf2;
+  color: #1f2937;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* ---------- DESIGN TOKENS ---------- */
+:root {
+  --cr-primary: #0f5c4a;
+  --cr-primary-dark: #0a4133;
+  --cr-primary-light: #1a7d66;
+  --cr-secondary: #f2b705;
+  --cr-secondary-dark: #c99400;
+  --cr-accent: #d64545;
+  --cr-accent-soft: #fdecea;
+
+  --cr-bg: #ffffff;
+  --cr-bg-alt: #f6f8fa;
+  --cr-bg-soft: #eef3f1;
+  --cr-border: #d8dee4;
+  --cr-border-strong: #b9c2cb;
+
+  --cr-text: #1f2937;
+  --cr-text-soft: #4b5563;
+  --cr-text-muted: #6b7280;
+  --cr-text-invert: #ffffff;
+
+  --cr-success: #1a7d4f;
+  --cr-success-soft: #e6f5ec;
+  --cr-warning: #b7791f;
+  --cr-warning-soft: #fdf3e0;
+  --cr-info: #1f6feb;
+  --cr-info-soft: #e8f0fe;
+  --cr-danger: #c0392b;
+  --cr-danger-soft: #fdecea;
+
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 18px;
+  --r-pill: 999px;
+
+  --sh-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --sh-md: 0 4px 10px rgba(15, 23, 42, 0.08);
+  --sh-lg: 0 10px 25px rgba(15, 23, 42, 0.10);
+
+  --page-width: 210mm;
+  --page-min-height: 297mm;
+  --page-padding: 18mm 16mm;
+}
+
+/* ---------- DOCUMENT SHELL ---------- */
+.doc-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-5) var(--sp-3) var(--sp-8);
+  gap: var(--sp-5);
+}
+
+/* ---------- TOOLBAR ---------- */
+.doc-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  max-width: var(--page-width);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  background: var(--cr-primary-dark);
+  color: var(--cr-text-invert);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-lg);
+}
+
+.doc-toolbar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.doc-toolbar__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: var(--cr-secondary);
+  color: var(--cr-primary-dark);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.doc-toolbar__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.doc-toolbar__subtitle {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+
+.doc-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 9px 14px;
+  border-radius: var(--r-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.15s ease, transform 0.05s ease;
+  border: 1px solid transparent;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--primary {
+  background: var(--cr-secondary);
+  color: var(--cr-primary-dark);
+}
+
+.btn--primary:hover {
+  background: #ffc72c;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--cr-text-invert);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- A4 PAGE ---------- */
+.page {
+  width: var(--page-width);
+  min-height: var(--page-min-height);
+  background: var(--cr-bg);
+  padding: var(--page-padding);
+  box-shadow: var(--sh-lg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--cr-border);
+  padding-bottom: var(--sp-2);
+  margin-bottom: var(--sp-5);
+  font-size: 0.72rem;
+  color: var(--cr-text-muted);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.page__header-left,
+.page__header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.page__footer {
+  margin-top: auto;
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--cr-border);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--cr-text-muted);
+}
+
+.page--cover .page__header,
+.page--cover .page__footer {
+  display: none;
+}
+
+/* ---------- COVER PAGE ---------- */
+.cover {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--sp-6) 0;
+}
+
+.cover__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.cover__eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--cr-primary);
+  font-weight: 700;
+}
+
+.cover__rule {
+  width: 68px;
+  height: 4px;
+  background: var(--cr-secondary);
+  border-radius: var(--r-pill);
+}
+
+.cover__middle {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-6) 0;
+}
+
+.cover__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.cover__brand-mark {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--r-xl);
+  background: var(--cr-primary);
+  color: var(--cr-text-invert);
+  display: grid;
+  place-items: center;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  box-shadow: var(--sh-md);
+  flex-shrink: 0;
+}
+
+.cover__brand-name {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--cr-primary-dark);
+  line-height: 1.05;
+  letter-spacing: -0.5px;
+}
+
+.cover__brand-tag {
+  font-size: 1rem;
+  color: var(--cr-text-soft);
+  margin-top: var(--sp-1);
+}
+
+.cover__title {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--cr-text);
+  line-height: 1.35;
+  max-width: 150mm;
+}
+
+.cover__subtitle {
+  font-size: 1rem;
+  color: var(--cr-text-soft);
+}
+
+.cover__meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+  padding: var(--sp-5) 0;
+  border-top: 1px solid var(--cr-border);
+  border-bottom: 1px solid var(--cr-border);
+}
+
+.cover__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cover__meta-label {
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cr-text-muted);
+  font-weight: 700;
+}
+
+.cover__meta-value {
+  font-size: 0.95rem;
+  color: var(--cr-text);
+  font-weight: 600;
+}
+
+.cover__meta-value .placeholder {
+  color: var(--cr-primary);
+  font-weight: 700;
+  background: var(--cr-bg-soft);
+  padding: 1px 6px;
+  border-radius: var(--r-sm);
+  border: 1px dashed var(--cr-primary-light);
+}
+
+.cover__bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  font-size: 0.8rem;
+  color: var(--cr-text-muted);
+}
+
+.cover__notice {
+  background: var(--cr-bg-soft);
+  border-left: 4px solid var(--cr-secondary);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-sm);
+  font-size: 0.8rem;
+  color: var(--cr-text-soft);
+  line-height: 1.5;
+}
+
+/* ---------- TYPOGRAPHY ---------- */
+.page h1,
+.page h2,
+.page h3,
+.page h4 {
+  color: var(--cr-primary-dark);
+  line-height: 1.25;
+}
+
+.section {
+  margin-bottom: var(--sp-6);
+  scroll-margin-top: 90px;
+}
+
+.section__header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  border-bottom: 2px solid var(--cr-primary);
+  padding-bottom: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+
+.section__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 var(--sp-2);
+  background: var(--cr-primary);
+  color: var(--cr-text-invert);
+  border-radius: var(--r-md);
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.section__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.section__subtitle {
+  font-size: 0.85rem;
+  color: var(--cr-text-muted);
+  margin-top: 2px;
+}
+
+.subsection {
+  margin: var(--sp-5) 0 var(--sp-3);
+}
+
+.subsection__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--cr-primary);
+  margin-bottom: var(--sp-2);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.subsection__title::before {
+  content: "";
+  width: 6px;
+  height: 18px;
+  background: var(--cr-secondary);
+  border-radius: var(--r-pill);
+}
+
+p {
+  margin-bottom: var(--sp-3);
+  color: var(--cr-text-soft);
+  font-size: 0.92rem;
+}
+
+strong {
+  color: var(--cr-text);
+}
+
+.placeholder {
+  color: var(--cr-primary);
+  font-weight: 700;
+  background: var(--cr-bg-soft);
+  padding: 1px 6px;
+  border-radius: var(--r-sm);
+  border: 1px dashed var(--cr-primary-light);
+  font-size: 0.85em;
+}
+
+/* Callouts */
+.callout {
+  border-radius: var(--r-md);
+  padding: var(--sp-3) var(--sp-4);
+  margin: var(--sp-3) 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  border-left: 4px solid;
+}
+
+.callout--info {
+  background: var(--cr-info-soft);
+  border-color: var(--cr-info);
+  color: #103a7a;
+}
+
+.callout--warning {
+  background: var(--cr-warning-soft);
+  border-color: var(--cr-warning);
+  color: #6b4300;
+}
+
+.callout--danger {
+  background: var(--cr-danger-soft);
+  border-color: var(--cr-danger);
+  color: #7a1f17;
+}
+
+.callout--success {
+  background: var(--cr-success-soft);
+  border-color: var(--cr-success);
+  color: #0f4d31;
+}
+
+.callout__label {
+  display: block;
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--r-pill);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.badge--confirm {
+  background: var(--cr-warning-soft);
+  color: var(--cr-warning);
+  border: 1px solid #f0d9a8;
+}
+
+.badge--sample {
+  background: var(--cr-info-soft);
+  color: var(--cr-info);
+  border: 1px solid #c3d7fb;
+}
+
+.badge--future {
+  background: #ede9fe;
+  color: #5b21b6;
+  border: 1px solid #ddd6fe;
+}
+
+/* ---------- TABLES ---------- */
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: var(--sp-3) 0 var(--sp-4);
+  border: 1px solid var(--cr-border);
+  border-radius: var(--r-md);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+thead {
+  background: var(--cr-primary);
+  color: var(--cr-text-invert);
+}
+
+thead th {
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+thead th:last-child {
+  border-right: none;
+}
+
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--cr-border);
+  border-right: 1px solid var(--cr-border);
+  color: var(--cr-text-soft);
+  vertical-align: top;
+}
+
+tbody td:last-child {
+  border-right: none;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--cr-bg-alt);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---------- CARDS ---------- */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--sp-3);
+  margin: var(--sp-3) 0 var(--sp-4);
+}
+
+.card {
+  background: var(--cr-bg-alt);
+  border: 1px solid var(--cr-border);
+  border-radius: var(--r-md);
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.card__title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--cr-primary-dark);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.card__text {
+  font-size: 0.8rem;
+  color: var(--cr-text-soft);
+  line-height: 1.5;
+}
+
+.card__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  background: var(--cr-secondary);
+  color: var(--cr-primary-dark);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Role cards */
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--sp-3);
+  margin: var(--sp-3) 0;
+}
+
+.role-card {
+  border: 1px solid var(--cr-border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--cr-bg);
+}
+
+.role-card__head {
+  background: var(--cr-primary);
+  color: var(--cr-text-invert);
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.role-card__head h4 {
+  color: var(--cr-text-invert);
+  font-size: 0.95rem;
+}
+
+.role-card__head span {
+  font-size: 0.72rem;
+  opacity: 0.85;
+}
+
+.role-card__body {
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.role-card__body ul {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.role-card__body li {
+  font-size: 0.8rem;
+  color: var(--cr-text-soft);
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.45;
+}
+
+.role-card__body li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--cr-secondary-dark);
+  font-weight: 800;
+}
+
+/* ---------- FLOW DIAGRAMS ---------- */
+.flow {
+  background: var(--cr-bg-alt);
+  border: 1px solid var(--cr-border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-4);
+  margin: var(--sp-3) 0 var(--sp-4);
+}
+
+.flow__title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--cr-primary-dark);
+  margin-bottom: var(--sp-3);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.flow__steps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.flow__node {
+  background: var(--cr-bg);
+  border: 2px solid var(--cr-primary);
+  border-radius: var(--r-md);
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--cr-primary-dark);
+  text-align: center;
+  min-width: 220px;
+  max-width: 320px;
+}
+
+.flow__node--start {
+  background: var(--cr-primary);
+  color: var(--cr-text-invert);
+  border-color: var(--cr-primary);
+}
+
+.flow__node--end {
+  background: var(--cr-secondary);
+  color: var(--cr-primary-dark);
+  border-color: var(--cr-secondary-dark);
+}
+
+.flow__node--decision {
+  background: var(--cr-warning-soft);
+  border-color: var(--cr-warning);
+  color: #6b4300;
+  border-style: dashed;
+}
+
+.flow__arrow {
+  color: var(--cr-primary-light);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 4px 0;
+  font-weight: 700;
+}
+
+/* Horizontal flow */
+.flow-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: var(--sp-3) 0;
+}
+
+.flow-h__node {
+  background: var(--cr-bg);
+  border: 1.5px solid var(--cr-primary);
+  border-radius: var(--r-md);
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--cr-primary-dark);
+}
+
+.flow-h__arrow {
+  color: var(--cr-secondary-dark);
+  font-weight: 800;
+}
+
+/* Three-column flow */
+.flow-3col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--sp-3);
+  margin: var(--sp-3) 0;
+}
+
+@media (max-width: 900px) {
+  .flow-3col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- TABLE OF CONTENTS ---------- */
+.toc {
+  background: var(--cr-bg-alt);
+  border: 1px solid var(--cr-border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-5);
+}
+
+.toc__title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--cr-primary-dark);
+  margin-bottom: var(--sp-2);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.toc__title::before {
+  content: "";
+  width: 6px;
+  height: 22px;
+  background: var(--cr-secondary);
+  border-radius: var(--r-pill);
+}
+
+.toc__hint {
+  font-size: 0.78rem;
+  color: var(--cr-text-muted);
+  margin-bottom: var(--sp-4);
+}
+
+.toc__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-2) var(--sp-5);
+}
+
+.toc__item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  padding: 6px 8px;
+  border-radius: var(--r-sm);
+  font-size: 0.85rem;
+  color: var(--cr-text-soft);
+  border-bottom: 1px dotted transparent;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.toc__item:hover {
+  background: var(--cr-bg-soft);
+  color: var(--cr-primary-dark);
+}
+
+.toc__num {
+  font-weight: 800;
+  color: var(--cr-primary);
+  min-width: 26px;
+  font-size: 0.8rem;
+}
+
+.toc__label {
+  flex: 1;
+}
+
+.toc__group {
+  grid-column: 1 / -1;
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-2);
+  border-top: 1px solid var(--cr-border);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cr-primary-light);
+}
+
+/* ---------- LISTS ---------- */
+.list-check {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: var(--sp-2) 0 var(--sp-4);
+}
+
+.list-check li {
+  font-size: 0.85rem;
+  color: var(--cr-text-soft);
+  padding-left: 24px;
+  position: relative;
+  line-height: 1.5;
+}
+
+.list-check li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--cr-success);
+  font-weight: 800;
+}
+
+.list-cross li::before {
+  content: "✕";
+  color: var(--cr-danger);
+}
+
+/* ---------- PRINT ---------- */
+@page {
+  size: A4 portrait;
+  margin: 14mm 12mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #ffffff;
+    font-size: 11pt;
+  }
+
+  .doc-shell {
+    padding: 0;
+    gap: 0;
+    display: block;
+  }
+
+  .doc-toolbar,
+  .doc-toolbar * {
+    display: none !important;
+  }
+
+  .page {
+    width: auto;
+    min-height: auto;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .page__header,
+  .page__footer {
+    display: flex !important;
+  }
+
+  .page--cover {
+    min-height: 265mm;
+    display: flex;
+  }
+
+  .page--cover .page__header,
+  .page--cover .page__footer {
+    display: none !important;
+  }
+
+  .section {
+    page-break-inside: auto;
+  }
+
+  .section__header,
+  .subsection__title {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  table,
+  figure,
+  .callout,
+  .card,
+  .flow,
+  .role-card {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media screen and (max-width: 900px) {
+  .doc-shell {
+    padding: var(--sp-3) var(--sp-2) var(--sp-6);
+  }
+
+  .page {
+    width: 100%;
+    min-height: auto;
+    padding: var(--sp-5) var(--sp-4);
+  }
+
+  .toc__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cover__brand-name {
+    font-size: 2rem;
+  }
+
+  .cover__meta {
+    grid-template-columns: 1fr;
+  }
+
+  .doc-toolbar {
+    border-radius: var(--r-md);
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     TOOLBAR
+     ============================================================ -->
+<div class="doc-shell">
+
+  <div class="doc-toolbar no-print" role="toolbar" aria-label="Document actions">
+    <div class="doc-toolbar__brand">
+      <div class="doc-toolbar__logo" aria-hidden="true">CR</div>
+      <div>
+        <div class="doc-toolbar__title">Catbalogan Ride</div>
+        <div class="doc-toolbar__subtitle">Functional Spec &amp; UI/UX Design Document</div>
+      </div>
+    </div>
+    <div class="doc-toolbar__actions">
+      <button class="btn btn--ghost" type="button" onclick="document.getElementById('toc').scrollIntoView({behavior:'smooth'});">
+        Table of Contents
+      </button>
+      <button class="btn btn--primary" type="button" onclick="window.print();">
+        Save / Print as PDF
+      </button>
+    </div>
+  </div>
+
+<!-- ============================================================
+     PAGE 1 — COVER
+     ============================================================ -->
+  <section class="page page--cover" id="cover">
+    <div class="cover">
+
+      <div class="cover__top">
+        <div class="cover__eyebrow">Capstone Project — System Proposal</div>
+        <div class="cover__rule"></div>
+      </div>
+
+      <div class="cover__middle">
+        <div class="cover__brand">
+          <div class="cover__brand-mark" aria-hidden="true">CR</div>
+          <div>
+            <div class="cover__brand-name">CATBALOGAN<br>RIDE</div>
+            <div class="cover__brand-tag">Local Ride-Hailing &amp; Motorcycle Transportation System</div>
+          </div>
+        </div>
+
+        <h1 class="cover__title">
+          Functional Specification &amp;<br>
+          UI/UX Design Specification
+        </h1>
+
+        <p class="cover__subtitle">
+          A proposed digital platform for motorcycle-based passenger transport
+          within Catbalogan City, Samar, Philippines.
+        </p>
+      </div>
+
+      <div class="cover__meta">
+        <div class="cover__meta-item">
+          <span class="cover__meta-label">School / Institution</span>
+          <span class="cover__meta-value"><span class="placeholder">[School Name]</span></span>
+        </div>
+        <div class="cover__meta-item">
+          <span class="cover__meta-label">Program / Section</span>
+          <span class="cover__meta-value"><span class="placeholder">[Program / Section]</span></span>
+        </div>
+        <div class="cover__meta-item">
+          <span class="cover__meta-label">Student Researcher(s)</span>
+          <span class="cover__meta-value"><span class="placeholder">[Student Name/s]</span></span>
+        </div>
+        <div class="cover__meta-item">
+          <span class="cover__meta-label">Adviser</span>
+          <span class="cover__meta-value"><span class="placeholder">[Adviser Name]</span></span>
+        </div>
+        <div class="cover__meta-item">
+          <span class="cover__meta-label">Document Version</span>
+          <span class="cover__meta-value">1.0</span>
+        </div>
+        <div class="cover__meta-item">
+          <span class="cover__meta-label">Status</span>
+          <span class="cover__meta-value">Draft for Review</span>
+        </div>
+        <div class="cover__meta-item">
+          <span class="cover__meta-label">Document Type</span>
+          <span class="cover__meta-value">Software System Proposal</span>
+        </div>
+        <div class="cover__meta-item">
+          <span class="cover__meta-label">Location</span>
+          <span class="cover__meta-value">Catbalogan City, Samar, Philippines</span>
+        </div>
+      </div>
+
+      <div class="cover__bottom">
+        <div class="cover__notice">
+          <strong>Notice:</strong> This document describes a <em>proposed</em> capstone project.
+          The accompanying HTML prototype is a documentation and UI/UX mockup only and does
+          not represent a deployed, production ride-hailing service. All local operational
+          details (fares, coverage, regulations) are placeholders that require
+          <strong>stakeholder confirmation</strong>.
+        </div>
+        <div>
+          Prepared for academic presentation and panel review.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+<!-- ============================================================
+     PAGE 2 — TABLE OF CONTENTS
+     ============================================================ -->
+  <section class="page" id="toc-page">
+    <header class="page__header">
+      <div class="page__header-left">Catbalogan Ride — Functional Specification</div>
+      <div class="page__header-right">Version 1.0 · Draft</div>
+    </header>
+
+    <div class="toc" id="toc">
+      <h2 class="toc__title">Table of Contents</h2>
+      <p class="toc__hint">
+        Click any entry to jump to that section. On screen, the toolbar stays available
+        at the top; when printing, the toolbar is hidden and the document flows as A4 pages.
+      </p>
+
+      <div class="toc__grid">
+
+        <div class="toc__group">Part I — Introduction &amp; System Overview</div>
+        <a class="toc__item" href="#sec-1"><span class="toc__num">1</span><span class="toc__label">Introduction</span></a>
+        <a class="toc__item" href="#sec-2"><span class="toc__num">2</span><span class="toc__label">Project Overview</span></a>
+        <a class="toc__item" href="#sec-3"><span class="toc__num">3</span><span class="toc__label">System Objectives</span></a>
+        <a class="toc__item" href="#sec-4"><span class="toc__num">4</span><span class="toc__label">Scope and Limitations</span></a>
+        <a class="toc__item" href="#sec-5"><span class="toc__num">5</span><span class="toc__label">Target Users</span></a>
+        <a class="toc__item" href="#sec-6"><span class="toc__num">6</span><span class="toc__label">User Roles</span></a>
+
+        <div class="toc__group">Part II — System Processes</div>
+        <a class="toc__item" href="#sec-7"><span class="toc__num">7</span><span class="toc__label">Overall System Process</span></a>
+        <a class="toc__item" href="#sec-8"><span class="toc__num">8</span><span class="toc__label">Passenger Process</span></a>
+        <a class="toc__item" href="#sec-9"><span class="toc__num">9</span><span class="toc__label">Rider / Driver Process</span></a>
+        <a class="toc__item" href="#sec-10"><span class="toc__num">10</span><span class="toc__label">Admin Process</span></a>
+
+        <div class="toc__group">Part III — Detailed Functions</div>
+        <a class="toc__item" href="#sec-11"><span class="toc__num">11</span><span class="toc__label">Ride Booking Process</span></a>
+        <a class="toc__item" href="#sec-12"><span class="toc__num">12</span><span class="toc__label">Driver Matching Process</span></a>
+        <a class="toc__item" href="#sec-13"><span class="toc__num">13</span><span class="toc__label">GPS and Location Process</span></a>
+        <a class="toc__item" href="#sec-14"><span class="toc__num">14</span><span class="toc__label">Fare Calculation Process</span></a>
+        <a class="toc__item" href="#sec-15"><span class="toc__num">15</span><span class="toc__label">Payment Process</span></a>
+        <a class="toc__item" href="#sec-16"><span class="toc__num">16</span><span class="toc__label">Cancellation Process</span></a>
+        <a class="toc__item" href="#sec-17"><span class="toc__num">17</span><span class="toc__label">Notification Process</span></a>
+        <a class="toc__item" href="#sec-18"><span class="toc__num">18</span><span class="toc__label">Rating and Feedback Process</span></a>
+        <a class="toc__item" href="#sec-19"><span class="toc__num">19</span><span class="toc__label">Ride History</span></a>
+        <a class="toc__item" href="#sec-20"><span class="toc__num">20</span><span class="toc__label">Account Management</span></a>
+        <a class="toc__item" href="#sec-21"><span class="toc__num">21</span><span class="toc__label">Security Requirements</span></a>
+        <a class="toc__item" href="#sec-22"><span class="toc__num">22</span><span class="toc__label">Functional Requirements</span></a>
+        <a class="toc__item" href="#sec-23"><span class="toc__num">23</span><span class="toc__label">Non-Functional Requirements</span></a>
+
+        <div class="toc__group">Part IV — Use Cases, Rules &amp; Acceptance</div>
+        <a class="toc__item" href="#sec-24"><span class="toc__num">24</span><span class="toc__label">Use Cases</span></a>
+        <a class="toc__item" href="#sec-25"><span class="toc__num">25</span><span class="toc__label">Business Rules</span></a>
+        <a class="toc__item" href="#sec-26"><span class="toc__num">26</span><span class="toc__label">Data Requirements</span></a>
+        <a class="toc__item" href="#sec-27"><span class="toc__num">27</span><span class="toc__label">UI/UX Design System</span></a>
+        <a class="toc__item" href="#sec-28"><span class="toc__num">28</span><span class="toc__label">Passenger UI Screens</span></a>
+        <a class="toc__item" href="#sec-29"><span class="toc__num">29</span><span class="toc__label">Rider UI Screens</span></a>
+        <a class="toc__item" href="#sec-30"><span class="toc__num">30</span><span class="toc__label">Admin Dashboard</span></a>
+        <a class="toc__item" href="#sec-31"><span class="toc__num">31</span><span class="toc__label">System Flow Diagram</span></a>
+        <a class="toc__item" href="#sec-32"><span class="toc__num">32</span><span class="toc__label">Exception / Alternative Flows</span></a>
+        <a class="toc__item" href="#sec-33"><span class="toc__num">33</span><span class="toc__label">Acceptance Criteria</span></a>
+
+        <div class="toc__group">Part V — Assumptions &amp; Closing</div>
+        <a class="toc__item" href="#sec-34"><span class="toc__num">34</span><span class="toc__label">Assumptions</span></a>
+        <a class="toc__item" href="#sec-35"><span class="toc__num">35</span><span class="toc__label">Stakeholder Confirmation Checklist</span></a>
+        <a class="toc__item" href="#sec-36"><span class="toc__num">36</span><span class="toc__label">Conclusion</span></a>
+
+      </div>
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 2</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 3 — SECTION 1: INTRODUCTION
+     ============================================================ -->
+  <section class="page" id="sec-1">
+    <header class="page__header">
+      <div class="page__header-left">Section 1 — Introduction</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">1</span>
+        <div>
+          <h2 class="section__title">Introduction</h2>
+          <div class="section__subtitle">Proposed local ride-hailing and motorcycle transportation system</div>
+        </div>
+      </div>
+
+      <p>
+        <strong>Catbalogan Ride</strong> is a proposed local ride-hailing and motorcycle
+        transportation system intended for <strong>Catbalogan City, Samar, Philippines</strong>.
+        It is designed as a capstone project to demonstrate how a digital platform could
+        help organize motorcycle-based passenger transport within the city by allowing
+        passengers to request rides through a mobile application and enabling registered
+        riders to receive, accept, and complete those ride requests.
+      </p>
+
+      <p>
+        The system is presented as a <strong>concept and academic proposal</strong>. It does
+        not represent an existing commercial service, and it is not affiliated with any
+        established ride-hailing company. The accompanying HTML document is a
+        documentation and UI/UX prototype only — it does not include real GPS, real-time
+        maps, real payments, a database, or a production backend.
+      </p>
+
+      <div class="callout callout--info">
+        <span class="callout__label">Positioning Statement</span>
+        This project is a <strong>proposed capstone system</strong> composed of a
+        Functional Specification and a UI/UX Design Specification. It is intended
+        for academic presentation, panel review, and PDF submission. Any operational
+        details such as fare amounts, coverage areas, and rider requirements are
+        placeholders that require <strong>stakeholder confirmation</strong>.
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">1.1 Purpose of the Proposed System</h3>
+        <p>
+          The purpose of Catbalogan Ride is to propose a structured, digital way for
+          passengers and motorcycle riders in Catbalogan City to connect for local
+          trips. Instead of relying solely on informal arrangements, the proposed
+          system aims to provide a single platform where:
+        </p>
+        <ul class="list-check">
+          <li>Passengers can enter a pickup point and destination.</li>
+          <li>An estimated fare can be shown before confirming a ride.</li>
+          <li>A registered rider can receive and accept the request.</li>
+          <li>Both parties can see the status of the ride.</li>
+          <li>A record of the trip, payment, and rating can be stored.</li>
+          <li>Administrators can manage users, riders, and ride activity.</li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">1.2 Local Context</h3>
+        <p>
+          Catbalogan City is the capital of Samar Province and is composed of urban
+          and rural barangays. Motorcycle-based transport is a common and practical
+          way to move around the city, especially for short-distance trips. The
+          proposed system is therefore designed with this local context in mind:
+          simple flows, landmark-friendly pickup and destination entry, and
+          cash-based payment as a primary option.
+        </p>
+
+        <div class="callout callout--warning">
+          <span class="callout__label">Local Information Rule</span>
+          This document does <strong>not</strong> claim official Catbalogan fare rates,
+          government regulations, transportation statistics, or existing operational
+          service details. Where such information would be needed, it is marked
+          <span class="placeholder">[For Stakeholder Confirmation]</span> or
+          <span class="placeholder">[To Be Determined]</span>.
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">1.3 Scope of This Document</h3>
+        <p>
+          This document combines two complementary specifications:
+        </p>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card__title"><span class="card__icon">FS</span>Functional Specification</div>
+            <div class="card__text">
+              Describes how the proposed system should behave — users, processes,
+              requirements, use cases, business rules, and data needs.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__title"><span class="card__icon">UX</span>UI/UX Design Specification</div>
+            <div class="card__text">
+              Presents the proposed look and feel of the passenger, rider, and
+              admin interfaces through original visual mockups.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__title"><span class="card__icon">PR</span>Prototype</div>
+            <div class="card__text">
+              A self-contained HTML document that demonstrates the proposed flows
+              using simulated data only — no real backend or APIs.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 3</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 4 — SECTION 2: PROJECT OVERVIEW
+     ============================================================ -->
+  <section class="page" id="sec-2">
+    <header class="page__header">
+      <div class="page__header-left">Section 2 — Project Overview</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">2</span>
+        <div>
+          <h2 class="section__title">Project Overview</h2>
+          <div class="section__subtitle">What the system is and how it is intended to work</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">2.1 What Catbalogan Ride Is</h3>
+        <p>
+          Catbalogan Ride is a proposed ride-hailing and motorcycle transportation
+          booking system for Catbalogan City. It consists of three connected
+          application views:
+        </p>
+        <div class="role-grid">
+          <div class="role-card">
+            <div class="role-card__head">
+              <h4>Passenger App</h4>
+              <span>Request and track rides</span>
+            </div>
+            <div class="role-card__body">
+              <ul>
+                <li>Register and log in</li>
+                <li>Enter pickup and destination</li>
+                <li>View fare estimate</li>
+                <li>Confirm booking</li>
+                <li>Track ride status</li>
+                <li>Pay and rate</li>
+              </ul>
+            </div>
+          </div>
+          <div class="role-card">
+            <div class="role-card__head">
+              <h4>Rider App</h4>
+              <span>Receive and complete rides</span>
+            </div>
+            <div class="role-card__body">
+              <ul>
+                <li>Register and verify</li>
+                <li>Go online / offline</li>
+                <li>Receive ride requests</li>
+                <li>Accept or reject</li>
+                <li>Start and complete trips</li>
+                <li>View earnings and ratings</li>
+              </ul>
+            </div>
+          </div>
+          <div class="role-card">
+            <div class="role-card__head">
+              <h4>Admin Dashboard</h4>
+              <span>Manage the platform</span>
+            </div>
+            <div class="role-card__body">
+              <ul>
+                <li>Manage users and riders</li>
+                <li>Verify rider accounts</li>
+                <li>Monitor rides</li>
+                <li>Review reports</li>
+                <li>Handle feedback</li>
+                <li>Configure settings</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">2.2 Intended Users</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>User Group</th>
+                <th>Description</th>
+                <th>Primary Need</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Passengers</strong></td>
+                <td>Residents and visitors in Catbalogan City who need local motorcycle transport.</td>
+                <td>A simple way to request a ride and know the estimated fare.</td>
+              </tr>
+              <tr>
+                <td><strong>Riders / Drivers</strong></td>
+                <td>Registered motorcycle operators who are willing to accept passenger trips through the platform.</td>
+                <td>A structured way to receive ride requests and record trips.</td>
+              </tr>
+              <tr>
+                <td><strong>Administrators</strong></td>
+                <td>Personnel responsible for managing users, riders, rides, and system settings.</td>
+                <td>Visibility and control over the platform’s operations.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">2.3 General System Concept</h3>
+        <p>
+          The system follows a simple request-and-match concept:
+        </p>
+        <div class="flow">
+          <div class="flow__title">Concept Flow</div>
+          <div class="flow__steps">
+            <div class="flow__node flow__node--start">Passenger Requests a Ride</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">System Computes Estimated Fare</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">System Searches for Available Rider</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rider Accepts Request</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Ride is Completed</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node flow__node--end">Payment, Rating, and History Recorded</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">2.4 How Passengers Request Rides</h3>
+        <p>
+          A passenger opens the app, logs in, enters a pickup point and destination,
+          views an estimated fare, and confirms the booking. The system then searches
+          for an available rider and shows the assigned rider’s information once the
+          request is accepted.
+        </p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">2.5 How Riders Receive Requests</h3>
+        <p>
+          A verified rider logs in, sets their status to <strong>Online</strong>, and
+          waits to receive ride requests. When a request arrives, the rider can accept
+          or reject it. After accepting, the rider proceeds to the pickup point,
+          starts the ride, and completes it at the destination.
+        </p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">2.6 How Administrators Manage the Platform</h3>
+        <p>
+          Administrators use a desktop-style dashboard to review rider applications,
+          manage passenger and rider accounts, monitor ongoing and completed rides,
+          review reports and feedback, and configure system settings such as fare
+          parameters.
+        </p>
+      </div>
+
+      <div class="callout callout--warning">
+        <span class="callout__label">Prototype Limitation</span>
+        The HTML prototype simulates these flows with static data. It does not
+        connect to real maps, GPS, payment gateways, SMS, push notifications, or
+        a production database.
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 4</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 5 — SECTION 3: SYSTEM OBJECTIVES
+     ============================================================ -->
+  <section class="page" id="sec-3">
+    <header class="page__header">
+      <div class="page__header-left">Section 3 — System Objectives</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">3</span>
+        <div>
+          <h2 class="section__title">System Objectives</h2>
+          <div class="section__subtitle">What the proposed system aims to accomplish</div>
+        </div>
+      </div>
+
+      <p>
+        The following objectives define the intended purpose of the proposed
+        Catbalogan Ride system. Each objective is written as a goal that the
+        functional specification is designed to support.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:80px;">ID</th>
+              <th>Objective</th>
+              <th style="width:180px;">Primary Actor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>OBJ-01</td><td>Provide a convenient way for passengers to request motorcycle rides within Catbalogan City.</td><td>Passenger</td></tr>
+            <tr><td>OBJ-02</td><td>Allow passengers to enter a pickup location and destination using text, landmarks, or map selection.</td><td>Passenger</td></tr>
+            <tr><td>OBJ-03</td><td>Display an estimated fare before the passenger confirms a booking.</td><td>Passenger</td></tr>
+            <tr><td>OBJ-04</td><td>Allow verified riders to receive, accept, or reject incoming ride requests.</td><td>Rider</td></tr>
+            <tr><td>OBJ-05</td><td>Provide a clear ride status that both passenger and rider can follow.</td><td>Passenger / Rider</td></tr>
+            <tr><td>OBJ-06</td><td>Maintain a record of completed, cancelled, and in-progress rides for each user.</td><td>Passenger / Rider</td></tr>
+            <tr><td>OBJ-07</td><td>Support a simple rating and feedback process after each completed ride.</td><td>Passenger</td></tr>
+            <tr><td>OBJ-08</td><td>Allow administrators to manage passenger accounts and rider accounts.</td><td>Admin</td></tr>
+            <tr><td>OBJ-09</td><td>Allow administrators to verify rider accounts before they can accept rides.</td><td>Admin</td></tr>
+            <tr><td>OBJ-10</td><td>Provide administrators with monitoring and reporting tools for rides, payments, and feedback.</td><td>Admin</td></tr>
+            <tr><td>OBJ-11</td><td>Support configurable fare parameters rather than hard-coded fare amounts.</td><td>Admin</td></tr>
+            <tr><td>OBJ-12</td><td>Present an original, professional UI/UX design appropriate for a local ride-hailing service.</td><td>All</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout--info">
+        <span class="callout__label">Note</span>
+        These objectives describe the <strong>proposed</strong> system. Actual
+        implementation of all objectives is subject to the final approved scope
+        and to the stakeholder confirmation checklist in Section 35.
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 5</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 6 — SECTION 4: SCOPE AND LIMITATIONS
+     ============================================================ -->
+  <section class="page" id="sec-4">
+    <header class="page__header">
+      <div class="page__header-left">Section 4 — Scope and Limitations</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">4</span>
+        <div>
+          <h2 class="section__title">Scope and Limitations</h2>
+          <div class="section__subtitle">What is included and what is explicitly excluded</div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">4.1 In Scope</h3>
+        <p>
+          The following functions and deliverables are part of the proposed
+          Catbalogan Ride system documentation and prototype:
+        </p>
+        <ul class="list-check">
+          <li>Passenger registration and login (conceptual)</li>
+          <li>Rider registration and login (conceptual)</li>
+          <li>Ride booking flow with pickup and destination entry</li>
+          <li>Estimated fare display based on configurable parameters</li>
+          <li>Conceptual rider matching</li>
+          <li>Ride status lifecycle and status display</li>
+          <li>Simulated notifications for key events</li>
+          <li>Ride history for passengers and riders</li>
+          <li>Rating and feedback after completed rides</li>
+          <li>Profile management screens</li>
+          <li>Administrator management of users, riders, and rides</li>
+          <li>Rider account verification workflow (conceptual)</li>
+          <li>Fare configuration screen for administrators (conceptual)</li>
+          <li>UI/UX prototype mockups for passenger, rider, and admin</li>
+          <li>Functional and non-functional requirements documentation</li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">4.2 Out of Scope</h3>
+        <p>
+          The following are <strong>explicitly excluded</strong> from the prototype.
+          They may be discussed as future production features, but they are not
+          implemented in the HTML file.
+        </p>
+        <ul class="list-check list-cross">
+          <li>Real GPS or device location services</li>
+          <li>Real-time maps or map tile providers</li>
+          <li>Real payment gateway or e-wallet integration</li>
+          <li>Real database or server-side storage</li>
+          <li>Production-grade authentication or authorization</li>
+          <li>Real SMS or push notifications</li>
+          <li>Real-time driver tracking</li>
+          <li>Production backend or cloud infrastructure</li>
+          <li>Actual deployment to app stores or web hosting</li>
+          <li>Real fare collection, commission, or rider payout</li>
+        </ul>
+      </div>
+
+      <div class="callout callout--danger">
+        <span class="callout__label">Important Clarification</span>
+        All interactions shown in the HTML prototype are <strong>simulated</strong>.
+        The prototype is a documentation and UI/UX artifact only. It is not a
+        working ride-hailing service, and it must not be presented as one.
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">4.3 Items Requiring Stakeholder Confirmation</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Official fare amounts and structure</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
+              <tr><td>Service coverage area within Catbalogan City</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
+              <tr><td>Required rider documents and verification rules</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
+              <tr><td>Allowed payment methods</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
+              <tr><td>Cancellation policy and any related fees</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
+              <tr><td>Commission and rider payout rules</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
+              <tr><td>Whether rider-to-passenger rating is included</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
+              <tr><td>Service hours</td><td><span class="badge badge--confirm">For Stakeholder Confirmation</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 6</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 7 — SECTION 5: TARGET USERS
+     ============================================================ -->
+  <section class="page" id="sec-5">
+    <header class="page__header">
+      <div class="page__header-left">Section 5 — Target Users</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">5</span>
+        <div>
+          <h2 class="section__title">Target Users</h2>
+          <div class="section__subtitle">Who the proposed system is designed for</div>
+        </div>
+      </div>
+
+      <p>
+        The proposed system is intended for three groups of users who interact
+        with Catbalogan Ride in different ways. Each group has distinct needs
+        and expected interactions with the platform.
+      </p>
+
+      <div class="subsection">
+        <h3 class="subsection__title">5.1 Passengers</h3>
+        <p>
+          Passengers are individuals in Catbalogan City who need a motorcycle
+          ride from one point to another. They may be residents going to work,
+          students going to school, or visitors moving around the city.
+        </p>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card__title">Primary Needs</div>
+            <div class="card__text">
+              A simple way to request a ride, know the estimated fare, and
+              see the status of the ride until completion.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__title">Expected Interaction</div>
+            <div class="card__text">
+              Register or log in, enter pickup and destination, confirm booking,
+              track the ride, pay, and rate the rider.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">5.2 Riders / Drivers</h3>
+        <p>
+          Riders are motorcycle operators who are willing to accept passenger
+          trips through the platform. They must be registered and verified
+          before accepting rides.
+        </p>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card__title">Primary Needs</div>
+            <div class="card__text">
+              A structured way to receive ride requests and a clear record of
+              completed trips, earnings, and ratings.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__title">Expected Interaction</div>
+            <div class="card__text">
+              Register, submit requirements, wait for verification, go online,
+              accept requests, complete trips, and review history.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">5.3 Administrators</h3>
+        <p>
+          Administrators are the personnel responsible for managing the platform.
+          They review rider applications, manage user accounts, monitor rides,
+          and configure system settings.
+        </p>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card__title">Primary Needs</div>
+            <div class="card__text">
+              Visibility over users, rides, payments, and feedback, plus the
+              ability to configure fare-related and system-wide settings.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__title">Expected Interaction</div>
+            <div class="card__text">
+              Log in to a dashboard, verify riders, manage accounts, monitor
+              rides, review reports, and adjust settings.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout--info">
+        <span class="callout__label">Note</span>
+        The system is intended for use within Catbalogan City only. Any expansion
+        beyond the city would require separate review and stakeholder approval.
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 7</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 8 — SECTION 6: USER ROLES
+     ============================================================ -->
+  <section class="page" id="sec-6">
+    <header class="page__header">
+      <div class="page__header-left">Section 6 — User Roles</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">6</span>
+        <div>
+          <h2 class="section__title">User Roles</h2>
+          <div class="section__subtitle">Responsibilities and permissions per role</div>
+        </div>
+      </div>
+
+      <p>
+        Catbalogan Ride defines three user roles. Each role has its own
+        responsibilities, main functions, permissions, and typical workflow.
+      </p>
+
+      <div class="subsection">
+        <h3 class="subsection__title">6.1 Passenger</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:180px;">Aspect</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Responsibilities</strong></td>
+                <td>Register, request rides, enter pickup and destination, view fare estimate, monitor ride status, complete payment, rate rider, view ride history.</td>
+              </tr>
+              <tr>
+                <td><strong>Main Functions</strong></td>
+                <td>Registration, login, profile management, booking, tracking, payment, rating, and history.</td>
+              </tr>
+              <tr>
+                <td><strong>Permissions</strong></td>
+                <td>Can create bookings, cancel bookings, view own ride history, and rate riders.</td>
+              </tr>
+              <tr>
+                <td><strong>Typical Workflow</strong></td>
+                <td>Login → Enter pickup → Enter destination → View fare → Confirm → Track → Pay → Rate.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">6.2 Rider / Driver</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:180px;">Aspect</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Responsibilities</strong></td>
+                <td>Register, submit required information, go online/offline, receive ride requests, accept or reject requests, pick up passengers, start and complete rides, view ride history, view ratings.</td>
+              </tr>
+              <tr>
+                <td><strong>Main Functions</strong></td>
+                <td>Registration, verification, online status, request handling, trip management, earnings, and history.</td>
+              </tr>
+              <tr>
+                <td><strong>Permissions</strong></td>
+                <td>Can accept or reject ride requests, start and complete trips, and view own earnings and ratings.</td>
+              </tr>
+              <tr>
+                <td><strong>Typical Workflow</strong></td>
+                <td>Login → Go online → Receive request → Accept → Navigate → Start → Complete → View earnings.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">6.3 Administrator</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:180px;">Aspect</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Responsibilities</strong></td>
+                <td>Manage users, manage riders, verify accounts, monitor rides, review reports, manage feedback, configure system settings.</td>
+              </tr>
+              <tr>
+                <td><strong>Main Functions</strong></td>
+                <td>Dashboard, user management, rider verification, ride monitoring, reporting, feedback handling, and settings.</td>
+              </tr>
+              <tr>
+                <td><strong>Permissions</strong></td>
+                <td>Can approve or reject rider accounts, suspend accounts, configure fare parameters, and view platform-wide reports.</td>
+              </tr>
+              <tr>
+                <td><strong>Typical Workflow</strong></td>
+                <td>Login → Dashboard → Manage users → Verify riders → Monitor rides → Review reports → Configure settings.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="callout callout--warning">
+        <span class="callout__label">For Stakeholder Confirmation</span>
+        Additional admin roles, permission levels, and approval workflows may be
+        required depending on the final organizational structure. These are marked
+        <span class="placeholder">[For Stakeholder Confirmation]</span>.
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 8</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 9 — SECTION 7: OVERALL SYSTEM PROCESS
+     ============================================================ -->
+  <section class="page" id="sec-7">
+    <header class="page__header">
+      <div class="page__header-left">Section 7 — Overall System Process</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">7</span>
+        <div>
+          <h2 class="section__title">Overall System Process</h2>
+          <div class="section__subtitle">High-level process for passenger, rider, and admin</div>
+        </div>
+      </div>
+
+      <p>
+        The following diagrams show the overall process of the proposed system
+        from three perspectives: passenger, rider, and administrator. These are
+        conceptual and are not tied to a specific implementation.
+      </p>
+
+      <div class="flow-3col">
+
+        <div class="flow">
+          <div class="flow__title">Passenger Process</div>
+          <div class="flow__steps">
+            <div class="flow__node flow__node--start">Login / Registration</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Enter Pickup</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Enter Destination</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">View Estimated Fare</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Confirm Ride</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">System Searches for Rider</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rider Accepts</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rider Travels to Pickup</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Ride Starts</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Ride in Progress</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Ride Completed</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Payment</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rating / Feedback</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node flow__node--end">Ride History</div>
+          </div>
+        </div>
+
+        <div class="flow">
+          <div class="flow__title">Rider Process</div>
+          <div class="flow__steps">
+            <div class="flow__node flow__node--start">Login</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Go Online</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Receive Ride Request</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node flow__node--decision">Accept / Reject</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Travel to Pickup</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Arrive</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Start Ride</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Complete Ride</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Confirm Fare</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node flow__node--end">Ride Record</div>
+          </div>
+        </div>
+
+        <div class="flow">
+          <div class="flow__title">Admin Process</div>
+          <div class="flow__steps">
+            <div class="flow__node flow__node--start">Login</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Dashboard</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Manage Passengers</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Manage Riders</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Monitor Rides</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Manage Reports</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Review Feedback</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node flow__node--end">System Settings</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 9</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 10 — SECTION 8: PASSENGER PROCESS
+     ============================================================ -->
+  <section class="page" id="sec-8">
+    <header class="page__header">
+      <div class="page__header-left">Section 8 — Passenger Process</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">8</span>
+        <div>
+          <h2 class="section__title">Passenger Process</h2>
+          <div class="section__subtitle">Detailed steps from registration to ride history</div>
+        </div>
+      </div>
+
+      <p>
+        This section describes the complete passenger experience in the proposed
+        system. Each step includes the user action, the expected system response,
+        and the expected result.
+      </p>
+
+      <div class="subsection">
+        <h3 class="subsection__title">8.1 Passenger Journey Overview</h3>
+        <div class="flow">
+          <div class="flow__title">Passenger Journey</div>
+          <div class="flow__steps">
+            <div class="flow__node flow__node--start">Registration</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Login</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Home Screen</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Pickup Location</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Destination</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Fare Estimate</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Confirm Booking</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Searching for Rider</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rider Assigned</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rider Arriving</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Ride Started</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Ride in Progress</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Ride Completed</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Payment</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rating</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node flow__node--end">Ride History</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">8.2 Step Details</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:60px;">#</th>
+                <th style="width:180px;">Step</th>
+                <th>User Action</th>
+                <th>System Response</th>
+                <th>Expected Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><strong>Registration</strong></td>
+                <td>Enters name, contact number, and credentials.</td>
+                <td>Validates input and creates a passenger account (conceptual).</td>
+                <td>Passenger account is created.</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><strong>Login</strong></td>
+                <td>Enters credentials.</td>
+                <td>Verifies credentials and loads the home screen.</td>
+                <td>Passenger is logged in.</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><strong>Home Screen</strong></td>
+                <td>Views available actions and options.</td>
+                <td>Displays map placeholder, pickup field, and ride options.</td>
+                <td>Passenger is ready to book.</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><strong>Pickup Location</strong></td>
+                <td>Selects or types a pickup point (may add a landmark note).</td>
+                <td>Validates and stores the pickup point.</td>
+                <td>Pickup is set.</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><strong>Destination</strong></td>
+                <td>Selects or types the destination.</td>
+                <td>Validates and stores the destination.</td>
+                <td>Destination is set.</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><strong>Fare Estimate</strong></td>
+                <td>Reviews the estimated fare.</td>
+                <td>Computes and displays the estimated fare based on configured rules.</td>
+                <td>Passenger sees the estimated cost.</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><strong>Confirm Booking</strong></td>
+                <td>Taps “Confirm Booking.”</td>
+                <td>Creates a booking request and starts rider search.</td>
+                <td>Booking is submitted.</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><strong>Searching for Rider</strong></td>
+                <td>Waits while the system searches.</td>
+                <td>Looks for available riders and sends requests.</td>
+                <td>System is actively searching.</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td><strong>Rider Assigned</strong></td>
+                <td>Views assigned rider details.</td>
+                <td>Assigns a rider and displays rider information.</td>
+                <td>Passenger knows who will pick them up.</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td><strong>Rider Arriving</strong></td>
+                <td>Watches the ride status.</td>
+                <td>Updates status as the rider approaches.</td>
+                <td>Passenger is informed of arrival.</td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td><strong>Ride Started</strong></td>
+                <td>Boards the motorcycle.</td>
+                <td>Updates ride status to “In Progress.”</td>
+                <td>Trip has begun.</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td><strong>Ride in Progress</strong></td>
+                <td>Rides to the destination.</td>
+                <td>Displays the current ride status.</td>
+                <td>Passenger is en route.</td>
+              </tr>
+              <tr>
+                <td>13</td>
+                <td><strong>Ride Completed</strong></td>
+                <td>Arrives at the destination.</td>
+                <td>Marks the ride as completed and shows the final fare.</td>
+                <td>Trip is finished.</td>
+              </tr>
+              <tr>
+                <td>14</td>
+                <td><strong>Payment</strong></td>
+                <td>Pays using the selected method.</td>
+                <td>Records the payment status (simulated).</td>
+                <td>Payment is recorded.</td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td><strong>Rating</strong></td>
+                <td>Rates the rider and optionally leaves a comment.</td>
+                <td>Stores the rating.</td>
+                <td>Feedback is submitted.</td>
+              </tr>
+              <tr>
+                <td>16</td>
+                <td><strong>Ride History</strong></td>
+                <td>Views previous rides.</td>
+                <td>Displays a list of past rides with details.</td>
+                <td>Passenger can review history.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 10</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 11 — SECTION 9: RIDER / DRIVER PROCESS
+     ============================================================ -->
+  <section class="page" id="sec-9">
+    <header class="page__header">
+      <div class="page__header-left">Section 9 — Rider / Driver Process</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">9</span>
+        <div>
+          <h2 class="section__title">Rider / Driver Process</h2>
+          <div class="section__subtitle">From registration to ratings and profile</div>
+        </div>
+      </div>
+
+      <p>
+        This section describes how a rider interacts with the proposed system,
+        from registration and verification to completing rides and viewing
+        earnings and ratings.
+      </p>
+
+      <div class="subsection">
+        <h3 class="subsection__title">9.1 Rider Journey Overview</h3>
+        <div class="flow">
+          <div class="flow__title">Rider Journey</div>
+          <div class="flow__steps">
+            <div class="flow__node flow__node--start">Registration</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Account Verification</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Login</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rider Dashboard</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Online / Offline Status</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Receive Ride Request</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node flow__node--decision">Accept / Reject</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">View Passenger Information</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Travel to Pickup</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Arrive</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Start Ride</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Complete Ride</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Earnings / History</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Ratings</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node flow__node--end">Profile</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">9.2 Step Details</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:60px;">#</th>
+                <th style="width:160px;">Step</th>
+                <th>Rider Action</th>
+                <th>System Response</th>
+                <th>Expected Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><strong>Registration</strong></td>
+                <td>Enters personal and vehicle information.</td>
+                <td>Creates a pending rider account (conceptual).</td>
+                <td>Rider account is created.</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><strong>Account Verification</strong></td>
+                <td>Submits required documents.</td>
+                <td>Flags the account for admin review.</td>
+                <td>Verification is pending.</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><strong>Login</strong></td>
+                <td>Enters credentials.</td>
+                <td>Verifies credentials and loads the rider dashboard.</td>
+                <td>Rider is logged in.</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><strong>Rider Dashboard</strong></td>
+                <td>Views dashboard summary.</td>
+                <td>Displays status, requests, and earnings summary.</td>
+                <td>Rider is ready to operate.</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><strong>Online / Offline Status</strong></td>
+                <td>Toggles availability.</td>
+                <td>Updates the rider’s availability state.</td>
+                <td>Rider is marked available or unavailable.</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><strong>Receive Ride Request</strong></td>
+                <td>Receives a request notification.</td>
+                <td>Displays request details.</td>
+                <td>Rider can review the request.</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><strong>Accept / Reject</strong></td>
+                <td>Chooses to accept or reject.</td>
+                <td>Updates the request status accordingly.</td>
+                <td>Request is accepted or declined.</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><strong>View Passenger Information</strong></td>
+                <td>Views passenger and pickup details.</td>
+                <td>Displays passenger name, pickup point, and notes.</td>
+                <td>Rider knows where to go.</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td><strong>Travel to Pickup</strong></td>
+                <td>Proceeds to the pickup point.</td>
+                <td>Updates the ride status.</td>
+                <td>Rider is en route.</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td><strong>Arrive</strong></td>
+                <td>Marks arrival at pickup.</td>
+                <td>Updates the status to “Arrived.”</td>
+                <td>Passenger is notified (simulated).</td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td><strong>Start Ride</strong></td>
+                <td>Starts the trip.</td>
+                <td>Updates the status to “In Progress.”</td>
+                <td>Trip has begun.</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td><strong>Complete Ride</strong></td>
+                <td>Marks the trip as completed.</td>
+                <td>Records the final fare and status.</td>
+                <td>Trip is finished.</td>
+              </tr>
+              <tr>
+                <td>13</td>
+                <td><strong>Earnings / History</strong></td>
+                <td>Views earnings and ride history.</td>
+                <td>Displays earnings summary and past rides.</td>
+                <td>Rider can review performance.</td>
+              </tr>
+              <tr>
+                <td>14</td>
+                <td><strong>Ratings</strong></td>
+                <td>Views ratings from passengers.</td>
+                <td>Displays average rating and feedback.</td>
+                <td>Rider sees feedback.</td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td><strong>Profile</strong></td>
+                <td>Views or updates profile details.</td>
+                <td>Saves changes (conceptual).</td>
+                <td>Rider profile is up to date.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="callout callout--warning">
+        <span class="callout__label">For Stakeholder Confirmation</span>
+        Required rider documents, verification criteria, and payout rules are
+        <span class="placeholder">[For Stakeholder Confirmation]</span> and are
+        not defined in this document.
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 11</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PAGE 12 — SECTION 10: ADMIN PROCESS
+     ============================================================ -->
+  <section class="page" id="sec-10">
+    <header class="page__header">
+      <div class="page__header-left">Section 10 — Admin Process</div>
+      <div class="page__header-right">Catbalogan Ride v1.0</div>
+    </header>
+
+    <div class="section">
+      <div class="section__header">
+        <span class="section__number">10</span>
+        <div>
+          <h2 class="section__title">Admin Process</h2>
+          <div class="section__subtitle">Managing users, riders, rides, and settings</div>
+        </div>
+      </div>
+
+      <p>
+        Administrators are responsible for the overall operation of the proposed
+        platform. This section describes the main admin processes and the expected
+        system behavior for each.
+      </p>
+
+      <div class="subsection">
+        <h3 class="subsection__title">10.1 Admin Journey Overview</h3>
+        <div class="flow">
+          <div class="flow__title">Admin Journey</div>
+          <div class="flow__steps">
+            <div class="flow__node flow__node--start">Admin Login</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Dashboard</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Passenger Management</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rider Management</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Rider Verification</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Ride Monitoring</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Reports</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Feedback Management</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node">Account Status</div>
+            <div class="flow__arrow">↓</div>
+            <div class="flow__node flow__node--end">System Settings</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection__title">10.2 Admin Processes</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:60px;">#</th>
+                <th style="width:180px;">Process</th>
+                <th>Description</th>
+                <th>Expected System Behavior</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><strong>Admin Login</strong></td>
+                <td>Administrator signs in to the dashboard.</td>
+                <td>Validates credentials and loads the dashboard.</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><strong>Dashboard</strong></td>
+                <td>Views high-level platform metrics.</td>
+                <td>Displays totals and summaries (configurable).</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><strong>Passenger Management</strong></td>
+                <td>Views, searches, and manages passenger accounts.</td>
+                <td>Allows viewing, filtering, and status changes.</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><strong>Rider Management</strong></td>
+                <td>Views and manages rider accounts.</td>
+                <td>Allows viewing, filtering, and status changes.</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><strong>Rider Verification</strong></td>
+                <td>Reviews rider submissions and approves or rejects.</td>
+                <td>Updates rider verification status.</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><strong>Ride Monitoring</strong></td>
+                <td>Monitors ongoing and recent rides.</td>
+                <td>Displays ride list with status and details.</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td><strong>Reports</strong></td>
+                <td>Views operational and financial summaries.</td>
+                <td>Generates report views (mock data).</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td><strong>Feedback Management</strong></td>
+                <td>Reviews ratings and complaints.</td>
+                <td>Displays feedback list with status.</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td><strong>Account Status</strong></td>
+                <td>Activates, suspends, or deactivates accounts.</td>
+                <td>Updates the account status and logs the action.</td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td><strong>System Settings</strong></td>
+                <td>Configures fare and system parameters.</td>
+                <td>Saves settings (conceptual).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="callout callout--info">
+        <span class="callout__label">Note</span>
+        Dashboard metrics, report contents, and settings options are
+        <strong>configurable</strong> and may be adjusted based on stakeholder
+        requirements. Specific values are not defined in this document.
+      </div>
+
+    </div>
+
+    <footer class="page__footer">
+      <span>Catbalogan Ride — Capstone Documentation</span>
+      <span>Page 12</span>
+    </footer>
+  </section>
+
+<!-- ============================================================
+     PLACEHOLDER FOR PART 3+
+     (Sections 11–36 will be inserted here in subsequent parts.)
+     ============================================================ -->
+
+<!--
+  END OF PARTS 1 + 2.
+  Part 3 will begin here and add Sections 11–23
+  (Ride Booking through Non-Functional Requirements).
+-->
+
+</div><!-- /.doc-shell -->
+
+<!-- ============================================================
+     CORE JAVASCRIPT
+     ============================================================ -->
+<script>
+(function () {
+  "use strict";
+
+  /* -------- Print helper -------- */
+  window.catbaloganPrint = function () {
+    window.print();
+  };
+
+  /* -------- TOC smooth scroll with offset for sticky toolbar -------- */
+  document.addEventListener("click", function (e) {
+    var link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    var id = link.getAttribute("href").slice(1);
+    if (!id) return;
+
+    var target = document.getElementById(id);
+    if (!target) return;
+
+    e.preventDefault();
+
+    var toolbar = document.querySelector(".doc-toolbar");
+    var offset = toolbar && getComputedStyle(toolbar).display !== "none"
+      ? toolbar.offsetHeight + 16
+      : 0;
+
+    var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+
+    window.scrollTo({ top: top, behavior: "smooth" });
+
+    if (history.replaceState) {
+      history.replaceState(null, "", "#" + id);
+    }
+  });
+
+  /* -------- Auto-number pages in footers -------- */
+  function numberPages() {
+    var pages = document.querySelectorAll(".page");
+    pages.forEach(function (page, index) {
+      var footer = page.querySelector(".page__footer");
+      if (!footer) return;
+      var spans = footer.querySelectorAll("span");
+      if (spans.length >= 2) {
+        spans[spans.length - 1].textContent = "Page " + (index + 1);
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", numberPages);
+  } else {
+    numberPages();
+  }
+})();
+</script>
+
+</body>
+</html>
