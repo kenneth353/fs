@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>improving · the design</title>
+    <title>VOYAGO — System Workflow & Process Guide</title>
     <style>
-        /* RESET & GLOBAL */
+        /* ---------- RESET & BASE ---------- */
         * {
             margin: 0;
             padding: 0;
@@ -13,352 +13,2545 @@
         }
 
         body {
-            min-height: 100vh;
-            background: #0b0d15;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', 'Poppins', system-ui, -apple-system, sans-serif;
-            overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f5f7fa;
+            color: #1a1f2e;
+            line-height: 1.5;
+            padding: 0 20px 40px;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ---------- GLOBAL ANIMATED BACKGROUND ---------- */
+        .global-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 15% 25%, rgba(245,166,35,0.04) 0%, transparent 55%),
+                radial-gradient(circle at 85% 75%, rgba(49,130,206,0.04) 0%, transparent 55%),
+                radial-gradient(circle at 50% 50%, rgba(128,90,213,0.02) 0%, transparent 70%);
+            animation: bgShift 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes bgShift {
+            0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+            50% { transform: scale(1.15) rotate(2deg); opacity: 1; }
+            100% { transform: scale(1.3) rotate(-2deg); opacity: 0.9; }
+        }
+
+        /* ---------- HERO SECTION ---------- */
+        .hero {
+            background: linear-gradient(135deg, #0a1628 0%, #0d2137 40%, #0a1628 100%);
+            border-radius: 0 0 40px 40px;
+            padding: 56px 64px 64px;
+            margin: 0 -20px 0;
             position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 48px;
+            min-height: 420px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15);
         }
 
-        /* MAANGAS GLOW BACKGROUND */
-        .bg-glow {
+        .hero::before {
+            content: '';
             position: absolute;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 30% 40%, #1e2a5a 0%, #0a0c14 70%);
-            z-index: 0;
+            top: -30%;
+            right: -10%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(245,166,35,0.15) 0%, transparent 65%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: orbFloat 12s ease-in-out infinite;
         }
 
-        /* ANIMATED SCANLINES / MOVING GRID */
-        .grid-overlay {
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -15%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(49,130,206,0.15) 0%, transparent 65%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: orbFloat 16s ease-in-out infinite reverse;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -40px) scale(1.2); }
+        }
+
+        .hero-grid-overlay {
             position: absolute;
             inset: 0;
-            background-image: 
-                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: 1;
-            animation: gridShift 8s linear infinite;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
             pointer-events: none;
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+            animation: gridShift 20s linear infinite;
         }
 
         @keyframes gridShift {
             0% { background-position: 0 0; }
-            100% { background-position: 40px 40px; }
+            100% { background-position: 60px 60px; }
         }
 
-        /* MAIN CARD – GLASSMORPHISM + HARD EDGE */
-        .card {
+        .hero-content {
             position: relative;
-            z-index: 10;
-            background: rgba(10, 15, 30, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 2px solid rgba(0, 255, 255, 0.5);
-            border-radius: 32px;
-            padding: 3.5rem 4.5rem;
-            box-shadow: 
-                0 0 30px rgba(0, 255, 255, 0.3),
-                0 0 80px rgba(0, 180, 255, 0.2),
-                inset 0 0 30px rgba(0, 255, 255, 0.1);
-            animation: cardPulse 3s ease-in-out infinite alternate;
-            transition: box-shadow 0.3s;
+            z-index: 2;
+            flex: 1;
+            min-width: 340px;
+            max-width: 620px;
         }
 
-        @keyframes cardPulse {
-            0% {
-                box-shadow: 
-                    0 0 25px rgba(0, 255, 255, 0.3),
-                    0 0 60px rgba(0, 180, 255, 0.15),
-                    inset 0 0 20px rgba(0, 255, 255, 0.05);
-                border-color: rgba(0, 255, 255, 0.4);
-            }
-            100% {
-                box-shadow: 
-                    0 0 45px rgba(0, 255, 255, 0.6),
-                    0 0 100px rgba(0, 200, 255, 0.3),
-                    inset 0 0 40px rgba(0, 255, 255, 0.2);
-                border-color: rgba(0, 255, 255, 0.9);
-            }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #8fa8c4;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 7px 18px;
+            border-radius: 100px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(8px);
+            animation: fadeUp 0.7s ease-out both;
         }
 
-        /* TEXT CONTAINER */
-        .text-content {
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: #f5a623;
+            border-radius: 50%;
+            animation: pulseDot 2s ease-in-out infinite;
+            box-shadow: 0 0 8px #f5a623;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px #f5a623; }
+            50% { opacity: 0.5; transform: scale(1.5); box-shadow: 0 0 20px #f5a623; }
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #ffffff;
+            letter-spacing: -0.03em;
+            margin-bottom: 2px;
+            animation: fadeUp 0.7s ease-out 0.1s both;
+            text-shadow: 0 0 60px rgba(245,166,35,0.3);
+        }
+
+        .hero h1 span {
+            color: #f5a623;
+            animation: glowPulse 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            0% { text-shadow: 0 0 20px rgba(245,166,35,0.4); }
+            100% { text-shadow: 0 0 60px rgba(245,166,35,0.9), 0 0 100px rgba(245,166,35,0.4); }
+        }
+
+        .hero-sub {
+            font-size: 1.7rem;
+            font-weight: 400;
+            color: #cbd5e0;
+            letter-spacing: 0.01em;
+            margin-bottom: 20px;
+            line-height: 1.3;
+            animation: fadeUp 0.7s ease-out 0.2s both;
+        }
+
+        .hero-sub .highlight {
+            color: #7eb8e0;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .hero-sub .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #f5a623, #7eb8e0, #f5a623);
+            background-size: 200% 100%;
+            border-radius: 2px;
+            animation: underlineFlow 2s ease-in-out infinite;
+        }
+
+        @keyframes underlineFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .hero-desc {
+            font-size: 0.95rem;
+            color: #7a8fa6;
+            max-width: 500px;
+            line-height: 1.75;
+            margin: 0;
+            padding: 0;
+            border: none;
+            animation: fadeUp 0.7s ease-out 0.3s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+            animation: fadeUp 0.7s ease-out 0.4s both;
+        }
+
+        .hero-cta .btn-primary {
+            background: #f5a623;
+            color: #0a1628;
+            border: none;
+            border-radius: 100px;
+            padding: 12px 28px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-cta .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .hero-cta .btn-primary:hover::after {
+            left: 100%;
+        }
+
+        .hero-cta .btn-primary:hover {
+            background: #ffb94d;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(245,166,35,0.45);
+        }
+
+        .hero-cta .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            color: #cbd5e0;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 100px;
+            padding: 12px 28px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(8px);
+        }
+
+        .hero-cta .btn-secondary:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(255,255,255,0.1);
+        }
+
+        .hero-actors {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex-shrink: 0;
+            animation: fadeUp 0.7s ease-out 0.5s both;
+        }
+
+        .actor-node {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.75rem;
-            text-align: center;
+            gap: 10px;
+            padding: 0 18px;
+            position: relative;
+            cursor: default;
         }
 
-        /* MAIN LINE – "i improving this site" */
-        .line1 {
-            font-size: clamp(2rem, 8vw, 4.5rem);
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #fff;
-            text-shadow: 
-                0 0 10px #0ff,
-                0 0 20px #0ff,
-                0 0 40px #0af,
-                0 0 80px #0af;
-            animation: flickerGlow 2.2s infinite alternate;
-            line-height: 1.2;
-        }
-
-        /* SECOND LINE – "please try again later" */
-        .line2 {
-            font-size: clamp(1.2rem, 4vw, 2rem);
-            font-weight: 600;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #c0ffff;
-            text-shadow: 
-                0 0 8px #0ff,
-                0 0 18px #0af,
-                0 0 30px #06f;
-            animation: softPulse 1.8s ease-in-out infinite alternate;
-        }
-
-        /* MAANGAS FLICKER EFFECT */
-        @keyframes flickerGlow {
-            0% {
-                text-shadow: 
-                    0 0 8px #0ff,
-                    0 0 18px #0ff,
-                    0 0 30px #0af,
-                    0 0 60px #0af;
-                opacity: 1;
-            }
-            20% {
-                text-shadow: 
-                    0 0 12px #0ff,
-                    0 0 28px #0ff,
-                    0 0 50px #0af,
-                    0 0 90px #0af;
-            }
-            40% {
-                text-shadow: 
-                    0 0 6px #0ff,
-                    0 0 14px #0ff,
-                    0 0 25px #0af,
-                    0 0 50px #0af;
-                opacity: 0.95;
-            }
-            60% {
-                text-shadow: 
-                    0 0 15px #0ff,
-                    0 0 35px #0ff,
-                    0 0 60px #0af,
-                    0 0 100px #0af;
-            }
-            80% {
-                text-shadow: 
-                    0 0 10px #0ff,
-                    0 0 20px #0ff,
-                    0 0 40px #0af,
-                    0 0 80px #0af;
-                opacity: 1;
-            }
-            100% {
-                text-shadow: 
-                    0 0 20px #0ff,
-                    0 0 40px #0ff,
-                    0 0 70px #0af,
-                    0 0 120px #0af;
-            }
-        }
-
-        @keyframes softPulse {
-            0% {
-                text-shadow: 
-                    0 0 6px #0ff,
-                    0 0 14px #0af,
-                    0 0 24px #06f;
-                opacity: 0.9;
-                letter-spacing: 2px;
-            }
-            100% {
-                text-shadow: 
-                    0 0 12px #0ff,
-                    0 0 26px #0af,
-                    0 0 40px #06f;
-                opacity: 1;
-                letter-spacing: 4px;
-            }
-        }
-
-        /* FLOATING ORBS (maangas background) */
-        .orb {
-            position: absolute;
+        .actor-circle {
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #0ff, #06f);
-            filter: blur(40px);
-            opacity: 0.2;
-            z-index: 2;
-            animation: floatOrb 12s infinite alternate ease-in-out;
+            border: 2px solid rgba(255,255,255,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(8px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
-        .orb1 {
-            width: 300px;
-            height: 300px;
-            top: -80px;
-            left: -80px;
-            animation-duration: 14s;
-            background: radial-gradient(circle at 30% 30%, #0ff, #04a);
+        .actor-circle::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, rgba(245,166,35,0.6), transparent, rgba(49,130,206,0.6), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
         }
 
-        .orb2 {
-            width: 400px;
-            height: 400px;
-            bottom: -120px;
-            right: -100px;
-            animation-duration: 18s;
-            animation-delay: -3s;
-            background: radial-gradient(circle at 70% 20%, #0af, #a0f);
+        .actor-node:hover .actor-circle {
+            border-color: rgba(245,166,35,0.6);
+            transform: translateY(-6px) scale(1.08);
+            box-shadow: 0 16px 40px rgba(245,166,35,0.25);
         }
 
-        .orb3 {
-            width: 200px;
-            height: 200px;
-            top: 50%;
-            left: 70%;
-            animation-duration: 10s;
-            animation-delay: -5s;
-            background: radial-gradient(circle at 20% 60%, #0ff, #f0f);
-            opacity: 0.15;
+        .actor-node:hover .actor-circle::after {
+            opacity: 1;
+            animation: spin 3s linear infinite;
         }
 
-        @keyframes floatOrb {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-            50% {
-                transform: translate(40px, -30px) scale(1.2);
-            }
-            100% {
-                transform: translate(-30px, 40px) scale(0.9);
-            }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        /* NOISE / GLITCH OVERLAY */
-        .glitch-layer {
+        .actor-circle svg {
+            width: 30px;
+            height: 30px;
+            stroke: #7eb8e0;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: stroke 0.3s;
+        }
+
+        .actor-node:hover .actor-circle svg {
+            stroke: #f5a623;
+        }
+
+        .actor-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #7eb8e0;
+            transition: color 0.3s;
+        }
+
+        .actor-node:hover .actor-label {
+            color: #f5a623;
+        }
+
+        .actor-connector {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.15), rgba(255,255,255,0.06));
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .actor-connector::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245,166,35,0.8), transparent);
+            animation: connectorFlow 2s ease-in-out infinite;
+        }
+
+        @keyframes connectorFlow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .hero-particles {
             position: absolute;
             inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 255, 255, 0.02) 0px,
-                rgba(0, 255, 255, 0.02) 2px,
-                transparent 2px,
-                transparent 4px
-            );
             pointer-events: none;
-            z-index: 20;
-            mix-blend-mode: overlay;
+            overflow: hidden;
         }
 
-        /* SMALL BADGE / MAANGAS SIGNATURE */
-        .badge {
+        .hero-particles .particle {
             position: absolute;
-            bottom: -18px;
-            right: 40px;
+            width: 3px;
+            height: 3px;
+            background: rgba(245,166,35,0.6);
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(245,166,35,0.8);
+            animation: particleDrift linear infinite;
+        }
+
+        @keyframes particleDrift {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-500px) translateX(80px) scale(0); opacity: 0; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- GUIDE WRAPPER ---------- */
+        .guide {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            padding: 48px 56px;
+            position: relative;
+            margin-top: 32px;
+            overflow: hidden;
+        }
+
+        .guide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #f5a623, #3182ce, #805ad5, #38a169, #d69e2e, #f5a623);
+            background-size: 300% 100%;
+            animation: gradientMove 8s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        /* ---------- TYPOGRAPHY ---------- */
+        h1, h2, h3, h4 {
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            color: #0b1a2e;
+            margin-top: 56px;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #f5a623;
+            display: inline-block;
+            position: relative;
+            animation: sectionReveal 0.8s ease-out both;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #f5a623, transparent);
+            animation: borderGlow 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes borderGlow {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes sectionReveal {
+            from { opacity: 0; transform: translateX(-24px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 18px;
+        }
+
+        h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 7px;
+            height: 7px;
+            background: #f5a623;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #f5a623;
+            animation: dotPulse 1.8s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; box-shadow: 0 0 8px #f5a623; }
+            50% { transform: translateY(-50%) scale(1.6); opacity: 0.6; box-shadow: 0 0 20px #f5a623; }
+        }
+
+        .section-lead {
+            color: #4a5568;
+            font-size: 1rem;
+            margin-bottom: 24px;
+            max-width: 800px;
+        }
+
+        /* ---------- ACTOR COLORS ---------- */
+        .actor-passenger { background: #ebf8ff; border-color: #3182ce; }
+        .actor-system { background: #faf5ff; border-color: #805ad5; }
+        .actor-rider { background: #f0fff4; border-color: #38a169; }
+        .actor-ops { background: #fffff0; border-color: #d69e2e; }
+
+        .badge-passenger { background: #3182ce; color: #fff; }
+        .badge-system { background: #805ad5; color: #fff; }
+        .badge-rider { background: #38a169; color: #fff; }
+        .badge-ops { background: #d69e2e; color: #fff; }
+
+        /* ---------- CARDS ---------- */
+        .card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: box-shadow 0.3s, transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #f5a623, #3182ce, #805ad5);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(245,166,35,0.04) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        .card:hover {
+            box-shadow: 0 16px 48px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .card-header .badge {
             font-size: 0.7rem;
-            font-weight: 800;
-            letter-spacing: 4px;
+            font-weight: 700;
             text-transform: uppercase;
-            color: #0ff;
-            background: #0a0e18;
-            padding: 6px 18px;
-            border-radius: 40px;
-            border: 1px solid #0ff;
-            box-shadow: 0 0 15px #0ff, inset 0 0 8px #0ff;
-            opacity: 0.8;
-            animation: badgeBlink 2.4s infinite;
-            z-index: 15;
+            letter-spacing: 0.05em;
+            padding: 4px 12px;
+            border-radius: 100px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes badgeBlink {
-            0%, 100% { opacity: 0.5; box-shadow: 0 0 8px #0ff; }
-            50% { opacity: 1; box-shadow: 0 0 22px #0ff, 0 0 40px #0af; }
+        .card-header .badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: badgeShine 3s ease-in-out infinite;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 600px) {
+        @keyframes badgeShine {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .card-header .title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1a202c;
+        }
+
+        .card-body {
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        .card-body ul {
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+
+        .card-body li {
+            margin-bottom: 4px;
+        }
+
+        /* ---------- DIAGRAM CONTAINERS ---------- */
+        .diagram-box {
+            background: #fafbfc;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 32px 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+            position: relative;
+            transition: box-shadow 0.4s, transform 0.4s;
+        }
+
+        .diagram-box:hover {
+            box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .diagram-box::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #f5a623, #3182ce, #805ad5, #38a169, #f5a623);
+            background-size: 300% 100%;
+            animation: gradientMove 5s linear infinite;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .diagram-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #a0aec0;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        /* ---------- FLOW ELEMENTS ---------- */
+        .flow-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .flow-node {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            min-width: 200px;
+            max-width: 320px;
+            border: 2px solid #cbd5e0;
+            background: #fff;
+            color: #2d3748;
+            position: relative;
+            line-height: 1.3;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+        }
+
+        .flow-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            z-index: 5;
+        }
+
+        .flow-node.start-end {
+            background: #edf2f7;
+            border-color: #a0aec0;
+            border-radius: 100px;
+            font-weight: 600;
+        }
+
+        .flow-node.decision {
+            background: #fffaf0;
+            border-color: #d69e2e;
+            border-radius: 8px;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+            padding: 18px 32px;
+            min-width: 180px;
+            max-width: 280px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 2px solid #d69e2e;
+            background: #fffff0;
+        }
+
+        .flow-node.success {
+            background: #f0fff4;
+            border-color: #38a169;
+        }
+
+        .flow-node.fail {
+            background: #fff5f5;
+            border-color: #e53e3e;
+        }
+
+        .flow-node.system {
+            background: #faf5ff;
+            border-color: #805ad5;
+        }
+
+        .flow-node.passenger {
+            background: #ebf8ff;
+            border-color: #3182ce;
+        }
+
+        .flow-node.rider {
+            background: #f0fff4;
+            border-color: #38a169;
+        }
+
+        .flow-node.ops {
+            background: #fffff0;
+            border-color: #d69e2e;
+        }
+
+        .flow-arrow {
+            font-size: 1.4rem;
+            color: #a0aec0;
+            line-height: 1;
+            padding: 2px 0;
+            font-weight: 300;
+            animation: arrowBounce 1.8s ease-in-out infinite;
+        }
+
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(6px); opacity: 1; }
+        }
+
+        .flow-arrow.down::after {
+            content: "↓";
+        }
+
+        .flow-arrow.right::after {
+            content: "→";
+        }
+
+        .flow-branch {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin: 4px 0;
+        }
+
+        .flow-branch-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .branch-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 2px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .branch-label.no {
+            color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        .branch-label.yes {
+            color: #38a169;
+            background: #f0fff4;
+        }
+
+        /* ---------- SWIMLANE ---------- */
+        .swimlane {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 24px 0;
+        }
+
+        .swimlane-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            padding: 16px 0;
+            border-right: 2px solid #e2e8f0;
+            min-height: 120px;
+        }
+
+        .swimlane-label.passenger {
+            background: #ebf8ff;
+            color: #2b6cb0;
+            border-color: #bee3f8;
+        }
+
+        .swimlane-label.system {
+            background: #faf5ff;
+            color: #6b46c1;
+            border-color: #e9d8fd;
+        }
+
+        .swimlane-label.rider {
+            background: #f0fff4;
+            color: #276749;
+            border-color: #c6f6d5;
+        }
+
+        .swimlane-label.ops {
+            background: #fffff0;
+            color: #975a16;
+            border-color: #fefcbf;
+        }
+
+        .swimlane-content {
+            padding: 16px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            min-height: 80px;
+            background: #fff;
+        }
+
+        .swimlane-content .flow-node {
+            min-width: 140px;
+            max-width: 220px;
+            font-size: 0.8rem;
+            padding: 8px 16px;
+        }
+
+        .swimlane-content .flow-arrow {
+            font-size: 1rem;
+        }
+
+        .swimlane-row {
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .swimlane-row:last-child {
+            border-bottom: none;
+        }
+
+        /* ---------- IO CARDS ---------- */
+        .io-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .io-card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .io-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(245,166,35,0.12), transparent 70%);
+            border-radius: 50%;
+            transform: translate(25px, -25px);
+            transition: transform 0.4s;
+        }
+
+        .io-card:hover::after {
+            transform: translate(10px, -10px) scale(1.8);
+        }
+
+        .io-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+        }
+
+        .io-card .io-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0b1a2e;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .io-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .io-row .io-label {
+            font-weight: 600;
+            color: #718096;
+            min-width: 60px;
+            flex-shrink: 0;
+        }
+
+        .io-row .io-value {
+            color: #2d3748;
+        }
+
+        /* ---------- PANEL GUIDE ---------- */
+        .panel-guide {
+            background: #f7fafc;
+            border-left: 4px solid #f5a623;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+            color: #2d3748;
+            position: relative;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .panel-guide:hover {
+            background: #fffaf0;
+            transform: translateX(4px);
+        }
+
+        .panel-guide strong {
+            color: #0b1a2e;
+        }
+
+        .panel-guide::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 20px;
+            width: 12px;
+            height: 12px;
+            background: #f5a623;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #f5a623;
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+
+        /* ---------- TIMELINE ---------- */
+        .timeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            margin: 16px 0;
+        }
+
+        .timeline-step {
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+            position: relative;
+            padding: 8px 4px;
+            transition: transform 0.25s;
+        }
+
+        .timeline-step:hover {
+            transform: translateY(-5px);
+        }
+
+        .timeline-step .step-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #4a5568;
+            margin-bottom: 4px;
+        }
+
+        .timeline-step .step-name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #1a202c;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 4px 6px;
+            display: inline-block;
+            transition: all 0.25s;
+        }
+
+        .timeline-step:hover .step-name {
+            border-color: #f5a623;
+            box-shadow: 0 0 16px rgba(245,166,35,0.3);
+            transform: scale(1.05);
+        }
+
+        .timeline-step::after {
+            content: "→";
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #cbd5e0;
+            font-size: 0.9rem;
+            animation: arrowSlide 1.8s ease-in-out infinite;
+        }
+
+        @keyframes arrowSlide {
+            0%, 100% { transform: translateY(-50%) translateX(0); opacity: 0.6; }
+            50% { transform: translateY(-50%) translateX(4px); opacity: 1; }
+        }
+
+        .timeline-step:last-child::after {
+            content: "";
+        }
+
+        /* ---------- QR CHECKPOINT ---------- */
+        .qr-checkpoint {
+            background: #fffff0;
+            border: 3px dashed #d69e2e;
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            position: relative;
+            animation: dashPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes dashPulse {
+            0%, 100% { border-color: #d69e2e; box-shadow: 0 0 0 rgba(214,158,46,0); }
+            50% { border-color: #f5a623; box-shadow: 0 0 30px rgba(214,158,46,0.15); }
+        }
+
+        .qr-checkpoint::before {
+            content: "🔒 SECURITY CHECKPOINT";
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: #d69e2e;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 2px 14px;
+            border-radius: 100px;
+            animation: badgeGlow 2.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes badgeGlow {
+            0% { box-shadow: 0 0 8px rgba(214,158,46,0.3); }
+            100% { box-shadow: 0 0 24px rgba(214,158,46,0.8); }
+        }
+
+        /* ---------- MISC ---------- */
+        .note {
+            font-size: 0.8rem;
+            color: #a0aec0;
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: #0b1a2e;
+            color: #fff;
+            border: none;
+            border-radius: 100px;
+            padding: 14px 28px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(11,26,46,0.3);
+            transition: all 0.3s;
+            z-index: 100;
+            font-family: inherit;
+            overflow: hidden;
+        }
+
+        .print-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245,166,35,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .print-btn:hover::after {
+            left: 100%;
+        }
+
+        .print-btn:hover {
+            background: #1a2f4a;
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 16px 40px rgba(11,26,46,0.45);
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 900px) {
+            .hero {
+                padding: 40px 32px 48px;
+                flex-direction: column;
+                align-items: flex-start;
+                min-height: auto;
+            }
+            .hero h1 { font-size: 3rem; }
+            .hero-sub { font-size: 1.3rem; }
+            .hero-actors { margin-top: 8px; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 0 8px 24px; }
+            .hero {
+                padding: 32px 24px 40px;
+                margin: 0 -8px 0;
+                border-radius: 0 0 24px 24px;
+                min-height: auto;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 32px;
+            }
+            .hero h1 { font-size: 2.6rem; }
+            .hero-sub { font-size: 1.2rem; }
+            .hero-desc { font-size: 0.9rem; }
+            .hero-cta { flex-direction: column; width: 100%; }
+            .hero-cta .btn-primary,
+            .hero-cta .btn-secondary { width: 100%; justify-content: center; }
+            .hero-actors { gap: 0; margin-top: 16px; width: 100%; justify-content: center; }
+            .actor-circle { width: 52px; height: 52px; }
+            .actor-circle svg { width: 22px; height: 22px; }
+            .actor-connector { width: 24px; }
+            .actor-node { padding: 0 10px; }
+            .actor-label { font-size: 0.55rem; }
+            .guide { padding: 24px 20px; border-radius: 20px; margin-top: 20px; }
+            h2 { font-size: 1.4rem; }
+            .swimlane { grid-template-columns: 60px 1fr; }
+            .swimlane-label { font-size: 0.65rem; writing-mode: horizontal-tb; padding: 8px; }
+            .flow-node { min-width: 140px; font-size: 0.8rem; padding: 10px 14px; }
+            .flow-branch { gap: 16px; }
+            .timeline-step { min-width: 60px; }
+            .timeline-step .step-name { font-size: 0.65rem; }
+            .print-btn { bottom: 16px; right: 16px; padding: 10px 20px; font-size: 0.8rem; }
+        }
+
+        /* ---------- PRINT ---------- */
+        @page {
+            size: A4;
+            margin: 12mm 10mm;
+        }
+
+        @media print {
+            body {
+                background: #fff;
+                padding: 0;
+                font-size: 10pt;
+            }
+
+            .guide {
+                box-shadow: none;
+                padding: 0;
+                border-radius: 0;
+                max-width: 100%;
+                margin-top: 0;
+            }
+
+            .hero {
+                display: none;
+            }
+
+            .print-btn {
+                display: none !important;
+            }
+
+            .card:hover {
+                box-shadow: none;
+            }
+
+            .diagram-box {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
             .card {
-                padding: 2.5rem 1.8rem;
-                border-radius: 24px;
-                margin: 1rem;
+                break-inside: avoid;
+                page-break-inside: avoid;
             }
-            .line1 {
-                letter-spacing: 1px;
+
+            .swimlane {
+                break-inside: avoid;
+                page-break-inside: avoid;
             }
-            .line2 {
-                letter-spacing: 1px;
+
+            h2 {
+                break-after: avoid;
+                page-break-after: avoid;
             }
-            .badge {
-                bottom: -14px;
-                right: 20px;
-                font-size: 0.55rem;
-                padding: 4px 12px;
-                letter-spacing: 2px;
+
+            h3 {
+                break-after: avoid;
+                page-break-after: avoid;
+            }
+
+            .flow-node {
+                font-size: 8pt;
+                padding: 6px 10px;
+                min-width: 100px;
+                max-width: 200px;
+            }
+
+            .flow-arrow {
+                font-size: 10pt;
+            }
+
+            .section-lead {
+                font-size: 9pt;
+            }
+
+            .card-body {
+                font-size: 8.5pt;
+            }
+
+            .panel-guide {
+                font-size: 8.5pt;
+            }
+
+            .io-card {
+                break-inside: avoid;
+            }
+
+            .io-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .timeline {
+                flex-wrap: wrap;
+            }
+
+            .global-bg {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <!-- background layers -->
-    <div class="bg-glow"></div>
-    <div class="grid-overlay"></div>
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
-    <div class="orb orb3"></div>
 
-    <!-- main card -->
-    <div class="card">
-        <div class="text-content">
-            <div class="line1">i improving<br>this site</div>
-            <div class="line2">please try again later</div>
-        </div>
-        <div class="badge">⚡I'm Improving the Design</div>
+<!-- GLOBAL ANIMATED BACKGROUND -->
+<div class="global-bg"></div>
+
+<!-- ============================================================ -->
+<!-- HERO SECTION -->
+<!-- ============================================================ -->
+<div class="hero">
+    <div class="hero-grid-overlay"></div>
+
+    <div class="hero-particles">
+        <div class="particle" style="left: 15%; bottom: 20%; animation-duration: 8s; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 25%; bottom: 10%; animation-duration: 10s; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 45%; bottom: 30%; animation-duration: 7s; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 65%; bottom: 15%; animation-duration: 11s; animation-delay: 0.5s;"></div>
+        <div class="particle" style="left: 80%; bottom: 25%; animation-duration: 9s; animation-delay: 1.5s;"></div>
+        <div class="particle" style="left: 55%; bottom: 5%; animation-duration: 12s; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 35%; bottom: 40%; animation-duration: 6s; animation-delay: 2.5s;"></div>
+        <div class="particle" style="left: 10%; bottom: 50%; animation-duration: 14s; animation-delay: 0.8s;"></div>
+        <div class="particle" style="left: 90%; bottom: 45%; animation-duration: 13s; animation-delay: 1.2s;"></div>
+        <div class="particle" style="left: 50%; bottom: 35%; animation-duration: 9s; animation-delay: 3.5s;"></div>
     </div>
 
-    <!-- extra glitch scanlines -->
-    <div class="glitch-layer"></div>
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            System Process Guide · Capstone Documentation
+        </div>
+        <h1>VOYAGO<span>.</span></h1>
+        <div class="hero-sub">How the <span class="highlight">App</span> Works</div>
+        <p class="hero-desc">
+            A visual guide to how passengers, riders, and the Voyago system interact throughout the complete ride-booking journey — from booking and fare negotiation to trip completion and operations review.
+        </p>
+        <div class="hero-cta">
+            <a href="#section-1" class="btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Start Reading
+            </a>
+            <a href="#" onclick="window.print(); return false;" class="btn-secondary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 6 2 18 2 18 9"/>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                    <rect x="6" y="14" width="12" height="8"/>
+                </svg>
+                Print / PDF
+            </a>
+        </div>
+    </div>
 
-    <script>
-        // (optional) tiny extra glitch pulse for the card – pure maangas vibe
-        (function() {
-            const card = document.querySelector('.card');
-            if (!card) return;
+    <div class="hero-actors">
+        <div class="actor-node">
+            <div class="actor-circle">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                </svg>
+            </div>
+            <span class="actor-label">Passenger</span>
+        </div>
+        <div class="actor-connector"></div>
+        <div class="actor-node">
+            <div class="actor-circle">
+                <svg viewBox="0 0 24 24">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+            </div>
+            <span class="actor-label">System</span>
+        </div>
+        <div class="actor-connector"></div>
+        <div class="actor-node">
+            <div class="actor-circle">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="7" r="3"/>
+                    <path d="M5 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+            </div>
+            <span class="actor-label">Rider</span>
+        </div>
+    </div>
+</div>
 
-            // subtle random flicker on border / shadow (enhances the "maangas" feel)
-            setInterval(() => {
-                // only apply if not reduced motion
-                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+<div class="guide" id="section-1">
 
-                const randomIntensity = 0.3 + Math.random() * 0.6;
-                const randomBlur = 20 + Math.random() * 40;
+    <!-- ============================================================ -->
+    <!-- SECTION 1 — HOW VOYAGO WORKS AT A GLANCE -->
+    <!-- ============================================================ -->
+    <h2>1. How Voyago Works at a Glance</h2>
+    <p class="section-lead">The complete high-level flow of a Voyago trip — showing the interaction between Passenger, System, Rider, and Operations.</p>
 
-                card.style.transition = 'box-shadow 0.12s, border-color 0.12s';
-                card.style.boxShadow = `
-                    0 0 ${randomBlur}px rgba(0, 255, 255, ${randomIntensity}),
-                    0 0 ${randomBlur * 2}px rgba(0, 180, 255, ${randomIntensity * 0.7}),
-                    inset 0 0 ${randomBlur * 0.6}px rgba(0, 255, 255, ${randomIntensity * 0.4})
-                `;
-                card.style.borderColor = `rgba(0, 255, 255, ${0.4 + Math.random() * 0.5})`;
+    <div class="diagram-box">
+        <span class="diagram-label">MASTER FLOW — ALL ACTORS</span>
+        <div class="flow-vertical">
+            <div class="flow-node start-end">START</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Passenger Books Ride</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Passenger Enters Pickup + Destination</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Fare Negotiation</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Fare Agreed?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node fail">Continue Fare Negotiation</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node system success">Fare Locked</div>
+                </div>
+            </div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">DRM-QR Generated</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Ride Dispatching</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Receives Ride Request</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Rider Accepts?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node fail">Request Handling</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node rider success">Rider Goes to Pickup</div>
+                </div>
+            </div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Passenger Pickup</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">DRM-QR Scan</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Authentication Successful?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node fail">Ride Denied / Support</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node system success">Trip Verified — Trip Can Start</div>
+                </div>
+            </div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system success">Trip Starts</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">GPS Tracking / Monitoring</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Trip in Progress</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Destination</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Payment Collection</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system success">Trip Completed</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Transaction Recorded</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">End-of-Day Operations</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node start-end">END</div>
+        </div>
+    </div>
 
-                // reset after short time to let the css animation take over again
-                setTimeout(() => {
-                    card.style.boxShadow = '';
-                    card.style.borderColor = '';
-                    card.style.transition = '';
-                }, 140);
-            }, 1800);
-        })();
-    </script>
+    <!-- ============================================================ -->
+    <!-- SECTION 2 — WHO DOES WHAT? -->
+    <!-- ============================================================ -->
+    <h2>2. Who Does What?</h2>
+    <p class="section-lead">The four actors in the Voyago system and their specific roles and responsibilities.</p>
+
+    <div class="io-grid">
+        <div class="io-card actor-passenger" style="border-left: 6px solid #3182ce;">
+            <div class="io-title" style="color: #2b6cb0;">🧑 PASSENGER</div>
+            <div class="io-row"><span class="io-label">Books</span><span class="io-value">a ride through the app</span></div>
+            <div class="io-row"><span class="io-label">Provides</span><span class="io-value">pickup and destination</span></div>
+            <div class="io-row"><span class="io-label">Negotiates</span><span class="io-value">and agrees on fare</span></div>
+            <div class="io-row"><span class="io-label">Presents</span><span class="io-value">DRM-QR for verification</span></div>
+            <div class="io-row"><span class="io-label">Takes</span><span class="io-value">the ride</span></div>
+            <div class="io-row"><span class="io-label">Pays</span><span class="io-value">the agreed fare</span></div>
+        </div>
+
+        <div class="io-card actor-system" style="border-left: 6px solid #805ad5;">
+            <div class="io-title" style="color: #6b46c1;">⚙️ VOYAGO SYSTEM</div>
+            <div class="io-row"><span class="io-label">Receives</span><span class="io-value">booking information</span></div>
+            <div class="io-row"><span class="io-label">Processes</span><span class="io-value">ride request</span></div>
+            <div class="io-row"><span class="io-label">Handles</span><span class="io-value">fare negotiation state</span></div>
+            <div class="io-row"><span class="io-label">Locks</span><span class="io-value">agreed fare</span></div>
+            <div class="io-row"><span class="io-label">Generates</span><span class="io-value">DRM-QR</span></div>
+            <div class="io-row"><span class="io-label">Dispatches</span><span class="io-value">ride request</span></div>
+            <div class="io-row"><span class="io-label">Verifies</span><span class="io-value">DRM-QR</span></div>
+            <div class="io-row"><span class="io-label">Tracks</span><span class="io-value">GPS during trip</span></div>
+            <div class="io-row"><span class="io-label">Records</span><span class="io-value">trip and payment info</span></div>
+        </div>
+
+        <div class="io-card actor-rider" style="border-left: 6px solid #38a169;">
+            <div class="io-title" style="color: #276749;">🏍️ RIDER</div>
+            <div class="io-row"><span class="io-label">Receives</span><span class="io-value">ride request</span></div>
+            <div class="io-row"><span class="io-label">Reviews</span><span class="io-value">trip details</span></div>
+            <div class="io-row"><span class="io-label">Accepts</span><span class="io-value">within 10–15 seconds</span></div>
+            <div class="io-row"><span class="io-label">Travels</span><span class="io-value">to pickup location</span></div>
+            <div class="io-row"><span class="io-label">Scans</span><span class="io-value">DRM-QR</span></div>
+            <div class="io-row"><span class="io-label">Transports</span><span class="io-value">passenger</span></div>
+            <div class="io-row"><span class="io-label">Collects</span><span class="io-value">agreed fare</span></div>
+            <div class="io-row"><span class="io-label">Completes</span><span class="io-value">trip record / end-of-shift</span></div>
+        </div>
+
+        <div class="io-card actor-ops" style="border-left: 6px solid #d69e2e;">
+            <div class="io-title" style="color: #975a16;">📋 ADMIN / OPERATIONS</div>
+            <div class="io-row"><span class="io-label">Monitors</span><span class="io-value">ride operations</span></div>
+            <div class="io-row"><span class="io-label">Responds</span><span class="io-value">to operational issues</span></div>
+            <div class="io-row"><span class="io-label">Reviews</span><span class="io-value">booking and transaction records</span></div>
+            <div class="io-row"><span class="io-label">Reviews</span><span class="io-value">driver trip records</span></div>
+            <div class="io-row"><span class="io-label">Handles</span><span class="io-value">end-of-day operational review</span></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 3 — PASSENGER POV -->
+    <!-- ============================================================ -->
+    <h2>3. Passenger POV — Step-by-Step Journey</h2>
+    <p class="section-lead">What the passenger does, step by step, and how the system responds.</p>
+
+    <div class="timeline">
+        <div class="timeline-step"><div class="step-label">STEP 1</div><div class="step-name">Book Ride</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 2</div><div class="step-name">Enter Pickup + Destination</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 3</div><div class="step-name">Fare Negotiation</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 4</div><div class="step-name">Fare Agreement</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 5</div><div class="step-name">DRM-QR Generated</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 6</div><div class="step-name">Ride Dispatching</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 7</div><div class="step-name">Rider Goes to Pickup</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 8</div><div class="step-name">DRM-QR Verification</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 9</div><div class="step-name">Authentication</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 10</div><div class="step-name">Trip Execution</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 11</div><div class="step-name">Destination</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 12</div><div class="step-name">Payment</div></div>
+        <div class="timeline-step"><div class="step-label">STEP 13</div><div class="step-name">Completion</div></div>
+    </div>
+
+    <div class="card actor-passenger">
+        <div class="card-header">
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 1 — Book a Ride</span>
+        </div>
+        <div class="card-body">
+            The passenger initiates a ride request through the Voyago app, or contacts through Messenger/SMS as a backup booking method.
+        </div>
+    </div>
+
+    <div class="card actor-passenger">
+        <div class="card-header">
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 2 — Enter Pickup and Destination</span>
+        </div>
+        <div class="card-body">
+            The passenger provides:
+            <ul>
+                <li><strong>Pickup location</strong></li>
+                <li><strong>Destination</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card actor-passenger">
+        <div class="card-header">
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 3 — Fare Negotiation</span>
+        </div>
+        <div class="card-body">
+            The passenger negotiates the fare with the rider. The fare is discussed based on:
+            <ul>
+                <li>Distance</li>
+                <li>Route</li>
+                <li>Drop-off location</li>
+                <li>Road conditions</li>
+                <li>Travel time</li>
+            </ul>
+            <div class="panel-guide">
+                <strong>How to explain this to the panel:</strong><br>
+                "The fare is not assumed by the system. The passenger and rider agree on the trip fare based on the trip conditions. Once they agree, the fare is locked before the trip begins."
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-passenger">
+        <div class="card-header">
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 4 — Fare Agreement</span>
+        </div>
+        <div class="card-body">
+            Once both parties agree, the fare becomes fixed/locked for the trip.
+            <div class="flow-vertical" style="margin-top:12px;">
+                <div class="flow-node decision">Fare Agreed?</div>
+                <div class="flow-branch">
+                    <div class="flow-branch-item">
+                        <span class="branch-label no">NO</span>
+                        <div class="flow-node fail">Continue Fare Negotiation</div>
+                    </div>
+                    <div class="flow-branch-item">
+                        <span class="branch-label yes">YES</span>
+                        <div class="flow-node system success">Fare Locked</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-system">
+        <div class="card-header">
+            <span class="badge badge-system">SYSTEM</span>
+            <span class="title">Step 5 — DRM-QR Generation</span>
+        </div>
+        <div class="card-body">
+            After the fare is agreed and confirmed, the passenger receives the unique <strong>Digital Ride-Match QR (DRM-QR)</strong> associated with the ride.
+        </div>
+    </div>
+
+    <div class="card actor-system">
+        <div class="card-header">
+            <span class="badge badge-system">SYSTEM</span>
+            <span class="title">Step 6 — Ride Dispatching</span>
+        </div>
+        <div class="card-body">
+            The ride request is dispatched to a rider according to the Voyago operational process.
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 7 — Rider Goes to Pickup</span>
+        </div>
+        <div class="card-body">
+            The rider travels to the passenger's pickup location. The passenger waits for the rider.
+            <div class="panel-guide">
+                <strong>System Response:</strong> Passenger can track the rider through the app.
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-passenger">
+        <div class="card-header">
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 8 — DRM-QR Verification</span>
+        </div>
+        <div class="card-body">
+            The passenger presents the DRM-QR and the rider scans it using the rider-side system.
+            <div class="panel-guide">
+                <strong>System Response:</strong> The system verifies the ride information.
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-system">
+        <div class="card-header">
+            <span class="badge badge-system">SYSTEM</span>
+            <span class="title">Step 9 — Authentication</span>
+        </div>
+        <div class="card-body">
+            <div class="flow-vertical">
+                <div class="flow-node decision">Authentication Successful?</div>
+                <div class="flow-branch">
+                    <div class="flow-branch-item">
+                        <span class="branch-label no">NO</span>
+                        <div class="flow-node fail">Ride Denied / Support</div>
+                    </div>
+                    <div class="flow-branch-item">
+                        <span class="branch-label yes">YES</span>
+                        <div class="flow-node system success">Trip Verified — Trip Can Start</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-system">
+        <div class="card-header">
+            <span class="badge badge-system">SYSTEM</span>
+            <span class="title">Step 10 — Trip Execution</span>
+        </div>
+        <div class="card-body">
+            After successful authentication, the trip starts. GPS tracking is active during the trip.
+            <div class="panel-guide">
+                <strong>System Response:</strong> Operations can monitor the active ride through GPS.
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-rider">
+        <div class="card-header">
+            <span class="badge badge-rider">RIDER</span>
+            <span class="title">Step 11 — Destination</span>
+        </div>
+        <div class="card-body">
+            The rider brings the passenger to the agreed destination.
+        </div>
+    </div>
+
+    <div class="card actor-passenger">
+        <div class="card-header">
+            <span class="badge badge-passenger">PASSENGER</span>
+            <span class="title">Step 12 — Payment</span>
+        </div>
+        <div class="card-body">
+            The passenger pays the agreed fare through the available payment method (cash or available digital payment options).
+            <div class="panel-guide">
+                <strong>System Response:</strong> Voyago records its booking fee, while the rider keeps the agreed trip fare. All transactions are digitally recorded.
+            </div>
+        </div>
+    </div>
+
+    <div class="card actor-system">
+        <div class="card-header">
+            <span class="badge badge-system">SYSTEM</span>
+            <span class="title">Step 13 — Completion</span>
+        </div>
+        <div class="card-body">
+            The trip is completed and the transaction is recorded.
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 4 — RIDER POV -->
+    <!-- ============================================================ -->
+    <h2>4. Rider POV — Step-by-Step Journey</h2>
+    <p class="section-lead">What the rider does, step by step, from receiving a request to end-of-shift reporting.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">RIDER WORKFLOW</span>
+        <div class="flow-vertical">
+            <div class="flow-node rider">Rider Becomes Available</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Ride Request Dispatched to Rider</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Receives Trip Details</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">10–15 Second Acceptance Window</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Rider Accepts?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node fail">Request Handling</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node rider success">Travel to Pickup</div>
+                </div>
+            </div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Arrive at Pickup</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Scan Passenger DRM-QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Authentication Successful?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node fail">Ride Denied / Support</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node system success">Trip Verified — Trip Can Start</div>
+                </div>
+            </div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Start Trip</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">GPS Tracking Active</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Transport Passenger</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Reach Destination</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Collect Agreed Fare</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Complete Trip Record</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">End-of-Shift / Trip Record Submission</div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 5 — ADMIN / OPERATIONS POV -->
+    <!-- ============================================================ -->
+    <h2>5. Admin / Operations POV — What They Do During and After Rides</h2>
+    <p class="section-lead">What the operations team does while a ride is happening and after trips are completed.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">OPERATIONS WORKFLOW</span>
+        <div class="flow-vertical">
+            <div class="flow-node ops">Monitor Ride Operations</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Monitor Ride Status / GPS</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Operational Issue?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node success">Continue Monitoring</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node fail">Respond to Operational Issues</div>
+                </div>
+            </div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system success">Trip Completed</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Driver Submits Trip Records</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Review Booking &amp; Transaction Records</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Review Driver Trip Records</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">End-of-Day Operations Review</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops success">Reports / Records</div>
+        </div>
+    </div>
+
+    <h3>Before / During / After Ride</h3>
+    <div class="io-grid">
+        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
+            <div class="io-title" style="color:#975a16;">BEFORE RIDE</div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Operational monitoring</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Review system activity as applicable</span></div>
+        </div>
+
+        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
+            <div class="io-title" style="color:#975a16;">DURING RIDE</div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Monitor ride status and GPS</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Respond to operational issues</span></div>
+        </div>
+
+        <div class="io-card actor-ops" style="border-left: 4px solid #d69e2e;">
+            <div class="io-title" style="color:#975a16;">AFTER RIDE</div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Review booking records</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Review transaction records</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">Review driver trip records</span></div>
+            <div class="io-row"><span class="io-label">→</span><span class="io-value">End-of-day operational review</span></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 6 — WHAT HAPPENS AFTER I CONFIRM MY RIDE? -->
+    <!-- ============================================================ -->
+    <h2>6. What Happens After I Confirm My Ride?</h2>
+    <p class="section-lead">A detailed actor-based view showing the complete process after the passenger confirms the booking.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">PASSENGER</span>
+        <div class="flow-vertical">
+            <div class="flow-node passenger">Confirms Fare</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Receives DRM-QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Waits for Rider</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Presents DRM-QR at Pickup</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Completes Payment</div>
+        </div>
+    </div>
+
+    <div class="diagram-box">
+        <span class="diagram-label">VOYAGO SYSTEM</span>
+        <div class="flow-vertical">
+            <div class="flow-node system">Locks Agreed Fare</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Generates DRM-QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Dispatches Ride Request</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Records Ride Details</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Enables QR Verification</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system success">Starts Trip After Successful Authentication</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Activates GPS Monitoring</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Records Transaction</div>
+        </div>
+    </div>
+
+    <div class="diagram-box">
+        <span class="diagram-label">RIDER</span>
+        <div class="flow-vertical">
+            <div class="flow-node rider">Receives Ride Request</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Accepts Ride</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Travels to Pickup</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Arrives at Pickup</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Scans Passenger DRM-QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Starts Trip After Successful Verification</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Completes Trip</div>
+        </div>
+    </div>
+
+    <div class="diagram-box">
+        <span class="diagram-label">OPERATIONS / ADMIN</span>
+        <div class="flow-vertical">
+            <div class="flow-node ops">Monitors Ride Operations</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Responds to Operational Issues</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Reviews Records</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Handles End-of-Day Operational Reporting</div>
+        </div>
+    </div>
+
+    <div class="panel-guide">
+        <strong>How to explain this to the panel:</strong><br>
+        "After the passenger confirms the ride, the system locks the agreed fare, generates the DRM-QR, and dispatches the request to a rider. The rider accepts within 10–15 seconds, travels to the pickup location, and scans the passenger's DRM-QR. The system verifies the QR, and if successful, the trip starts. GPS monitoring remains active until the destination is reached, after which payment is collected and the transaction is recorded."
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 7 — FOUR-LANE SWIMLANE -->
+    <!-- ============================================================ -->
+    <h2>7. Complete System Swimlane — All Four Actors</h2>
+    <p class="section-lead">The entire Voyago journey across Passenger, System, Rider, and Operations lanes.</p>
+
+    <div style="border: 2px solid #e2e8f0; border-radius: 16px; overflow: hidden; margin: 24px 0;">
+        <div style="display: grid; grid-template-columns: 100px 1fr; border-bottom: 2px solid #e2e8f0;">
+            <div style="background:#ebf8ff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#2b6cb0; padding:12px 0; border-right:2px solid #e2e8f0;">PASSENGER</div>
+            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Book</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Enter Pickup + Destination</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Negotiate Fare</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Confirm Fare</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Receive DRM-QR</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Wait for Rider</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Present QR</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Ride</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node passenger" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Pay</div>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 100px 1fr; border-bottom: 2px solid #e2e8f0;">
+            <div style="background:#faf5ff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#6b46c1; padding:12px 0; border-right:2px solid #e2e8f0;">SYSTEM</div>
+            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Receive Request</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Process Fare Agreement</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Lock Fare</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Generate DRM-QR</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Dispatch Request</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Verify QR</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Start Trip</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">GPS Monitoring</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node system" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Record Transaction</div>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 100px 1fr; border-bottom: 2px solid #e2e8f0;">
+            <div style="background:#f0fff4; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#276749; padding:12px 0; border-right:2px solid #e2e8f0;">RIDER</div>
+            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Receive Request</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">View Trip Details</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Accept</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Proceed to Pickup</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Arrive at Pickup</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Scan Passenger DRM-QR</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Start Trip</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Transport Passenger</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node rider" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Complete Trip</div>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 100px 1fr;">
+            <div style="background:#fffff0; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; text-transform:uppercase; color:#975a16; padding:12px 0; border-right:2px solid #e2e8f0;">ADMIN / OPS</div>
+            <div style="padding:12px 16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Monitor</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Respond to Issues</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">Review Records</div>
+                <span style="color:#cbd5e0;">→</span>
+                <div class="flow-node ops" style="min-width:110px; font-size:0.75rem; padding:6px 12px;">End-of-Day Operations</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 8 — FARE NEGOTIATION PROCESS -->
+    <!-- ============================================================ -->
+    <h2>8. Fare Negotiation Process</h2>
+    <p class="section-lead">Voyago uses a driver-negotiated fare system where the passenger and rider agree on the fare before the trip.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">FARE NEGOTIATION FLOW</span>
+        <div class="flow-vertical">
+            <div class="flow-node passenger">Pickup + Destination</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Fare Negotiation</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Factors Considered:<br>Distance · Route · Drop-off Location · Road Conditions · Travel Time</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Fare Agreement?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node fail">Continue Negotiation</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node system success">Fare Locked</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-guide">
+        <strong>How to explain this to the panel:</strong><br>
+        "The fare is not assumed by the system. The passenger and rider agree on the trip fare based on the trip conditions — distance, route, drop-off location, road conditions, and travel time. Once they agree, the fare is locked before the trip begins."
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 9 — DRM-QR AUTHENTICATION -->
+    <!-- ============================================================ -->
+    <h2>9. DRM-QR Authentication</h2>
+    <p class="section-lead">The Digital Ride-Match QR system is a mandatory verification process before the trip begins.</p>
+
+    <div class="qr-checkpoint">
+        <div class="flow-vertical">
+            <div class="flow-node passenger">Booking Confirmed</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Fare Agreed</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Fare Locked</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Unique DRM-QR Generated</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Passenger Presents QR at Pickup</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Scans QR</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">System Verifies Ride Details</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Authentication Successful?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node fail">Ride Denied / Support</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node system success">Trip Verified — Trip Can Start</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <span class="badge" style="background:#d69e2e; color:#fff;">WHY THIS EXISTS</span>
+            <span class="title">Purpose of the DRM-QR Checkpoint</span>
+        </div>
+        <div class="card-body">
+            <ul>
+                <li>Real-time authentication</li>
+                <li>Verifies passenger and ride details</li>
+                <li>Helps prevent pickup errors</li>
+                <li>Helps prevent off-platform rides</li>
+                <li>Required before trip starts</li>
+            </ul>
+            <div class="note">The "Start Trip" feature remains locked until the rider scans and verifies the passenger's QR code.</div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 10 — RIDE DISPATCHING -->
+    <!-- ============================================================ -->
+    <h2>10. Ride Dispatching</h2>
+    <p class="section-lead">How a ride request moves from the passenger to a rider.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">DISPATCH FLOW</span>
+        <div class="flow-vertical">
+            <div class="flow-node passenger">Passenger Request</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Ride Dispatching</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Ride Request Delivered to Rider</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">10–15 Second Acceptance Window</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Rider Decision</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">ACCEPT</span>
+                    <div class="flow-node rider success">Continue to Pickup</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label no">REJECT</span>
+                    <div class="flow-node fail">Request Handling</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 11 — GPS TRACKING & SAFETY MONITORING -->
+    <!-- ============================================================ -->
+    <h2>11. GPS Tracking &amp; Safety Monitoring</h2>
+    <p class="section-lead">Voyago monitors active trips through GPS tracking and an automatic trip time-out feature.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">SAFETY MONITORING FLOW</span>
+        <div class="flow-vertical">
+            <div class="flow-node system">TRIP ACTIVE</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">GPS TRACKING</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">RIDE MONITORING</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">OPERATIONS AWARENESS</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node decision">Issue Detected?</div>
+            <div class="flow-branch">
+                <div class="flow-branch-item">
+                    <span class="branch-label no">NO</span>
+                    <div class="flow-node success">Continue Ride</div>
+                </div>
+                <div class="flow-branch-item">
+                    <span class="branch-label yes">YES</span>
+                    <div class="flow-node fail">Operations Response</div>
+                </div>
+            </div>
+        </div>
+        <div class="note" style="text-align:center; margin-top:16px;">
+            The automatic trip time-out feature detects delayed pickups or unusual route changes during late-night trips.
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 12 — PAYMENT COLLECTION -->
+    <!-- ============================================================ -->
+    <h2>12. Payment Collection</h2>
+    <p class="section-lead">How payment is handled after the trip is completed.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">PAYMENT FLOW</span>
+        <div class="flow-vertical">
+            <div class="flow-node system">TRIP COMPLETED</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node passenger">Passenger Pays Agreed Fare</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Cash or Available Digital Payment Options</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Transaction Recorded</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node system">Voyago Booking Fee Recorded</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node rider">Rider Keeps Agreed Trip Fare</div>
+        </div>
+        <div class="note" style="text-align:center; margin-top:16px;">
+            The passenger pays the agreed fare through cash or available digital payment options. Voyago records its booking fee, while the driver keeps the agreed trip fare.
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 13 — END-OF-DAY OPERATIONS -->
+    <!-- ============================================================ -->
+    <h2>13. End-of-Day Operations</h2>
+    <p class="section-lead">The back-office operational process after trips are completed.</p>
+
+    <div class="diagram-box">
+        <span class="diagram-label">END-OF-DAY OPERATIONS</span>
+        <div class="flow-vertical">
+            <div class="flow-node rider">Driver Submits Trip Records</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Vehicle Safety Checks</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Operations Reviews Transactions</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Operations Reviews Booking Records</div>
+            <div class="flow-arrow down"></div>
+            <div class="flow-node ops">Operations Reviews Reports</div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 14 — ALTERNATIVE / EXCEPTION FLOWS -->
+    <!-- ============================================================ -->
+    <h2>14. Alternative / Exception Flows</h2>
+    <p class="section-lead">What happens when things don't go as planned.</p>
+
+    <h3>A. Fare Not Agreed</h3>
+    <div class="flow-vertical">
+        <div class="flow-node system">Fare Negotiation</div>
+        <div class="flow-arrow down"></div>
+        <div class="flow-node decision">Fare Agreed?</div>
+        <div class="flow-branch">
+            <div class="flow-branch-item">
+                <span class="branch-label no">NO</span>
+                <div class="flow-node fail">Continue Fare Negotiation</div>
+            </div>
+        </div>
+    </div>
+
+    <h3>B. Rider Rejects / Does Not Accept</h3>
+    <div class="flow-vertical">
+        <div class="flow-node rider">Ride Request</div>
+        <div class="flow-arrow down"></div>
+        <div class="flow-node system">10–15 Second Acceptance Window</div>
+        <div class="flow-arrow down"></div>
+        <div class="flow-node decision">Rider Accepts?</div>
+        <div class="flow-branch">
+            <div class="flow-branch-item">
+                <span class="branch-label no">NO</span>
+                <div class="flow-node fail">Request Handling</div>
+            </div>
+        </div>
+    </div>
+
+    <h3>C. QR Authentication Failed</h3>
+    <div class="flow-vertical">
+        <div class="flow-node rider">Scan QR</div>
+        <div class="flow-arrow down"></div>
+        <div class="flow-node system">System Verifies</div>
+        <div class="flow-arrow down"></div>
+        <div class="flow-node decision">Authentication Successful?</div>
+        <div class="flow-branch">
+            <div class="flow-branch-item">
+                <span class="branch-label no">NO</span>
+                <div class="flow-node fail">Ride Denied / Support</div>
+            </div>
+        </div>
+    </div>
+
+    <h3>D. Delayed Pickup / Unusual Route Change</h3>
+    <div class="flow-vertical">
+        <div class="flow-node system">Trip Monitoring</div>
+        <div class="flow-arrow down"></div>
+        <div class="flow-node decision">Issue Detected?</div>
+        <div class="flow-branch">
+            <div class="flow-branch-item">
+                <span class="branch-label yes">YES</span>
+                <div class="flow-node ops">Operations Response</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 15 — INPUT → PROCESS → OUTPUT -->
+    <!-- ============================================================ -->
+    <h2>15. Input → Process → Output</h2>
+    <p class="section-lead">A breakdown of each major system function.</p>
+
+    <div class="io-grid">
+        <div class="io-card">
+            <div class="io-title">📋 BOOKING</div>
+            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Pickup + Destination</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Customer Booking / Ride Request</span></div>
+            <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Ride Request</span></div>
+        </div>
+
+        <div class="io-card">
+            <div class="io-title">💰 FARE</div>
+            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Pickup + Destination</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Fare Negotiation</span></div>
+            <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Agreed / Locked Fare</span></div>
+        </div>
+
+        <div class="io-card">
+            <div class="io-title">🔐 DRM-QR AUTHENTICATION</div>
+            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Confirmed Ride</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">DRM-QR Generation + Rider QR Scan + Verification</span></div>
+            <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Trip Verified / Trip Can Start</span></div>
+        </div>
+
+        <div class="io-card">
+            <div class="io-title">🛵 TRIP</div>
+            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Verified Ride</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Trip Execution</span></div>
+            <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Completed Ride</span></div>
+        </div>
+
+        <div class="io-card">
+            <div class="io-title">📡 RIDE MONITORING</div>
+            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">GPS Ride Data</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Ride Monitoring</span></div>
+            <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Ride Status / Operational Monitoring</span></div>
+        </div>
+
+        <div class="io-card">
+            <div class="io-title">💳 PAYMENT</div>
+            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Completed Ride / Agreed Fare</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Payment Collection + Transaction Recording</span></div>
+            <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Completed Transaction</span></div>
+        </div>
+
+        <div class="io-card">
+            <div class="io-title">📊 OPERATIONS REVIEW</div>
+            <div class="io-row"><span class="io-label">INPUT</span><span class="io-value">Completed Ride Records</span></div>
+            <div class="io-row"><span class="io-label">PROCESS</span><span class="io-value">Operations Review</span></div>
+            <div class="io-row"><span class="io-label">OUTPUT</span><span class="io-value">Booking / Transaction / Trip Records</span></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 16 — IF THIS HAPPENS, THEN WHAT? -->
+    <!-- ============================================================ -->
+    <h2>16. If This Happens, Then What?</h2>
+    <p class="section-lead">Quick troubleshooting guide for common scenarios.</p>
+
+    <div class="io-grid">
+        <div class="io-card" style="border-left: 4px solid #e53e3e;">
+            <div class="io-title" style="color:#c53030;">FARE NOT AGREED</div>
+            <div class="io-row"><span class="io-value">→ Continue Fare Negotiation</span></div>
+        </div>
+        <div class="io-card" style="border-left: 4px solid #e53e3e;">
+            <div class="io-title" style="color:#c53030;">RIDER DOES NOT ACCEPT</div>
+            <div class="io-row"><span class="io-value">→ Request Handling</span></div>
+        </div>
+        <div class="io-card" style="border-left: 4px solid #e53e3e;">
+            <div class="io-title" style="color:#c53030;">QR AUTHENTICATION FAILS</div>
+            <div class="io-row"><span class="io-value">→ Ride Denied / Support</span></div>
+        </div>
+        <div class="io-card" style="border-left: 4px solid #d69e2e;">
+            <div class="io-title" style="color:#975a16;">RIDE IS DELAYED / UNUSUAL ROUTE CHANGE DETECTED</div>
+            <div class="io-row"><span class="io-value">→ Operations Monitoring / Response</span></div>
+        </div>
+        <div class="io-card" style="border-left: 4px solid #38a169;">
+            <div class="io-title" style="color:#276749;">TRIP COMPLETED</div>
+            <div class="io-row"><span class="io-value">→ Payment Collection → Transaction Recorded</span></div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 17 — PANEL EXPLANATION GUIDE -->
+    <!-- ============================================================ -->
+    <h2>17. Panel Explanation Guide</h2>
+    <p class="section-lead">Simple scripts you can use when presenting each major workflow.</p>
+
+    <div class="panel-guide">
+        <strong>What is the main flow?</strong><br>
+        "Voyago starts when a passenger books a ride, provides the pickup and destination, negotiates the fare, and confirms the agreed fare."
+    </div>
+
+    <div class="panel-guide">
+        <strong>Why is the fare locked?</strong><br>
+        "Once the passenger and rider agree on the fare, the agreed amount is locked before the trip starts."
+    </div>
+
+    <div class="panel-guide">
+        <strong>What is DRM-QR?</strong><br>
+        "DRM-QR is the ride authentication mechanism used to verify the passenger's booking before the trip starts."
+    </div>
+
+    <div class="panel-guide">
+        <strong>What happens at pickup?</strong><br>
+        "The rider scans the passenger's DRM-QR. If authentication is successful, the trip can start."
+    </div>
+
+    <div class="panel-guide">
+        <strong>What does the system monitor?</strong><br>
+        "The system supports GPS tracking and ride monitoring, including automatic trip timeout detection for delayed pickups or unusual route changes."
+    </div>
+
+    <div class="panel-guide">
+        <strong>What does the Admin do?</strong><br>
+        "Operations monitors rides, responds to operational issues, reviews records, and handles end-of-day operations."
+    </div>
+
+    <div class="panel-guide">
+        <strong>How does the ride end?</strong><br>
+        "After reaching the destination, the passenger pays the agreed fare, the trip is completed, and the transaction is recorded."
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION 18 — ONE-PAGE MASTER FLOW -->
+    <!-- ============================================================ -->
+    <h2>18. One-Page Master Flow</h2>
+    <p class="section-lead">The simplest, most presentable summary of the entire Voyago system.</p>
+
+    <div class="diagram-box" style="background: #0b1a2e; border: none; border-radius: 24px; padding: 48px 32px;">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0;">
+            <div style="color: #f5a623; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 24px;">VOYAGO — MASTER FLOW</div>
+
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0; align-items: center;">
+                <div style="background: #3182ce; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">BOOK</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #3182ce; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">ENTER PICKUP + DESTINATION</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">NEGOTIATE FARE</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">AGREE</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">FARE LOCKED</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">DRM-QR GENERATED</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">DISPATCH</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #38a169; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">RIDER ACCEPTS</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #38a169; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">PICKUP</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">DRM-QR SCAN</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">AUTHENTICATION</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #38a169; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">TRIP START</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">GPS MONITORING</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #38a169; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">DESTINATION</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">PAYMENT</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #38a169; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">COMPLETION</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #805ad5; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">TRANSACTION RECORD</div>
+                <span style="color:#4a5568; font-size:1rem; margin:0 4px;">→</span>
+                <div style="background: #d69e2e; color: #fff; padding: 10px 18px; border-radius: 100px; font-size: 0.75rem; font-weight: 600; margin: 4px;">END-OF-DAY OPERATIONS</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER -->
+    <!-- ============================================================ -->
+    <div style="margin-top: 64px; padding-top: 24px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 0.8rem; color: #a0aec0;">
+        VOYAGO — System Workflow &amp; Process Guide • Based on the official manuscript • For academic presentation use
+    </div>
+
+</div>
+
+<!-- PRINT BUTTON -->
+<button class="print-btn" onclick="window.print();">
+    🖨️ Print / Save as PDF
+</button>
+
+<script>
+    // Parallax effect on hero elements
+    (function() {
+        const hero = document.querySelector('.hero');
+        if (!hero) return;
+
+        hero.addEventListener('mousemove', (e) => {
+            const rect = hero.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+            const content = hero.querySelector('.hero-content');
+            const actors = hero.querySelector('.hero-actors');
+
+            if (content) {
+                content.style.transform = `translate(${x * 8}px, ${y * 5}px)`;
+            }
+            if (actors) {
+                actors.style.transform = `translate(${x * -10}px, ${y * -5}px)`;
+            }
+        });
+
+        hero.addEventListener('mouseleave', () => {
+            const content = hero.querySelector('.hero-content');
+            const actors = hero.querySelector('.hero-actors');
+            if (content) content.style.transform = '';
+            if (actors) actors.style.transform = '';
+        });
+    })();
+
+    // Scroll reveal animation for cards and sections
+    (function() {
+        const observerOptions = {
+            threshold: 0.08,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card, .io-card, .diagram-box, .panel-guide, .qr-checkpoint, h2').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(24px)';
+            el.style.transition = 'opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+            observer.observe(el);
+        });
+    })();
+
+    // Add subtle floating animation to flow nodes on hover
+    (function() {
+        document.querySelectorAll('.flow-node').forEach(node => {
+            node.addEventListener('mouseenter', function() {
+                this.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s';
+            });
+        });
+    })();
+
+    // Animated counter for timeline steps (subtle)
+    (function() {
+        const timelineSteps = document.querySelectorAll('.timeline-step');
+        timelineSteps.forEach((step, index) => {
+            step.style.transitionDelay = `${index * 0.05}s`;
+        });
+    })();
+</script>
+
 </body>
 </html>
